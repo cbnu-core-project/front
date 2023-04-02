@@ -1,24 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
+// 라우트 모듈 불러오기
+import { Routes, Route } from "react-router-dom";
+import Page from "./pages/page";
 
+/*라우팅을 위한 태그 */
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<h1>hello</h1>} />
+      <Route path="/page" element={<Page />} />
+    </Routes>
   );
 }
 
