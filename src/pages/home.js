@@ -14,7 +14,7 @@ function Home() {
   return (
     <>
       <div>
-        <span onClick={() => onClicK()}>count {count}</span>
+        <button className={'bg-blue-500 text-white p-2 rounded-xl m-5'} onClick={onClicK}>count {count}</button>
       </div>
     </>
   );
