@@ -16,14 +16,6 @@ function Home() {
       <div>
         <span onClick={() => onClicK()}>count {count}</span>
       </div>
-      <button
-        className="bg-blue-500 w-24 h-8 rounded-xl text-lg font-bold text-slate-200 transition duration-500 hover:bg-red-500 shadow-lg hover:shadow-xl hover:shadow-red-500 hover:scale-110"
-        onClick={() => {
-          navigate("/page");
-        }}
-      >
-        이동
-      </button>
     </>
   );
 }
