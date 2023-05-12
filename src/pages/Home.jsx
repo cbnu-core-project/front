@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { countState } from "../store";
 
-function Home() {
+export default function Home() {
   let [count, setCount] = useRecoilState(countState);
 
   let navigate = useNavigate();
@@ -19,5 +19,3 @@ function Home() {
     </>
   );
 }
-
-export default Home;
