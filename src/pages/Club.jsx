@@ -69,10 +69,11 @@ export default function Club() {
         </ul>
       </div>
       <div className={"px-[63px]"}>
-        <ClubTab />
-        <div>
-          <i className="fa fa-spinner fa-spin">no spinner but why</i>
+        <div className={"flex"}>
+          <ClubTab />
+          <div></div>
         </div>
+
         <article className={""}>
           <div className={"grid grid-cols-4 gap-10"}>
             {posts.map((post) => {
@@ -127,6 +128,22 @@ const ClubTab = () => {
           >
             직무 동아리
           </button>
+          <div className={""}>
+            <form
+              className={
+                "flex h-[40px] w-[300px] rounded-full border border-gray2"
+              }
+            >
+              <input
+                type={"text"}
+                className={"rounded-full w-[250px] px-3 outline-0"}
+                placeholder={"동아리를 검색해보세요."}
+              />
+              <button type={"submit"}>
+                <i className="fa-solid fa-magnifying-glass fa-xl pt-4 ml-2"></i>
+              </button>
+            </form>
+          </div>
         </div>
         <div className={"mt-[32px]"} />
       </div>
