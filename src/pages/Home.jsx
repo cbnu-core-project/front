@@ -1,20 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { countState } from "../store";
+import HomeClubList from "../components/HomeClubList";
+import SideBar from "../components/SideBar";
 
 export default function Home() {
-  let [count, setCount] = useRecoilState(countState);
-
-  let navigate = useNavigate();
-
-  const onClicK = () => {
-    setCount(++count);
-  };
-
   return (
     <>
-      <div>
-        <button className={'bg-blue-500 text-white p-2 rounded-xl m-5'} onClick={onClicK}>count {count}</button>
+      <div className={"w-full flex"}>
+        <div>
+          <HomeClubList />
+          <div className={"mt-14"} />
+        </div>
+        <SideBar />
       </div>
     </>
   );

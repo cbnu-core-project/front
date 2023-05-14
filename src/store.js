@@ -1,11 +1,11 @@
 import { atom } from "recoil";
 
-export const countState = atom({
-  key: "countState",
-  default: 0,
+export const postsState = atom({
+  key: "postsState",
+  default: [],
 });
 
-
-
-
-
+export const homeTabState = atom({
+  key: "homeTabState",
+  default: 0,
+});

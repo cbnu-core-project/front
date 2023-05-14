@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .btn-home-tab-focused {
+        @apply w-[120px] h-[40px] rounded-3xl text-h5 text-white bg-mid
+    }
+    .btn-home-tab {
+        @apply w-[120px] h-[40px] rounded-3xl text-darkgray bg-light
+    }
+}
