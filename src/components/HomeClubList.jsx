@@ -1,25 +1,42 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { homeTabState, postsState } from "../store";
+import { homeClubTabState, postsState } from "../store";
+import { useNavigate } from "react-router-dom";
 
 axios.defaults.baseURL = "http://cbnucore.site";
 
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(postsState);
+  const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
+  const navigation = useNavigate();
 
   const getPosts = () => {
-    axios.get("/api/posts").then((res) => {
-      setPosts(res.data);
-    });
+    if (homeTab == 0) {
+      axios.get("/api/posts/?skip=0&limit=8").then((res) => {
+        setPosts(res.data);
+      });
+    } else if (homeTab == 1) {
+      axios
+        .get("/api/posts/classification/?skip=0&limit=8&classification=0")
+        .then((res) => {
+          setPosts(res.data);
+        });
+    } else if (homeTab == 2) {
+      axios
+        .get("/api/posts/classification/?skip=0&limit=8&classification=1")
+        .then((res) => {
+          setPosts(res.data);
+        });
+    }
   };
 
-  useEffect(getPosts, []);
+  useEffect(getPosts, [homeTab]);
 
   return (
     <>
-      <div className={"mt-32 px-8 2xl:px-16"}>
-        <HomeTab />
+      <div className={"px-8 2xl:px-16"}>
+        <HomeClubTab />
         <article className={"w-home2 2xl:w-home"}>
           <div className={"grid grid-cols-4 gap-10"}>
             {posts.map((post) => {
@@ -45,6 +62,9 @@ export default function HomeClubList() {
             className={
               "w-[200px] h-[46px] text-h5 text-black rounded-3xl border border-gray"
             }
+            onClick={() => {
+              navigation("/club");
+            }}
           >
             전체보기 >
           </button>
@@ -54,8 +74,8 @@ export default function HomeClubList() {
   );
 }
 
-const HomeTab = () => {
-  const [homeTab, setHomeTab] = useRecoilState(homeTabState);
+const HomeClubTab = () => {
+  const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
 
   const onClickHandler = (tabValue) => {
     setHomeTab(tabValue);

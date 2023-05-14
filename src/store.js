@@ -5,7 +5,12 @@ export const postsState = atom({
   default: [],
 });
 
-export const homeTabState = atom({
-  key: "homeTabState",
+export const homeClubTabState = atom({
+  key: "homeClubTabState",
+  default: 0,
+});
+
+export const homePromotionTabState = atom({
+  key: "homePromotionTabState",
   default: 0,
 });
