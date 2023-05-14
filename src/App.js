@@ -1,20 +1,24 @@
-import {Routes, Route, NavLink} from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import { Home, Club, Notice, Promotion } from "./pages";
+import { Home, Club, Notice, Promotion, ClubDetail } from "./pages";
+import SideBar from "./components/SideBar";
 
 /*라우팅을 위한 태그 */
 function App() {
   return (
-      <>
-          <Navigation/>
-          <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/club" element={<Club />} />
-              <Route path="/notice" element={<Notice />} />
-              <Route path="/promotion" element={<Promotion />} />
-          </Routes>
-      </>
-
+    <>
+      <Navigation />
+      <div className={"flex"}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/club" element={<Club />} />
+          <Route path="/notice" element={<Notice />} />
+          <Route path="/promotion" element={<Promotion />} />
+          <Route path="/clubdetail/:id" element={<ClubDetail />} />
+        </Routes>
+        <SideBar />
+      </div>
+    </>
   );
 }
 

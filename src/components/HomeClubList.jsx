@@ -9,20 +9,20 @@ axios.defaults.baseURL = "http://cbnucore.site";
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(postsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
   const getPosts = () => {
-    if (homeTab == 0) {
+    if (homeTab === 0) {
       axios.get("/api/posts/?skip=0&limit=8").then((res) => {
         setPosts(res.data);
       });
-    } else if (homeTab == 1) {
+    } else if (homeTab === 1) {
       axios
         .get("/api/posts/classification/?skip=0&limit=8&classification=0")
         .then((res) => {
           setPosts(res.data);
         });
-    } else if (homeTab == 2) {
+    } else if (homeTab === 2) {
       axios
         .get("/api/posts/classification/?skip=0&limit=8&classification=1")
         .then((res) => {
@@ -37,7 +37,7 @@ export default function HomeClubList() {
     <>
       <div className={"px-8 2xl:px-16"}>
         <HomeClubTab />
-        <article className={"w-home2 2xl:w-home"}>
+        <article className={""}>
           <div className={"grid grid-cols-4 gap-10"}>
             {posts.map((post) => {
               return (
@@ -46,7 +46,7 @@ export default function HomeClubList() {
                     "w-[200px] h-[240px] 2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110"
                   }
                   onClick={() => {
-                    // navigate('/detail/' + post._id);
+                    navigate("/clubdetail/" + post._id);
                   }}
                 >
                   <Image post={post} />
@@ -60,10 +60,10 @@ export default function HomeClubList() {
         <div className={"grid place-content-center"}>
           <button
             className={
-              "w-[200px] h-[46px] text-h5 text-black rounded-3xl border border-gray"
+              "w-[200px] h-[46px] text-h6 text-black rounded-3xl border border-gray"
             }
             onClick={() => {
-              navigation("/club");
+              navigate("/club");
             }}
           >
             전체보기 >

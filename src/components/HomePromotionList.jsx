@@ -33,7 +33,7 @@ export default function HomePromotionList() {
         <div className={"grid place-content-center"}>
           <button
             className={
-              "w-[200px] h-[46px] text-h5 text-black rounded-3xl border border-gray"
+              "w-[200px] h-[46px] text-h6 text-black rounded-3xl border border-gray"
             }
             onClick={() => {
               navigation("/promotion");

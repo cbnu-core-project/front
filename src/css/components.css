@@ -5,9 +5,9 @@
 
 @layer components {
     .btn-home-tab-focused {
-        @apply w-[120px] h-[40px] rounded-3xl text-h5 text-white bg-mid
+        @apply w-[120px] h-[40px] rounded-3xl text-h6 text-white bg-main_mid
     }
     .btn-home-tab {
-        @apply w-[120px] h-[40px] rounded-3xl text-darkgray bg-light
+        @apply w-[120px] h-[40px] rounded-3xl text-darkgray bg-main_light
     }
 }

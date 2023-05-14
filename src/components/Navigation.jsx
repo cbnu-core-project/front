@@ -11,7 +11,9 @@ export default function Navigation() {
         <div className={"flex gap-5"}>
           <NavLink
             to={"/"}
-            className={"ml-[72px] mt-[25.5px] text-[24px] text-main font-bold"}
+            className={
+              "ml-[72px] mt-[25.5px] text-[24px] text-main_default font-bold"
+            }
           >
             동아리 로고
           </NavLink>
