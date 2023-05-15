@@ -53,6 +53,7 @@ export default function ClubSearch() {
   };
 
   useEffect(() => {
+    console.log("작동");
     getPosts();
     countPosts();
   }, [homeTab]);
@@ -143,15 +144,18 @@ const ClubTab = () => {
               className={
                 "flex h-[40px] w-[300px] rounded-full border border-gray2"
               }
+              onSubmit={(e) => {
+                // 기본 작동을 유지시켜서 새로고침 작동함으로써 재랜더링 되게 만들었음.
+                // e.preventDefault();
+                navigate("/club/search/?query=" + e.target.query.value);
+                setHomeTab(0);
+              }}
             >
               <input
                 type={"text"}
                 className={"rounded-full w-[250px] px-3 outline-0"}
                 placeholder={"동아리를 검색해보세요."}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  navigate("/club/search/?query=" + e.target.query.value);
-                }}
+                name={"query"}
               />
               <button type={"submit"}>
                 <i className="fa-solid fa-magnifying-glass fa-xl pt-4 ml-2"></i>
