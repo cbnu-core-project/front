@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { homeClubTabState, postsState } from "../store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -11,6 +11,8 @@ export default function Club() {
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
   const [count, setCount] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query");
 
   const countPosts = () => {
     let i = 0;
@@ -22,6 +24,7 @@ export default function Club() {
   };
 
   const getPosts = () => {
+    /* 이따가 수정하자. 검색 목록 받아서 프론트에서 classification 분리하기로.. */
     if (homeTab === 0) {
       axios.get("/api/posts/?skip=0&limit=8").then((res) => {
         setPosts(res.data);
