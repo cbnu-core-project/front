@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 axios.defaults.baseURL = "http://cbnucore.site";
 
-export default function Club() {
+export default function ClubSearch() {
   const [posts, setPosts] = useRecoilState(postsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
@@ -26,21 +26,29 @@ export default function Club() {
   const getPosts = () => {
     /* 이따가 수정하자. 검색 목록 받아서 프론트에서 classification 분리하기로.. */
     if (homeTab === 0) {
-      axios.get("/api/posts/?skip=0&limit=8").then((res) => {
+      axios.get("/api/posts/search/?query=" + query).then((res) => {
         setPosts(res.data);
+        console.log(res.data);
       });
     } else if (homeTab === 1) {
-      axios
-        .get("/api/posts/classification/?skip=0&limit=8&classification=0")
-        .then((res) => {
-          setPosts(res.data);
+      axios.get("/api/posts/search/?query=" + query).then((res) => {
+        let tempPosts = [];
+        let data = res.data;
+        console.log(data);
+        data.forEach((post) => {
+          console.log(post);
+          post.classification === 0 ? tempPosts.push(post) : tempPosts.push();
         });
+        setPosts(tempPosts);
+      });
     } else if (homeTab === 2) {
-      axios
-        .get("/api/posts/classification/?skip=0&limit=8&classification=1")
-        .then((res) => {
-          setPosts(res.data);
+      axios.get("/api/posts/search/?query=" + query).then((res) => {
+        let tempPosts = [];
+        res.data.forEach((post) => {
+          post.classification === 1 ? tempPosts.push(post) : tempPosts.push();
         });
+        setPosts(tempPosts);
+      });
     }
   };
 
@@ -101,6 +109,7 @@ export default function Club() {
 
 const ClubTab = () => {
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
+  const navigate = useNavigate();
 
   const onClickHandler = (tabValue) => {
     setHomeTab(tabValue);
@@ -139,6 +148,10 @@ const ClubTab = () => {
                 type={"text"}
                 className={"rounded-full w-[250px] px-3 outline-0"}
                 placeholder={"동아리를 검색해보세요."}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  navigate("/club/search/?query=" + e.target.query.value);
+                }}
               />
               <button type={"submit"}>
                 <i className="fa-solid fa-magnifying-glass fa-xl pt-4 ml-2"></i>

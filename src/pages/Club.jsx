@@ -98,6 +98,7 @@ export default function Club() {
 
 const ClubTab = () => {
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
+  const navigate = useNavigate();
 
   const onClickHandler = (tabValue) => {
     setHomeTab(tabValue);
@@ -131,11 +132,16 @@ const ClubTab = () => {
               className={
                 "flex h-[40px] w-[300px] rounded-full border border-gray2"
               }
+              onSubmit={(e) => {
+                e.preventDefault();
+                navigate("/club/search/?query=" + e.target.query.value);
+              }}
             >
               <input
                 type={"text"}
                 className={"rounded-full w-[250px] px-3 outline-0"}
                 placeholder={"동아리를 검색해보세요."}
+                name={"query"}
               />
               <button type={"submit"}>
                 <i className="fa-solid fa-magnifying-glass fa-xl pt-4 ml-2"></i>
