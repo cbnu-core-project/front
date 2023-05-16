@@ -4,9 +4,11 @@ module.exports = {
   theme: {
     colors: {
       // Brand colors
+      main: "#4200FF",
       main_default: "#4200FF",
       main_mid: "#6360FF",
       main_light: "#ECEDFB",
+      background: "#F1F2FC",
 
       // Particular colors
       red_error: "#FF5449",
@@ -21,7 +23,7 @@ module.exports = {
       white: "#FFFFFF",
 
       // 그 외 추가 컬러
-      sidebarbackground: "#F1F2FC",
+      // ...
     },
     screens: {
       "2xl": "1920px", // 최상위 화면 크기

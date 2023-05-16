@@ -1,12 +1,34 @@
 import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Navigation() {
+  // const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  //
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setScreenWidth(window.innerWidth);
+  //     // console.log(screenWidth);
+  //   };
+  //
+  //   window.addEventListener("resize", handleResize);
+  //
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, [screenWidth]);
+  //
+  // // 스타일 동적적용을 위한 style
+  // const containerStyle = {
+  //   width: screenWidth + "px",
+  // };
+
   return (
     <>
       <div
         className={
-          "w-home2 2xl:w-home h-[80px] bg-white bg-opacity-90 top-0 fixed"
+          "w-full h-[80px] bg-white bg-opacity-90 top-0 fixed shadow-lg"
         }
+        // style={containerStyle}
       >
         <div className={"flex gap-5"}>
           <NavLink
