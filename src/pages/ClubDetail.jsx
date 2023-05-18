@@ -6,7 +6,7 @@ export default function ClubDetail() {
   const { id } = useParams();
   const [post, setPost] = useState({});
   function getPost() {
-    axios.get("/api/post/" + id).then((res) => {
+    axios.get("/api/club/" + id).then((res) => {
       setPost(res.data[0]);
       console.log(res.data);
     });

@@ -17,7 +17,7 @@ export default function ClubSearch() {
   const countPosts = () => {
     let i = 0;
     let j = 0;
-    axios.get("/api/posts").then((res) => {
+    axios.get("/api/clubs").then((res) => {
       res.data.forEach((post) => (post.classification === 0 ? ++i : ++j));
       setCount([i, j]);
     });
@@ -26,12 +26,12 @@ export default function ClubSearch() {
   const getPosts = () => {
     /* 이따가 수정하자. 검색 목록 받아서 프론트에서 classification 분리하기로.. */
     if (homeTab === 0) {
-      axios.get("/api/posts/search/?query=" + query).then((res) => {
+      axios.get("/api/clubs/search/?query=" + query).then((res) => {
         setPosts(res.data);
         console.log(res.data);
       });
     } else if (homeTab === 1) {
-      axios.get("/api/posts/search/?query=" + query).then((res) => {
+      axios.get("/api/clubs/search/?query=" + query).then((res) => {
         let tempPosts = [];
         let data = res.data;
         console.log(data);
@@ -42,7 +42,7 @@ export default function ClubSearch() {
         setPosts(tempPosts);
       });
     } else if (homeTab === 2) {
-      axios.get("/api/posts/search/?query=" + query).then((res) => {
+      axios.get("/api/clubs/search/?query=" + query).then((res) => {
         let tempPosts = [];
         res.data.forEach((post) => {
           post.classification === 1 ? tempPosts.push(post) : tempPosts.push();

@@ -15,7 +15,7 @@ export default function Club() {
   const countPosts = () => {
     let i = 0;
     let j = 0;
-    axios.get("/api/posts").then((res) => {
+    axios.get("/api/clubs").then((res) => {
       res.data.forEach((post) => (post.classification === 0 ? ++i : ++j));
       setCount([i, j]);
     });
@@ -23,18 +23,18 @@ export default function Club() {
 
   const getPosts = () => {
     if (homeTab === 0) {
-      axios.get("/api/posts/?skip=0&limit=8").then((res) => {
+      axios.get("/api/clubs/?skip=0&limit=8").then((res) => {
         setPosts(res.data);
       });
     } else if (homeTab === 1) {
       axios
-        .get("/api/posts/classification/?skip=0&limit=8&classification=0")
+        .get("/api/clubs/classification/?skip=0&limit=8&classification=0")
         .then((res) => {
           setPosts(res.data);
         });
     } else if (homeTab === 2) {
       axios
-        .get("/api/posts/classification/?skip=0&limit=8&classification=1")
+        .get("/api/clubs/classification/?skip=0&limit=8&classification=1")
         .then((res) => {
           setPosts(res.data);
         });
