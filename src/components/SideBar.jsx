@@ -3,10 +3,9 @@ export default function () {
     <>
       <aside
         className={
-          "w-side bg-background h-screen overflow-y-scroll fixed right-0"
+          "w-side bg-background h-screen overflow-y-scroll fixed right-0 top-0"
         }
       >
-        <div className={"mt-[80px]"} />
         <div>사이드바</div>
         <br />
         <br />

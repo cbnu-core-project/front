@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Navigation />
-      <div className={"flex"}>
+      <div className={"mr-side"}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/club" element={<Club />} />
@@ -17,12 +17,10 @@ function App() {
           <Route path="/clubdetail/:id" element={<ClubDetail />} />
           <Route path="/club/search/" element={<ClubSearch />} />
         </Routes>
-        <SideBar />
       </div>
+      <SideBar />
     </>
   );
 }
 
 export default App;
-
-// 하하호호 히히 이상호의 추가 행동
