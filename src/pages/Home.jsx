@@ -1,10 +1,13 @@
-import HomeClubList from "../components/HomeClubList";
-import SideBar from "../components/SideBar";
-import HomePromotionList from "../components/HomePromotionList";
-import Navigation from "../components/Navigation";
-import HomeNoticeList from "../components/HomeNoticeList";
+import HomeClubList from "../components/home/HomeClubList";
+import HomePromotionList from "../components/home/HomePromotionList";
+import HomeNoticeList from "../components/home/HomeNoticeList";
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    document.title = `모든 동아리가 모이는 공간 | Core`;
+  });
+
   return (
     <>
       <div className={"w-full min-w-home2"}>

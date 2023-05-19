@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { homePromotionTabState } from "../store";
+import { homePromotionTabState } from "../../store";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePromotionList() {

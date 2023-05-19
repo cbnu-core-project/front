@@ -1,15 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { readOneClub } from "../api/club";
 
 export default function ClubDetail() {
   const { id } = useParams();
   const [post, setPost] = useState({});
   function getPost() {
-    axios.get("/api/club/" + id).then((res) => {
-      setPost(res.data[0]);
-      console.log(res.data);
-    });
+    readOneClub(id).then((res) => setPost(res.data[0]));
   }
 
   useEffect(getPost, []);

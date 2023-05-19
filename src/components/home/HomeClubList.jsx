@@ -1,10 +1,8 @@
 import { useEffect } from "react";
-import axios from "axios";
 import { useRecoilState } from "recoil";
-import { homeClubTabState, postsState } from "../store";
+import { homeClubTabState, postsState } from "../../store";
 import { useNavigate } from "react-router-dom";
-
-axios.defaults.baseURL = "http://cbnucore.site";
+import { readSomeClubs } from "../../api/club";
 
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(postsState);
@@ -12,23 +10,7 @@ export default function HomeClubList() {
   const navigate = useNavigate();
 
   const getPosts = () => {
-    if (homeTab === 0) {
-      axios.get("/api/clubs/?skip=0&limit=8").then((res) => {
-        setPosts(res.data);
-      });
-    } else if (homeTab === 1) {
-      axios
-        .get("/api/clubs/classification/?skip=0&limit=8&classification=0")
-        .then((res) => {
-          setPosts(res.data);
-        });
-    } else if (homeTab === 2) {
-      axios
-        .get("/api/clubs/classification/?skip=0&limit=8&classification=1")
-        .then((res) => {
-          setPosts(res.data);
-        });
-    }
+    readSomeClubs(0, 8, homeTab).then((res) => setPosts(res.data));
   };
 
   useEffect(getPosts, [homeTab]);

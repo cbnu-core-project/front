@@ -16,7 +16,7 @@ export default function Club() {
     let i = 0;
     let j = 0;
     axios.get("/api/clubs").then((res) => {
-      res.data.forEach((post) => (post.classification === 0 ? ++i : ++j));
+      res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
       setCount([i, j]);
     });
   };
@@ -44,6 +44,7 @@ export default function Club() {
   useEffect(() => {
     getPosts();
     countPosts();
+    document.title = `${posts.length}개의 동아리가 함께 하고 있습니다 | Core`;
   }, [homeTab]);
 
   return (
