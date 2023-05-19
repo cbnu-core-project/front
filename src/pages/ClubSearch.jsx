@@ -1,13 +1,11 @@
 import { useRecoilState } from "recoil";
-import { homeClubTabState, postsState } from "../store";
+import { homeClubTabState, clubsState } from "../store";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
 import { useEffect, useState } from "react";
-
-axios.defaults.baseURL = "http://cbnucore.site";
+import { readAllClubs, searchAllClubs } from "../api/club";
 
 export default function ClubSearch() {
-  const [posts, setPosts] = useRecoilState(postsState);
+  const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
   const [count, setCount] = useState([]);
@@ -17,39 +15,14 @@ export default function ClubSearch() {
   const countPosts = () => {
     let i = 0;
     let j = 0;
-    axios.get("/api/clubs").then((res) => {
-      res.data.forEach((post) => (post.classification === 0 ? ++i : ++j));
+    readAllClubs().then((res) => {
+      res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
       setCount([i, j]);
     });
   };
 
   const getPosts = () => {
-    /* 이따가 수정하자. 검색 목록 받아서 프론트에서 classification 분리하기로.. */
-    if (homeTab === 0) {
-      axios.get("/api/clubs/search/?query=" + query).then((res) => {
-        setPosts(res.data);
-        console.log(res.data);
-      });
-    } else if (homeTab === 1) {
-      axios.get("/api/clubs/search/?query=" + query).then((res) => {
-        let tempPosts = [];
-        let data = res.data;
-        console.log(data);
-        data.forEach((post) => {
-          console.log(post);
-          post.classification === 0 ? tempPosts.push(post) : tempPosts.push();
-        });
-        setPosts(tempPosts);
-      });
-    } else if (homeTab === 2) {
-      axios.get("/api/clubs/search/?query=" + query).then((res) => {
-        let tempPosts = [];
-        res.data.forEach((post) => {
-          post.classification === 1 ? tempPosts.push(post) : tempPosts.push();
-        });
-        setPosts(tempPosts);
-      });
-    }
+    searchAllClubs(query, homeTab).then((res) => setPosts(res.data));
   };
 
   useEffect(() => {

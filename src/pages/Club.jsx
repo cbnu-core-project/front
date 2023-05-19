@@ -1,13 +1,14 @@
 import { useRecoilState } from "recoil";
-import { homeClubTabState, postsState } from "../store";
+import { homeClubTabState, clubsState } from "../store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { readAllClubs, readSomeClubs } from "../api/club";
 
 axios.defaults.baseURL = "http://cbnucore.site";
 
 export default function Club() {
-  const [posts, setPosts] = useRecoilState(postsState);
+  const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
   const [count, setCount] = useState([]);
@@ -15,30 +16,14 @@ export default function Club() {
   const countPosts = () => {
     let i = 0;
     let j = 0;
-    axios.get("/api/clubs").then((res) => {
+    readAllClubs().then((res) => {
       res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
       setCount([i, j]);
     });
   };
 
   const getPosts = () => {
-    if (homeTab === 0) {
-      axios.get("/api/clubs/?skip=0&limit=8").then((res) => {
-        setPosts(res.data);
-      });
-    } else if (homeTab === 1) {
-      axios
-        .get("/api/clubs/classification/?skip=0&limit=8&classification=0")
-        .then((res) => {
-          setPosts(res.data);
-        });
-    } else if (homeTab === 2) {
-      axios
-        .get("/api/clubs/classification/?skip=0&limit=8&classification=1")
-        .then((res) => {
-          setPosts(res.data);
-        });
-    }
+    readSomeClubs(0, 16, homeTab).then((res) => setPosts(res.data));
   };
 
   useEffect(() => {

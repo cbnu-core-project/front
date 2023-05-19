@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
-export const postsState = atom({
-  key: "postsState",
+export const clubsState = atom({
+  key: "clubsState",
   default: [],
 });
 

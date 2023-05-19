@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <>
-      <div className={"w-full min-w-home2"}>
+      <div className={"w-full min-w-home2 mr-side"}>
         <div>
           <div className={"mt-[128px]"} />
           <HomeClubList />

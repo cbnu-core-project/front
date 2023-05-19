@@ -3,3 +3,10 @@
 @tailwind utilities;
 
 @import "/src/css/components.css";
+
+*{
+    -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+    display: none;
+}

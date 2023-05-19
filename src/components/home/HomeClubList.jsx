@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { homeClubTabState, postsState } from "../../store";
+import { homeClubTabState, clubsState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { readSomeClubs } from "../../api/club";
 
 export default function HomeClubList() {
-  const [posts, setPosts] = useRecoilState(postsState);
+  const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
 
