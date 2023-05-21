@@ -11,12 +11,12 @@ export default function Club() {
   const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
-  const [count, setCount] = useState([]);
+  const [count, setCount] = useState([0, 0]);
 
   const countPosts = () => {
     let i = 0;
     let j = 0;
-    readAllClubs().then((res) => {
+    readAllClubs(0).then((res) => {
       res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
       setCount([i, j]);
     });
@@ -119,8 +119,9 @@ const ClubTab = () => {
                 "flex h-[40px] w-[300px] rounded-full border border-gray2"
               }
               onSubmit={(e) => {
-                e.preventDefault();
+                // e.preventDefault();
                 navigate("/club/search/?query=" + e.target.query.value);
+                setHomeTab(0); // 기본 홈탭을 0으로 바꾸기
               }}
             >
               <input

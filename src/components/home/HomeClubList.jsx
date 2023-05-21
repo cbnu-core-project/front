@@ -1,24 +1,47 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { homeClubTabState, clubsState } from "../../store";
 import { useNavigate } from "react-router-dom";
-import { readSomeClubs } from "../../api/club";
+import { readAllClubs, readSomeClubs } from "../../api/club";
+import { usePagination } from "@mantine/hooks";
 
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
+  const [count, setCount] = useState([0, 0]);
   const navigate = useNavigate();
 
   const getPosts = () => {
-    readSomeClubs(0, 8, homeTab).then((res) => setPosts(res.data));
+    readSomeClubs((page - 1) * 8, 8, homeTab).then((res) => {
+      setPosts(res.data);
+    });
   };
 
-  useEffect(getPosts, [homeTab]);
+  const countPosts = () => {
+    let i = 0;
+    let j = 0;
+    readAllClubs(homeTab).then((res) => {
+      res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
+      setCount([i, j]);
+    });
+  };
+
+  const [page, onChange] = useState(1);
+  const pagination = usePagination({
+    total: Math.ceil((count[0] + count[1]) / 8),
+    page,
+    onChange,
+  });
+
+  useEffect(() => {
+    getPosts();
+    countPosts();
+  }, [homeTab, page]);
 
   return (
     <>
       <div className={"px-8 2xl:px-16"}>
-        <HomeClubTab />
+        <HomeClubTab pagination={pagination} page={page} />
         <article className={""}>
           <div className={"grid grid-cols-4 gap-10"}>
             {posts.map((post) => {
@@ -56,8 +79,9 @@ export default function HomeClubList() {
   );
 }
 
-const HomeClubTab = () => {
+const HomeClubTab = (props) => {
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
+  const [posts, setPosts] = useRecoilState(clubsState);
 
   const onClickHandler = (tabValue) => {
     setHomeTab(tabValue);
@@ -89,6 +113,36 @@ const HomeClubTab = () => {
           >
             직무 동아리
           </button>
+          <div className={"flex text-h6 ml-auto mt-[6px]"}>
+            <div
+              className={
+                "border w-[28px] h-[28px] text-center border-midgray rounded"
+              }
+              onClick={() => {
+                props.pagination.previous();
+              }}
+            >
+              {"<"}
+            </div>
+            <p
+              className={"mx-2"}
+              onClick={() => {
+                props.pagination.next();
+              }}
+            >
+              {props.page} / {props.pagination.range.at(-1)}
+            </p>
+            <div
+              className={
+                "border w-[28px] h-[28px] text-center border-midgray rounded"
+              }
+              onClick={() => {
+                props.pagination.next();
+              }}
+            >
+              {">"}
+            </div>
+          </div>
         </div>
         <div className={"mt-[32px]"} />
       </div>
