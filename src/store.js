@@ -5,6 +5,17 @@ export const clubsState = atom({
   default: [],
 });
 
+export const promotionsState = atom({
+  key: "promotionsState",
+  default: [],
+});
+
+export const noticesState = atom({
+  key: "noticesState",
+  default: [],
+});
+
+// 탭바
 export const homeClubTabState = atom({
   key: "homeClubTabState",
   default: 0,

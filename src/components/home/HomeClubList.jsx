@@ -114,7 +114,7 @@ const HomeClubTab = (props) => {
             직무 동아리
           </button>
           <div className={"flex text-h6 ml-auto mt-[6px]"}>
-            <div
+            <button
               className={
                 "border w-[28px] h-[28px] text-center border-midgray rounded"
               }
@@ -123,7 +123,7 @@ const HomeClubTab = (props) => {
               }}
             >
               {"<"}
-            </div>
+            </button>
             <p
               className={"mx-2"}
               onClick={() => {
@@ -132,7 +132,7 @@ const HomeClubTab = (props) => {
             >
               {props.page} / {props.pagination.range.at(-1)}
             </p>
-            <div
+            <button
               className={
                 "border w-[28px] h-[28px] text-center border-midgray rounded"
               }
@@ -141,7 +141,7 @@ const HomeClubTab = (props) => {
               }}
             >
               {">"}
-            </div>
+            </button>
           </div>
         </div>
         <div className={"mt-[32px]"} />
@@ -170,7 +170,7 @@ const Content = (props) => {
             "text-md w-[115px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-darkgray text-darkgray rounded-xl px-3"
           }
         >
-          {props.post.classification === 0 ? "중앙 동아리" : "직무 동아리"}
+          {props.post.classification === 1 ? "중앙 동아리" : "직무 동아리"}
         </div>
       </div>
       <div className={"hidden 2xl:block"}>
