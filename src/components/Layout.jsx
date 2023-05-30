@@ -1,6 +1,66 @@
-import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function SideBar() {
+export default function Layout() {
+  return (
+    <>
+      <div className="grid grid-cols-[1100px,450px] grid-rows-[80px,1fr]">
+        <Headers></Headers>
+        <Outlet></Outlet>
+        <SideBar></SideBar>
+      </div>
+    </>
+  );
+}
+
+function Headers() {
+  let [mystate, setMyState] = useState(false);
+  let [userId, setUserId] = useState();
+
+  useEffect(() => {
+    axios.get("/api/register");
+  });
+
+  return (
+    <>
+      <div className="bg-white items-center opacity-80 flex pl-2 pr-16 gap-[48px] shadow-md backdrop-opacity-[25px] mt-0">
+        <h1 className="w-[109px] h-[29px] text-main text-h2 font-[900] ml-[72px]">
+          동아리
+        </h1>
+        <ul className="grid grid-cols-3 items-start gap-[80px]">
+          <li className="side_tab_btn_focused">동아리</li>
+          <li className="side_tab_btn">홍보게시판</li>
+          <li className="side_tab_btn">공지사항</li>
+        </ul>
+      </div>
+      <div className="bg-background pl-[40px] ">
+        <div className="flex items-center mt-[15px]">
+          <div className="h-[56px] w-[56px] bg-black rounded-full p-0 m-0"></div>
+          <div className="pl-[8px]">
+            <div>안녕하세요,</div>
+            <div className="font-[600] ">부리부리 대마왕님</div>
+          </div>
+          <button
+            className="mt-[25px] ml-[5px] material-symbols-outlined"
+            onClick={() => {
+              setMyState(!mystate);
+            }}
+          >
+            expand_more
+          </button>
+          <span class="ml-[100px] material-symbols-outlined">
+            notifications
+          </span>
+        </div>
+        {mystate == true ? <Modal /> : null}
+      </div>
+    </>
+  );
+}
+
+function SideBar() {
   let [myclub, setMyclub] = useState(true);
   let [schedule, setSchedule] = useState(true);
   let [register, setRegister] = useState(true);
@@ -8,7 +68,7 @@ export default function SideBar() {
   let [mytext, setMyText] = useState(true);
 
   return (
-    <div className="bg-background pl-[40px] w-side fixed">
+    <div className="bg-background pl-[40px]">
       <div className="flex mt-[40px]">
         <div className="side_title">나의 동아리</div>
         <button
@@ -178,63 +238,5 @@ function MyText() {
         </div>
       </div>
     </div>
-  );
-}
-
-function SideBar2() {
-  return (
-    <>
-      <aside
-        className={
-          "w-side bg-background h-screen overflow-y-scroll fixed right-0 top-0"
-        }
-      >
-        <div>사이드바</div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <div>스크롤</div>
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </aside>
-    </>
   );
 }

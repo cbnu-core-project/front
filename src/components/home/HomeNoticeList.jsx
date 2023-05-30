@@ -2,20 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { noticesState } from "../../store";
 import { useEffect } from "react";
-import { readSomeClubs } from "../../api/club";
-import { readAllNotices } from "../../api/notice";
+import { readSomeNotices } from "../../api/notice";
 
 export default function HomeNoticeList() {
   const navigate = useNavigate();
   const [notices, setNotices] = useRecoilState(noticesState);
 
   const getPosts = () => {
-    readAllNotices().then((res) => {
+    readSomeNotices(0, 5).then((res) => {
       setNotices(res.data);
     });
   };
 
-  useEffect(() => getPosts);
+  useEffect(() => getPosts, []);
 
   return (
     <>

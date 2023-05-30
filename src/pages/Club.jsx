@@ -34,7 +34,7 @@ export default function Club() {
 
   return (
     <div className={"w-full min-w-home2"}>
-      <div className={"mt-[80px]"} />
+      <div className={""} />
       <div className={" w-full bg-main_mid text-white px-[64px] py-[56px]"}>
         <p className={"text-h1 font-light"}>
           충북대학교 <span className={"font-bold"}>동아리</span>

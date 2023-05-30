@@ -28,7 +28,7 @@ export default function HomePromotionList() {
     });
   };
 
-  useEffect(() => getPosts());
+  useEffect(() => getPosts(), []);
 
   return (
     <>

@@ -11,3 +11,51 @@
         @apply w-[120px] h-[40px] rounded-3xl text-darkgray bg-main_light
     }
 }
+
+@layer components {
+    .home_tab_btn_focused {
+        @apply w-[120px] h-[40px] rounded-3xl bg-main_mid text-center pt-[8px] text-white
+    }
+
+    .home_tab_btn {
+        @apply w-[120px] h-[40px] rounded-3xl bg-main_light text-center pt-[8px] hover:bg-main_mid hover:text-white
+    }
+
+    .semi_title{
+        @apply text-main text-[28px] font-[300] leading-[38px] tracking-[-.015em]
+    }
+
+    .tag_club{
+        @apply text-[#4F4F4F] text-[10px] font-[300] leading-[16px] tracking-[-.005em] border border-[#4F4F4F] rounded-3xl pl-[6px] pr-[6px]
+    }
+
+    .tag_keyword{
+        @apply bg-gray3 text-midgray text-[10px] font-[300] leading-[16px] tracking-[-.005em] rounded-3xl text-center
+        justify-center items-center pl-[6px] pr-[6px]
+    }
+
+    .all_view{
+        @apply justify-center items-center w-[100px] border border-[1px_#DBDBDB] text-black text-h7 font-[300] leading-[16px] tracking-[-.005em] rounded-3xl text-center
+        mt-[30px] mb-[45px] pt-[6px] pb-[6px] ml-auto mr-auto
+    }
+
+    .side_tab_btn_focused {
+        @apply list-none h-[18px] text-darkgray text-h6 font-[700] leading-[18px] tracking-[-.015em]
+    }
+
+    .side_tab_btn {
+        @apply list-none h-[18px] text-gray text-h6 font-[400] leading-[18px] hover:text-darkgray hover:font-[700]
+    }
+
+    .side_title{
+        @apply text-black text-[17px] font-[600] leading-[16px] tracking-[-.005em]
+    }
+
+    .club_icon{
+        @apply w-[50px] h-[50px] bg-main_mid rounded-xl text-center text-white font-[600] pt-[12px]
+    }
+
+    .club_text{
+        @apply text-center text-h8 font-[300]
+    }
+}
