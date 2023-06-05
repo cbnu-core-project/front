@@ -13,14 +13,6 @@
 }
 
 @layer components {
-    .home_tab_btn_focused {
-        @apply w-[120px] h-[40px] rounded-3xl bg-main_mid text-center pt-[8px] text-white
-    }
-
-    .home_tab_btn {
-        @apply w-[120px] h-[40px] rounded-3xl bg-main_light text-center pt-[8px] hover:bg-main_mid hover:text-white
-    }
-
     .semi_title{
         @apply text-main text-[28px] font-[300] leading-[38px] tracking-[-.015em]
     }
