@@ -9,6 +9,7 @@ module.exports = {
       main_mid: "#6360FF",
       main_light: "#ECEDFB",
       background: "#F1F2FC",
+      sub: "#29CCC7",
 
       // Particular colors
       red_error: "#FF5449",

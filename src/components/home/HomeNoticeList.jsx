@@ -51,7 +51,7 @@ export default function HomeNoticeList() {
               navigate("/notice");
             }}
           >
-            전체보기 >
+            전체보기 
           </button>
         </div>
       </div>

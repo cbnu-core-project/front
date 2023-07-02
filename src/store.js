@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 
+//데이터 저장
 export const clubsState = atom({
   key: "clubsState",
   default: [],
@@ -23,5 +24,10 @@ export const homeClubTabState = atom({
 
 export const homePromotionTabState = atom({
   key: "homePromotionTabState",
+  default: 0,
+});
+
+export const PromotionTabState = atom({
+  key: "PromotionTabState",
   default: 0,
 });

@@ -5,6 +5,7 @@ import { readSomePromotions } from "../../api/promotion";
 import { useEffect } from "react";
 import { baseUrl } from "../../common/global";
 
+
 export default function HomePromotionList() {
   const navigation = useNavigate();
   const [promotions, setPromotions] = useRecoilState(promotionsState);
@@ -40,7 +41,7 @@ export default function HomePromotionList() {
             return (
               <div
                 className={
-                  "w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px] transition hover:scale-110 bg-gradient-to-b from-white to-black"
+                  "w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px] rounded-xl transition hover:scale-110 bg-gradient-to-b from-white to-black z-10"
                 }
               >
                 <img
@@ -62,7 +63,7 @@ export default function HomePromotionList() {
               navigation("/promotion");
             }}
           >
-            전체보기 >
+            전체보기
           </button>
         </div>
       </div>

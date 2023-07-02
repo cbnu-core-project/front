@@ -6,6 +6,7 @@ import { readAllClubs, readSomeClubs } from "../../api/club";
 import { usePagination } from "@mantine/hooks";
 import { baseUrl } from "../../common/global";
 
+
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
@@ -49,7 +50,7 @@ export default function HomeClubList() {
               return (
                 <div
                   className={
-                    "w-[200px] h-[240px] 2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110"
+                    "w-[200px] h-[240px] 2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
                   }
                   onClick={() => {
                     navigate("/clubdetail/" + post._id);
@@ -72,7 +73,7 @@ export default function HomeClubList() {
               navigate("/club");
             }}
           >
-            전체보기 >
+            전체보기 
           </button>
         </div>
       </div>
@@ -125,14 +126,14 @@ const HomeClubTab = (props) => {
             >
               {"<"}
             </button>
-            <p
+            <button
               className={"mx-2"}
               onClick={() => {
                 props.pagination.next();
               }}
             >
               {props.page} / {props.pagination.range.at(-1)}
-            </p>
+            </button>
             <button
               className={
                 "border w-[28px] h-[28px] text-center border-midgray rounded"
@@ -161,14 +162,14 @@ const Image = (props) => {
 
 const Content = (props) => {
   return (
-    <div className={"p-2"}>
-      <div className={"2xl:flex"}>
-        <div className={"text-lg 2xl:text-xl font-bold"}>
+    <div className={"p-3"}>
+      <div className={"gap-2 flex"}>
+        <div className={"text-h5 2xl:text-xl font-bold"}>
           {props.post.title}
         </div>
         <div
           className={
-            "text-md w-[115px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-darkgray text-darkgray rounded-xl px-3"
+            "text-h8 w-[85px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-gray text-darkgray rounded-xl px-3"
           }
         >
           {props.post.classification === 1 ? "중앙 동아리" : "직무 동아리"}
@@ -179,10 +180,15 @@ const Content = (props) => {
           ? props.post.content.slice(0, 35) + "..."
           : props.post.content}
       </div>
-      <div className={"block 2xl:hidden text-sm"}>
+      <div className={"block 2xl:hidden text-h7 mt-[3px]"}>
         {props.post.content.length > 12
           ? props.post.content.slice(0, 12) + "..."
           : props.post.content}
+      </div>
+      <div className={"gap-1 flex mt-[20px]"}>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag1} </div>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag2} </div>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag3} </div>
       </div>
     </div>
   );
