@@ -221,9 +221,9 @@ const Content = (props) => {
           : props.post.content}
       </div>
       <div className={"gap-1 flex mt-[20px]"}>
-        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.title} </div>
-        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.title} </div>
-        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.title} </div>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag1} </div>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag2} </div>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag3} </div>
       </div>
     </div>
   );
