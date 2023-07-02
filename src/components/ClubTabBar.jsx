@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ClubTabBar() {
   let [clubtab, setClubTab] = useState(0);
   let navigate = useNavigate();
+
+  // 처음 실행 될 때 동아리소개 페이지로 이동
+  useEffect(()=>{
+    navigate('./clubintroduce')
+  }, []);
 
   return (
     <>

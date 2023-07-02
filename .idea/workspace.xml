@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="7a1cd0d5-9e72-4092-b5da-4cc6c883066e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/.eslintcache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/0.pack" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/0.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/1.pack" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/1.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/index.pack" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/index.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/index.pack.old" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/index.pack.old" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ClubTabBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ClubTabBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/HomeClubList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/HomeClubList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/HomePromotionList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/HomePromotionList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Club.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Club.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ClubSearch.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ClubSearch.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +24,31 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1688286094" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="cho_branch" />
+                    <option name="lastUsedInstant" value="1688286093" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -51,7 +85,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="d5d072b0-d5d0-4f93-b6b1-94414fdc207d" name="Changes" comment="" />
+      <changelist id="7a1cd0d5-9e72-4092-b5da-4cc6c883066e" name="Changes" comment="" />
       <created>1684206506599</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -66,10 +100,22 @@
       <workItem from="1685525527850" duration="1370000" />
       <workItem from="1687757855081" duration="6534000" />
       <workItem from="1687950467721" duration="5250000" />
+      <workItem from="1688286257684" duration="846000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

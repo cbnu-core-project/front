@@ -45,7 +45,7 @@ export default function HomePromotionList() {
                 }
               >
                 <img
-                  className={"w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px]"}
+                  className={"w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px]  overflow-y-scroll"}
                   src={`${baseUrl}/${promotion.image_url}`}
                   alt={"marketing"}
                 />
