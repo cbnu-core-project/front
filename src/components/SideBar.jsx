@@ -13,7 +13,7 @@ export default function SideBar() {
       <div className="flex mt-[40px]">
         <div className="side_title">나의 동아리</div>
         <button
-          class="ml-[215px] material-symbols-outlined"
+          class="ml-auto material-symbols-outlined"
           onClick={() => {
             setMyclub(!myclub);
           }}
@@ -29,7 +29,7 @@ export default function SideBar() {
       <div className="flex mt-[25px]">
         <div className="side_title">이번주 일정</div>
         <button
-          class="ml-[215px] material-symbols-outlined"
+          class="ml-auto material-symbols-outlined"
           onClick={() => {
             setSchedule(!schedule);
           }}
@@ -41,7 +41,7 @@ export default function SideBar() {
       <div className="flex mt-[20px]">
         <div className="side_title">동아리 신청 내역</div>
         <button
-          className="ml-[175px] material-symbols-outlined"
+          className="ml-auto material-symbols-outlined"
           onClick={() => {
             setRegister(!register);
           }}
@@ -53,7 +53,7 @@ export default function SideBar() {
       <div className="flex mt-[20px]">
         <div className="side_title">관심 동아리</div>
         <button
-          class="ml-[215px] material-symbols-outlined"
+          class="ml-auto material-symbols-outlined"
           onClick={() => {
             setInteresting(!interesting);
           }}
@@ -66,7 +66,7 @@ export default function SideBar() {
       <div className="flex mt-[20px]">
         <div className="side_title">내가 작성한 글</div>
         <button
-          class="ml-[195px] material-symbols-outlined"
+          class="ml-auto material-symbols-outlined"
           onClick={() => {
             setMyText(!mytext);
           }}
@@ -120,7 +120,7 @@ function MyClub() {
 
 function Register() {
   return (
-    <div className="w-[355px] h-[55px] bg-white flex rounded-2xl mt-[10px]">
+    <div className="w-full h-[55px] bg-white flex rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[10px]">
         <div className="text-black text-h7 font-[300]">[코어] 직무 동아리</div>
         <div className="text-gray text-h7 font-[300]">
@@ -141,7 +141,7 @@ function WeekSchedule() {
         <div className="text-[10px] font-[200] text-white">Sun</div>
         <div className="text-h6 font-[600]  text-white">15</div>
       </div>
-      <div className="flex flex-col w-[300px] h-[80px] bg-white pl-[10px] pt-[10px]">
+      <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
         <div className="text-black text-h7 font-[300]">코어 동아리 회의</div>
         <div className="text-gray text-h7 font-[300]">18:00~22:00</div>
         <div className="text-gray text-h7 font-[300]">NH관 202호</div>
@@ -167,7 +167,7 @@ function Interesting() {
 
 function MyText() {
   return (
-    <div className="w-[355px] h-[55px] bg-white rounded-2xl mt-[10px]">
+    <div className="w-full h-[55px] bg-white rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[13px]">
         <div className="flex mt-[10px]">
           <div className="w-[2px] h-[13px] bg-main_mid mt-[3px] rounded-sm"></div>
@@ -183,63 +183,5 @@ function MyText() {
         </div>
       </div>
     </div>
-  );
-}
-
-function SideBar2() {
-  return (
-    <>
-      <aside
-        className={
-          "w-side bg-background h-screen overflow-y-scroll fixed right-0 top-0"
-        }
-      >
-        <div>사이드바</div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <div>스크롤</div>
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </aside>
-    </>
   );
 }

@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState([]); // [year, month, day] 리스트로 만듬
+
+  // 날짜를 선택 할 때 마다 실행 되는 훅
+  useEffect(() => {
+    console.log(selectedDate)
+  }, [selectedDate]);
+
 
   // 달력을 구성하는 날짜 배열 생성
   const getCalendarDays = () => {
     const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
+    const month = currentDate.getMonth(); // month ( 0 ~ 11 범위인 것 주의!! )
+    const firstDay = new Date(year, month, 1).getDay(); // 요일도 0 ~ 6 범위 주의
     const lastDay = new Date(year, month + 1, 0).getDate();
+
 
     // console.log(year, month, firstDay, lastDay);
     // console.log(currentDate)
@@ -60,19 +67,21 @@ const Calendar = () => {
           </div>
         ))}
         {getCalendarDays().map((day, index) => (
-          <div
-            key={index}
-            className={`text-center text-black font-bold ${
-              day ? 'cursor-pointer hover:bg-main_mid' : ''
-            } rounded p-2`}
-            onClick={() => setSelectedDate(day)}
-          >
-            {day}
-          </div>
+          day ? <div
+              key={index}
+              className={`text-center text-black font-bold ${
+                day ? 'cursor-pointer rounded-xl hover:border hover:border-main_mid hover:border-2' : ''
+              } rounded p-2 ${currentDate.getFullYear() ==  selectedDate[0] && currentDate.getMonth() == selectedDate[1] && day == selectedDate[2] ? 'border border-main_mid border-2' : ''}`}
+              onClick={() => setSelectedDate([currentDate.getFullYear(), currentDate.getMonth(), day])}
+            >
+              {day}
+            </div>
+          :
+          <div></div>
         ))}
-      </div>
+    </div>
       <div className="mt-4">
-        Selected Date: {selectedDate ? selectedDate : 'None'}
+        Selected Date: {selectedDate[2] ? `${selectedDate[0]}-${selectedDate[1] + 1}-${selectedDate[2]}` : 'None'}
       </div>
     </div>
   );
