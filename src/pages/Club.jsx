@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { readAllClubs, readSomeClubs } from "../api/club";
+import { baseUrl } from "../common/global";
 
 axios.defaults.baseURL = "http://cbnucore.site";
 
@@ -35,7 +36,7 @@ export default function Club() {
   return (
     <div className={"w-full min-w-home2"}>
       <div className={""} />
-      <div className={" w-full bg-main_mid text-white px-[64px] py-[56px]"}>
+      <div className={"w-full bg-main_mid text-white px-[64px] py-[56px]"}>
         <p className={"text-h1 font-light"}>
           충북대학교 <span className={"font-bold"}>동아리</span>
         </p>
@@ -145,7 +146,7 @@ const ClubTab = () => {
 const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[200px]"}>
-      <img src={props.post.image_url} alt="img" className={"rounded-t-lg"} />
+      <img src={`${baseUrl}/${props.post.image_url}`} alt="img" className={"rounded-t-lg"} />
     </div>
   );
 };

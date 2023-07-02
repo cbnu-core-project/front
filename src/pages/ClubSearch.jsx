@@ -3,6 +3,7 @@ import { homeClubTabState, clubsState } from "../store";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { readAllClubs, searchAllClubs } from "../api/club";
+import { baseUrl } from "../common/global";
 
 export default function ClubSearch() {
   const [posts, setPosts] = useRecoilState(clubsState);
@@ -145,7 +146,7 @@ const ClubTab = () => {
 const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[200px]"}>
-      <img src={props.post.image_url} alt="img" className={"rounded-t-lg"} />
+      <img src={`${baseUrl}/${props.post.image_url}`} alt="img" className={"rounded-t-lg"} />
     </div>
   );
 };

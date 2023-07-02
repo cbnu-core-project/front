@@ -1,6 +1,6 @@
 import { Routes, Route, NavLink } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import { Home, Club, Notice, Promotion, ClubDetail, ClubSearch } from "./pages";
+import { Home, Club, ClubDetail, ClubSearch } from "./pages";
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
@@ -34,9 +34,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/club" element={<Club />} />
-          <Route path="/notice" element={<Notice />} />
-          <Route path="/promotion" element={<Promotion />} />
-          <Route path="/clubdetail/:id" element={<ClubDetail />}></Route>
+          <Route path="/notice" element={<div />} />
+          <Route path="/promotion" element={<div />} />
+          <Route path="/clubdetail/:id" element={< ClubDetail/>}></Route>
           <Route path="/club/search/" element={<ClubSearch />} />
           <Route path="/login" element={<Login />} />
         </Routes>
