@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { readAllClubs, readSomeClubs } from "../api/club";
+import { baseUrl } from "../common/global";
 
 axios.defaults.baseURL = "http://cbnucore.site";
 
@@ -145,7 +146,7 @@ const ClubTab = () => {
 const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[200px]"}>
-      <img src={props.post.image_url} alt="img" className={"rounded-t-lg"} />
+      <img src={`${baseUrl}/${props.post.image_url}`} alt="img" className={"rounded-t-lg"} />
     </div>
   );
 };

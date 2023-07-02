@@ -4,6 +4,7 @@ import { homeClubTabState, clubsState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { readAllClubs, readSomeClubs } from "../../api/club";
 import { usePagination } from "@mantine/hooks";
+import { baseUrl } from "../../common/global";
 
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(clubsState);
@@ -153,7 +154,7 @@ const HomeClubTab = (props) => {
 const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[200px]"}>
-      <img src={props.post.image_url} alt="img" className={"rounded-t-lg"} />
+      <img src={`${baseUrl}/${props.post.image_url}`} alt="img" className={"rounded-t-lg"} />
     </div>
   );
 };

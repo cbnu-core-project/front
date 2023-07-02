@@ -3,6 +3,7 @@ import { homePromotionTabState, promotionsState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { readSomePromotions } from "../../api/promotion";
 import { useEffect } from "react";
+import { baseUrl } from "../../common/global";
 
 export default function HomePromotionList() {
   const navigation = useNavigate();
@@ -44,7 +45,7 @@ export default function HomePromotionList() {
               >
                 <img
                   className={"w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px]"}
-                  src={promotion.image_url}
+                  src={`${baseUrl}/${promotion.image_url}`}
                   alt={"marketing"}
                 />
               </div>
