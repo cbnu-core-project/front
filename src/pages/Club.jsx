@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { readAllClubs, readSomeClubs } from "../api/club";
+import { baseUrl } from "../common/global";
+import { usePagination } from "@mantine/hooks";
 
-axios.defaults.baseURL = "http://cbnucore.site";
+axios.defaults.baseURL = baseUrl;
 
 export default function Club() {
   const [posts, setPosts] = useRecoilState(clubsState);
@@ -21,6 +23,14 @@ export default function Club() {
       setCount([i, j]);
     });
   };
+
+  const [page, onChange] = useState(1);
+
+  const pagination = usePagination({
+    total: Math.ceil((count[0] + count[1]) / 16),
+    page,
+    onChange,
+  });
 
   const getPosts = () => {
     readSomeClubs(0, 16, homeTab).then((res) => setPosts(res.data));
@@ -55,7 +65,7 @@ export default function Club() {
       </div>
       <div className={"px-[63px]"}>
         <div className={"flex"}>
-          <ClubTab />
+          <PromotionTab />
         </div>
 
         <article className={""}>
@@ -64,7 +74,7 @@ export default function Club() {
               return (
                 <div
                   className={
-                    "w-[200px] h-[240px] 2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110"
+                    "w-[200px] h-[240px] 2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
                   }
                   onClick={() => {
                     navigate("/clubdetail/" + post._id);
@@ -78,11 +88,42 @@ export default function Club() {
           </div>
         </article>
       </div>
+      <div className={"w-full p-16 flex"}>
+        <div className={"flex-auto"}>
+          <button
+            className={
+              "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded"
+            }
+            onClick={() => {
+              pagination.previous();
+            }}
+          >
+            {"< 이전"}
+          </button>
+        </div>
+
+        <div className={"flex-auto"}>
+          <button className={"font-bold "}>{page}</button>
+        </div>
+
+        <div className={"flex-row-reverse"}>
+          <button
+            className={
+              "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded "
+            }
+            onClick={() => {
+              pagination.next();
+            }}
+          >
+            {"다음 >"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-const ClubTab = () => {
+const PromotionTab = () => {
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
 
@@ -145,21 +186,25 @@ const ClubTab = () => {
 const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[200px]"}>
-      <img src={props.post.image_url} alt="img" className={"rounded-t-lg"} />
+      <img
+        src={`${baseUrl}/${props.post.image_url}`}
+        alt="img"
+        className={"rounded-t-lg"}
+      />
     </div>
   );
 };
 
 const Content = (props) => {
   return (
-    <div className={"p-2"}>
-      <div className={"2xl:flex"}>
-        <div className={"text-lg 2xl:text-xl font-bold"}>
+    <div className={"p-3"}>
+      <div className={"gap-2 flex "}>
+        <div className={"text-h5 2xl:text-xl font-bold grid content-center"}>
           {props.post.title}
         </div>
         <div
           className={
-            "text-md w-[115px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-darkgray text-darkgray rounded-xl px-3"
+            "text-h8 w-[85px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-gray text-darkgray rounded-xl px-3"
           }
         >
           {props.post.classification === 0 ? "중앙 동아리" : "직무 동아리"}
@@ -170,10 +215,15 @@ const Content = (props) => {
           ? props.post.content.slice(0, 35) + "..."
           : props.post.content}
       </div>
-      <div className={"block 2xl:hidden text-sm"}>
-        {props.post.content.length > 12
-          ? props.post.content.slice(0, 12) + "..."
+      <div className={"block 2xl:hidden text-h7 mt-[3px]"}>
+        {props.post.content.length > 17
+          ? props.post.content.slice(0, 17) + "..."
           : props.post.content}
+      </div>
+      <div className={"gap-1 flex mt-[20px]"}>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.title} </div>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.title} </div>
+        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.title} </div>
       </div>
     </div>
   );

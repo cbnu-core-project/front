@@ -26,7 +26,7 @@ export default function Navigation() {
     <>
       <div
         className={
-          "w-full h-[80px] bg-white bg-opacity-90 top-0 fixed shadow-lg"
+          "w-full h-[80px] bg-white bg-opacity-90 top-0 fixed shadow-lg z-50 "
         }
         // style={containerStyle}
       >

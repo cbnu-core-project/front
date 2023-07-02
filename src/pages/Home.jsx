@@ -3,6 +3,7 @@ import HomePromotionList from "../components/home/HomePromotionList";
 import HomeNoticeList from "../components/home/HomeNoticeList";
 import { useEffect } from "react";
 
+
 export default function Home() {
   useEffect(() => {
     document.title = `모든 동아리가 모이는 공간 | Core`;
