@@ -14,7 +14,7 @@ export default function ClubDetail() {
 
   return (
     <>
-      <div className={"p-10 ml-[10px]"}>
+      <div className={"p-14 ml-[8px]"}>
         <ClubTabBar />
       </div>
 
