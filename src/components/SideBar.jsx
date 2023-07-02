@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Calendar from "./Calendar";
 
 export default function SideBar() {
   let [myclub, setMyclub] = useState(true);
@@ -8,7 +9,7 @@ export default function SideBar() {
   let [mytext, setMyText] = useState(true);
 
   return (
-    <div className="bg-background pl-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0">
+    <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0">
       <div className="flex mt-[40px]">
         <div className="side_title">나의 동아리</div>
         <button
@@ -22,6 +23,9 @@ export default function SideBar() {
       </div>
       {myclub == true ? <MyClub /> : null}
       <div className="side_title mt-[20px]">월간 일정</div>
+      <div className={''}>
+        <Calendar/>
+      </div>
       <div className="flex mt-[25px]">
         <div className="side_title">이번주 일정</div>
         <button
@@ -71,6 +75,7 @@ export default function SideBar() {
         </button>
       </div>
       {mytext == true ? <MyText /> : null}
+      <div className={'mt-[32px]'}/>
     </div>
   );
 }

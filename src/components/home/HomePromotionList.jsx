@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { readSomePromotions } from "../../api/promotion";
 import { useEffect } from "react";
 import { baseUrl } from "../../common/global";
-import axios from "axios";
 
-axios.defaults.baseURL = baseUrl;
 
 export default function HomePromotionList() {
   const navigation = useNavigate();

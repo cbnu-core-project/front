@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { readAllClubs, readSomeClubs } from "../../api/club";
 import { usePagination } from "@mantine/hooks";
 import { baseUrl } from "../../common/global";
-import axios from "axios";
 
-axios.defaults.baseURL = baseUrl;
 
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(clubsState);
