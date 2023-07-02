@@ -12,6 +12,12 @@ export default function HomeClubList() {
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const [count, setCount] = useState([0, 0]);
   const navigate = useNavigate();
+  const [page, onChange] = useState(1);
+  const pagination = usePagination({
+    total: Math.ceil((count[0] + count[1]) / 8),
+    page,
+    onChange,
+  });
 
   const getPosts = () => {
     readSomeClubs((page - 1) * 8, 8, homeTab).then((res) => {
@@ -28,17 +34,15 @@ export default function HomeClubList() {
     });
   };
 
-  const [page, onChange] = useState(1);
-  const pagination = usePagination({
-    total: Math.ceil((count[0] + count[1]) / 8),
-    page,
-    onChange,
-  });
-
   useEffect(() => {
     getPosts();
     countPosts();
   }, [homeTab, page]);
+
+  useEffect(() => {
+    // homeTab 변경 시 page 원래대로 1로 되돌리기
+    onChange(1)
+  }, [homeTab])
 
   return (
     <>

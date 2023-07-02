@@ -13,6 +13,7 @@ function decodeToken(token) {
   return decodedData;
 }
 
+// 토큰 만료기간 확인 후, 만료 처리
 function App() {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -48,7 +49,7 @@ function App() {
           <Route path="/login" element={<Login />} />
         </Routes>
       </div>
-      <SideBar />
+       <SideBar />
     </>
   );
 }

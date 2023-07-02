@@ -4,32 +4,55 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { readAllClubs, searchAllClubs } from "../api/club";
 import { baseUrl } from "../common/global";
+import { Pagination } from "@mantine/core";
+import { usePagination } from "@mantine/hooks";
 
 export default function ClubSearch() {
   const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
   const navigate = useNavigate();
-  const [count, setCount] = useState([]);
+  const [count, setCount] = useState([0, 0]);
+  const [countAll, setCountAll] = useState([0, 0]);
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("query");
+  const [page, onChange] = useState(1);
+  const pagination = usePagination({
+    total: Math.ceil((count[0] + count[1]) / 16),
+    page,
+    onChange,
+  });
 
-  const countPosts = () => {
+  const countClassificationSearchPosts = () => {
     let i = 0;
     let j = 0;
-    readAllClubs().then((res) => {
+    searchAllClubs(query ,homeTab).then((res) => {
       res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
       setCount([i, j]);
     });
   };
 
+  const countAllPosts = () => {
+    let i = 0;
+    let j = 0;
+    readAllClubs(0).then((res) => {
+      res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
+      setCountAll([i, j]);
+    });
+  };
+
+
   const getPosts = () => {
     searchAllClubs(query, homeTab).then((res) => setPosts(res.data));
   };
 
+  useEffect(()=>{
+    countAllPosts();
+  }, [])
+
   useEffect(() => {
     console.log("작동");
     getPosts();
-    countPosts();
+    countClassificationSearchPosts();
   }, [homeTab]);
 
   return (
@@ -49,8 +72,8 @@ export default function ClubSearch() {
         </p>
         <div className={"mt-[32px]"} />
         <ul className={"list-disc list-inside"}>
-          <li>중앙 동아리 {count[0]}개</li>
-          <li>직무 동아리 {count[1]}개</li>
+          <li>중앙 동아리 {countAll[0]}개</li>
+          <li>직무 동아리 {countAll[1]}개</li>
         </ul>
       </div>
       <div className={"px-[63px]"}>
@@ -77,6 +100,11 @@ export default function ClubSearch() {
             })}
           </div>
         </article>
+      </div>
+      <div className={"w-full p-16 flex justify-center"}>
+        <div className={""}>
+          <Pagination total={Math.ceil((count[0] + count[1]) / 16)} boundaries={1} onChange={onChange}/>
+        </div>
       </div>
     </div>
   );

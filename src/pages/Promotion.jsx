@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { readAllPromotions, readSomePromotions } from "../api/promotion";
 import { usePagination } from "@mantine/hooks";
 import { baseUrl } from "../common/global";
+import { Pagination } from "@mantine/core";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -14,13 +15,23 @@ export default function Promotion() {
   const [homeTab, setHomeTab] = useRecoilState(homePromotionTabState);
   const navigate = useNavigate();
   const [count, setCount] = useState([0, 0]);
+  const [countAll, setCountAll] = useState([0, 0]);
 
-  const countPosts = () => {
+  const countClassificationPosts = () => {
+    let i = 0;
+    let j = 0;
+    readAllPromotions(homeTab).then((res) => {
+      res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
+      setCount([i, j]);
+    });
+  };
+
+  const countAllPosts = () => {
     let i = 0;
     let j = 0;
     readAllPromotions(0).then((res) => {
       res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
-      setCount([i, j]);
+      setCountAll([i, j]);
     });
   };
 
@@ -37,11 +48,13 @@ export default function Promotion() {
       setPromotions(res.data)
     );
   };
+  useEffect(()=>{
+    countAllPosts();
+  }, [])
 
   useEffect(() => {
     getPosts();
-    countPosts();
-    document.title = `${promotions.length}개의 동아리가 함께 하고 있습니다 | Core`;
+    countClassificationPosts();
   }, [homeTab, page]);
 
   return (
@@ -58,8 +71,8 @@ export default function Promotion() {
         <div className={"mt-[32px]"} />
         <ul className={"list-disc list-inside"}>
           <li>
-            중앙 동아리 <span className={"font-bold"}>{count[0]}개</span> | 직무
-            동아리 <span className={"font-bold"}>{count[1]}개</span> 홍보중
+            중앙 동아리 <span className={"font-bold"}>{countAll[0]}개</span> | 직무
+            동아리 <span className={"font-bold"}>{countAll[1]}개</span> 홍보중
           </li>
         </ul>
       </div>
@@ -100,35 +113,9 @@ export default function Promotion() {
           </div>
         </article>
       </div>
-      <div className={"w-full p-16 flex"}>
-        <div className={"flex-auto"}>
-          <button
-            className={
-              "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded"
-            }
-            onClick={() => {
-              pagination.previous();
-            }}
-          >
-            {"< 이전"}
-          </button>
-        </div>
-
-        <div className={"flex-auto"}>
-          <button className={"font-bold "}>{page}</button>
-        </div>
-
-        <div className={"flex-row-reverse"}>
-          <button
-            className={
-              "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded "
-            }
-            onClick={() => {
-              pagination.next();
-            }}
-          >
-            {"다음 >"}
-          </button>
+      <div className={"w-full p-16 flex justify-center"}>
+        <div className={""}>
+          <Pagination total={Math.ceil((count[0] + count[1]) / 16)} boundaries={1} onChange={onChange}/>
         </div>
       </div>
     </div>

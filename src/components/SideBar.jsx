@@ -9,7 +9,8 @@ export default function SideBar() {
   let [mytext, setMyText] = useState(true);
 
   return (
-    <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-50">
+
+    <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
       <div className="flex mt-[40px]">
         <div className="side_title">나의 동아리</div>
         <button

@@ -1,41 +1,54 @@
 import { useRecoilState } from "recoil";
 import { homePromotionTabState, promotionsState } from "../../store";
 import { useNavigate } from "react-router-dom";
-import { readSomePromotions } from "../../api/promotion";
-import { useEffect } from "react";
+import { readAllPromotions, readSomePromotions } from "../../api/promotion";
+import { useEffect, useState } from "react";
 import { baseUrl } from "../../common/global";
+import { usePagination } from "@mantine/hooks";
+import { readAllClubs, readSomeClubs } from "../../api/club";
 
 
 export default function HomePromotionList() {
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const [promotions, setPromotions] = useRecoilState(promotionsState);
   const [homeTab, setHomeTab] = useRecoilState(homePromotionTabState);
-
-  // const temp_list = [
-  //   "/images/코어홍보.png",
-  //   "/images/한별홍보.png",
-  //   "/images/꼴로르홍보1.png",
-  //   "/images/꼴로르홍보2.png",
-  // ];
-
-  // const getPosts = () => {
-  //   readSomePromotions((page - 1) * 8, 8, homeTab).then((res) => {
-  //     setPosts(res.data);
-  //   });
-  // };
+  const [count, setCount] = useState([0, 0]);
+  const [page, onChange] = useState(1);
+  const pagination = usePagination({
+    total: Math.ceil((count[0] + count[1]) / 4),
+    page,
+    onChange,
+  });
 
   const getPosts = () => {
-    readSomePromotions(0, 4, homeTab).then((res) => {
+    readSomePromotions((page - 1) * 4, 4, homeTab).then((res) => {
       setPromotions(res.data);
     });
   };
 
-  useEffect(() => getPosts(), []);
+  const countPosts = () => {
+    let i = 0;
+    let j = 0;
+    readAllPromotions(homeTab).then((res) => {
+      res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
+      setCount([i, j]);
+    });
+  };
+
+  useEffect(() => {
+    getPosts();
+    countPosts();
+  }, [homeTab, page]);
+
+  useEffect(() => {
+    // homeTab 변경 시 page 원래대로 1로 되돌리기
+    onChange(1)
+  }, [homeTab])
 
   return (
     <>
       <div className={"px-8 2xl:px-16"}>
-        <HomePromotionTab />
+        <HomePromotionTab pagination={pagination} page={page} />
         <div className={"grid grid-cols-4"}>
           {promotions.map((promotion) => {
             return (
@@ -60,7 +73,7 @@ export default function HomePromotionList() {
               "w-[200px] h-[46px] text-h6 text-black rounded-3xl border border-gray"
             }
             onClick={() => {
-              navigation("/promotion");
+              navigate("/promotion");
             }}
           >
             전체보기
@@ -71,7 +84,7 @@ export default function HomePromotionList() {
   );
 }
 
-const HomePromotionTab = () => {
+const HomePromotionTab = (props) => {
   const [homeTab, setHomeTab] = useRecoilState(homePromotionTabState);
 
   const onClickHandler = (tabValue) => {
@@ -104,6 +117,36 @@ const HomePromotionTab = () => {
           >
             직무 동아리
           </button>
+          <div className={"flex text-h6 ml-auto mt-[6px]"}>
+            <button
+              className={
+                "border w-[28px] h-[28px] text-center border-midgray rounded"
+              }
+              onClick={() => {
+                props.pagination.previous();
+              }}
+            >
+              {"<"}
+            </button>
+            <button
+              className={"mx-2"}
+              onClick={() => {
+                props.pagination.next();
+              }}
+            >
+              {props.page} / {props.pagination.range.at(-1)}
+            </button>
+            <button
+              className={
+                "border w-[28px] h-[28px] text-center border-midgray rounded"
+              }
+              onClick={() => {
+                props.pagination.next();
+              }}
+            >
+              {">"}
+            </button>
+          </div>
         </div>
         <div className={"mt-[32px]"} />
       </div>
