@@ -15,7 +15,7 @@ export default function ClubIntroduce() {
           {/*동아리 활동*/}
           <div
             className={
-              "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl"
+              "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl -z-10"
             }
           ></div>
           <div
@@ -51,7 +51,18 @@ export default function ClubIntroduce() {
             <div className={"grid place-content-center"}>
               <div className={"border-t mt-2 border-gray2 w-[573px] h-[120px]"}>
                 <div className={"mt-[24px]"} />
-                <p className={"font-bold text-h4"}>우리는 이런 활동을 해요!</p>
+                <div className={"flex gap-4"}>
+                  <p className={"font-bold text-h2"}>
+                    우리는 이런 활동을 해요!
+                  </p>
+                  <p
+                    className={
+                      "text-midgray list-disc list-outside text-h4 mt-[5px]"
+                    }
+                  >
+                    가입 인원 <span className={"font-bold"}>15</span>명
+                  </p>
+                </div>
                 <div
                   className={
                     "flex grid grid-cols-4 gap-[10px] text-center mt-[16px]"
@@ -93,11 +104,91 @@ export default function ClubIntroduce() {
           {/*동아리 프로그램*/}
           <div
             className={
-              "2xl:w-[358px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center"
+              "overflow-hidden 2xl:w-[358px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center bg-gradient-to-t from-white"
             }
           >
             <p className={"font-bold text-h2 py-6"}>동아리 프로그램</p>
-            <div className={"border-t border-gray2 w-[294px] h-[430px]"}></div>
+            <div
+              className={
+                "w-[294px] h-[430px] border-t border-gray2 overflow-y-scroll"
+              }
+            >
+              {/*나중에 반복문으로 빼자*/}
+              <div className={"my-6"}>
+                <div className={"h-[50px] my-6 flex gap-2"}>
+                  <img
+                    src={"/images/소프트웨어야놀자.png"}
+                    className={"w-[100px] h-[50px] rounded-xl"}
+                  ></img>
+                  <div>
+                    <p className={"text-h4 text-black"}>
+                      소프트웨어야 놀자 멘토단
+                    </p>
+                    <p className={"text-h7 text-darkgray"}>간단한 소개 작성</p>
+                  </div>
+                </div>
+                <div className={"h-[50px] my-6 flex gap-2"}>
+                  <img
+                    src={"/images/소프트웨어야놀자.png"}
+                    className={"w-[100px] h-[50px] rounded-xl"}
+                  ></img>
+                  <div>
+                    <p className={"text-h4 text-black"}>
+                      소프트웨어야 놀자 멘토단
+                    </p>
+                    <p className={"text-h7 text-darkgray "}>간단한 소개 작성</p>
+                  </div>
+                </div>
+                <div className={"h-[50px] my-6 flex gap-2"}>
+                  <img
+                    src={"/images/소프트웨어야놀자.png"}
+                    className={"w-[100px] h-[50px] rounded-xl"}
+                  ></img>
+                  <div>
+                    <p className={"text-h4 text-black"}>
+                      소프트웨어야 놀자 멘토단
+                    </p>
+                    <p className={"text-h7 text-darkgray"}>간단한 소개 작성</p>
+                  </div>
+                </div>
+                <div className={"h-[50px] my-6 flex gap-2"}>
+                  <img
+                    src={"/images/소프트웨어야놀자.png"}
+                    className={"w-[100px] h-[50px] rounded-xl"}
+                  ></img>
+                  <div>
+                    <p className={"text-h4 text-black"}>
+                      소프트웨어야 놀자 멘토단
+                    </p>
+                    <p className={"text-h7 text-darkgray"}>간단한 소개 작성</p>
+                  </div>
+                </div>
+                <div className={"h-[50px] my-6 flex gap-2"}>
+                  <img
+                    src={"/images/소프트웨어야놀자.png"}
+                    className={"w-[100px] h-[50px] rounded-xl"}
+                  ></img>
+                  <div>
+                    <p className={"text-h4 text-black"}>
+                      소프트웨어야 놀자 멘토단
+                    </p>
+                    <p className={"text-h7 text-darkgray"}>간단한 소개 작성</p>
+                  </div>
+                </div>
+                <div className={"h-[50px] my-6 flex gap-2"}>
+                  <img
+                    src={"/images/소프트웨어야놀자.png"}
+                    className={"w-[100px] h-[50px] rounded-xl"}
+                  ></img>
+                  <div>
+                    <p className={"text-h4 text-black"}>
+                      소프트웨어야 놀자 멘토단
+                    </p>
+                    <p className={"text-h7 text-darkgray"}>간단한 소개 작성</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           {/*주요 활동내역 프로그램*/}
           <div
@@ -106,7 +197,54 @@ export default function ClubIntroduce() {
             }
           >
             <p className={"font-bold text-h2 py-6"}>주요 활동내역</p>
-            <div className={"border-t border-gray2 w-[390px] h-[430px]"}></div>
+            <div
+              className={
+                "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll"
+              }
+            >
+              <div className={"mt-6 flex"}>
+                <div className={"w-[70px] h-auto text-[30px] font-light "}>
+                  2022
+                </div>
+                <div className={"w-[320px] h-auto"}>
+                  <p className={"list-disc list-inside ml-5 "}>
+                    {/*나중에 반복문으로 뺄거임*/}
+                    <li className={"text-h4 mt-[5px]"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                    <li className={"text-h4 mt-6"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                    <li className={"text-h4 mt-6"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                    <li className={"text-h4 mt-6"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                    <li className={"text-h4 mt-6"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                    <li className={"text-h4 mt-6"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                    <li className={"text-h4 mt-6"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                    <li className={"text-h4 mt-6"}>
+                      <span className={"text-h3 mr-6 text-gray"}>06</span>
+                      직무분석 경진대회 장려상 수상
+                    </li>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
           {/*홍보 게시판 프로그램*/}
           <div
@@ -115,24 +253,30 @@ export default function ClubIntroduce() {
             }
           >
             <p className={"font-bold text-h2 py-6 "}>홍보 게시판</p>
-            <div className={"border-t border-gray2 w-[390px] h-[430px] mx-auto"}>
+            <div
+              className={"border-t border-gray2 w-[390px] h-[430px]"}
+            >
               <div className={"h-[24px]"} />
-              <div className={"flex gap-6"}>
+              <div className={"flex gap-6 ml-[10px]"}>
                 <div
                   className={
                     "w-[171px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
                   }
                 >
-                  <div className={"h-[258px]"}></div>
-                  <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>디자인팀 신입부원 모집</div>
+                  <img src="/images/코어홍보.png" className={"h-[258px]"}></img>
+                  <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>
+                    디자인팀 신입부원 모집
+                  </div>
                 </div>
                 <div
                   className={
                     "w-[100px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
                   }
                 >
-                  <div className={"h-[258px]"}></div>
-                  <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>디자인팀 신입부원 모집</div>
+                  <img src="/images/코어홍보.png" className={"h-[258px]"}></img>
+                  <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>
+                    디자인팀 신입부원 모집
+                  </div>
                 </div>
               </div>
             </div>
