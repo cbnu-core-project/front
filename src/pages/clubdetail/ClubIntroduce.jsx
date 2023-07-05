@@ -1,13 +1,23 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState} from "react";
 import { readOneClub } from "../../api/club";
+import { baseUrl } from "../../common/global";
+
+
 
 export default function ClubIntroduce() {
   const { id } = useParams();
-  const [post, setPost] = useState({});
+  const [posts, setPost] = useState({});
+  const [count, setCount] = useState(0);
+
   function getPost() {
     readOneClub(id).then((res) => setPost(res.data[0]));
   }
+
+  useEffect(() => {
+    getPost();
+  }, []);
+
   return (
     <>
       <div className={"p-2 ml-[56px]"}>
@@ -15,39 +25,85 @@ export default function ClubIntroduce() {
           {/*동아리 활동*/}
           <div
             className={
-              "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl -z-10"
+              "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden overflow-x-scroll"
             }
-          ></div>
+          >
+            <div className={'flex transition -translate-x-['+ count +'00%]'}>
+              <img
+                src={`${baseUrl}/${posts.image_url}`}
+                alt={"1"}
+                className={"w-[637px] h-[432px]"}
+              ></img>
+              <img
+                src={`${baseUrl}/${posts.image_url}`}
+                alt={"2"}
+                className={"w-[637px] h-[432px]"}
+              ></img>
+              <img
+                src={`${baseUrl}/${posts.image_url}`}
+                alt={"3"}
+                className={"w-[637px] h-[432px]"}
+              ></img>
+            </div>
+            <div
+              className={"flex gap-2 absolute inset-x-[300px] bottom-[20px]"}
+            >
+              <button
+                className={count == 0? "w-[6px] h-[6px] rounded-xl z-10  bg-white" : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"}
+                onClick={() => {
+                  setCount(0);
+                }}
+                slide
+              ></button>
+              <button
+                className={count == 1? "w-[6px] h-[6px] rounded-xl z-10  bg-white" : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"}
+                onClick={() => {
+                  setCount(1);
+                }}
+              ></button>
+              <button
+                className={count == 2? "w-[6px] h-[6px] rounded-xl z-10  bg-white" : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"}
+                onClick={() => {
+                  setCount(2);
+                }}
+              ></button>
+            </div>
+            
+          </div>
+          
           <div
             className={
               "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] shadow-lg rounded-xl"
             }
           >
             <div className={"flex p-2 mt-[20px] ml-[24px] gap-3"}>
-              <p className={"text-h2 font-bold "}>코어</p>
+              <p className={"text-h2 font-bold "}>{posts.title}</p>
               <div className={"gap-2 flex mt-[9px]"}>
                 <div
                   className={
                     "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md"
                   }
                 >
-                  직무동아리
+                  {posts.tag1}
                 </div>
                 <div
                   className={
                     "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md"
                   }
                 >
-                  IT/개발
+                  {posts.tag2}
+                </div>
+                <div
+                  className={
+                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md"
+                  }
+                >
+                  {posts.tag3}
                 </div>
               </div>
             </div>
-            <p className={"text-h3 ml-8"}>세상의 중심에서 코딩을 외치다!</p>
-            <p className={"text-h6 px-8 py-4 text-darkgray"}>
-              코어는 IT/개발 직군 취창업을 목표로 하는 직무동아리 소속
-              동아리입니다. 전공과 무관하게 해당 직군으로 취업을 희망하시는 모든
-              학우분들 환영합니다!
-            </p>
+            <p className={"text-h3 ml-8"}>{posts.content}</p>
+            <p className={"text-h6 px-8 py-4 text-darkgray"}>{posts.content}</p>
             <div className={"grid place-content-center"}>
               <div className={"border-t mt-2 border-gray2 w-[573px] h-[120px]"}>
                 <div className={"mt-[24px]"} />
@@ -71,27 +127,27 @@ export default function ClubIntroduce() {
                   <div
                     className={"border border-sub text-sub rounded-lg h-[30px]"}
                   >
-                    코딩스터디
+                    {posts.tag1}
                   </div>
                   <div
                     className={"border border-sub text-sub rounded-lg h-[30px]"}
                   >
-                    직무분석
+                    {posts.tag2}
                   </div>
                   <div
                     className={"border border-sub text-sub rounded-lg h-[30px]"}
                   >
-                    IT직무
+                    {posts.tag3}
                   </div>
                   <div
                     className={"border border-sub text-sub rounded-lg h-[30px]"}
                   >
-                    현직자 멘토링
+                    {posts.tag1}
                   </div>
                   <div
                     className={"border border-sub text-sub rounded-lg h-[30px]"}
                   >
-                    웹/앱 개발
+                    {posts.tag2}
                   </div>
                 </div>
               </div>
@@ -253,9 +309,7 @@ export default function ClubIntroduce() {
             }
           >
             <p className={"font-bold text-h2 py-6 "}>홍보 게시판</p>
-            <div
-              className={"border-t border-gray2 w-[390px] h-[430px]"}
-            >
+            <div className={"border-t border-gray2 w-[390px] h-[430px]"}>
               <div className={"h-[24px]"} />
               <div className={"flex gap-6 ml-[10px]"}>
                 <div
@@ -263,7 +317,7 @@ export default function ClubIntroduce() {
                     "w-[171px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
                   }
                 >
-                  <img src="/images/코어홍보.png" className={"h-[258px]"}></img>
+                  <img src={`${baseUrl}/${posts.image_url}`} className={"h-[258px]"}></img>
                   <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>
                     디자인팀 신입부원 모집
                   </div>
@@ -273,7 +327,7 @@ export default function ClubIntroduce() {
                     "w-[100px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
                   }
                 >
-                  <img src="/images/코어홍보.png" className={"h-[258px]"}></img>
+                  <img src={`${baseUrl}/${posts.image_url}`} className={"h-[258px]"}></img>
                   <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>
                     디자인팀 신입부원 모집
                   </div>

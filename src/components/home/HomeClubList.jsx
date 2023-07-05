@@ -173,7 +173,7 @@ const Content = (props) => {
         </div>
         <div
           className={
-            "text-h8 w-[85px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-gray text-darkgray rounded-xl px-3"
+            "text-h8 w-[85px] 2xl:w-[80px] 2xl:h-[24px] 2xl:text-h7 text-center 2xl:ml-2 text-md border border-gray text-darkgray rounded-xl px-2 py-[0.5px]"
           }
         >
           {props.post.classification === 1 ? "중앙 동아리" : "직무 동아리"}

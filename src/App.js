@@ -1,6 +1,6 @@
 import { Routes, Route, NavLink } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import { Home, Club, Notice, Promotion, ClubDetail, ClubSearch, ClubManagement, ClubSignUp, ClubBoard,ClubFAQ,ClubIntroduce,ClubSchedule} from "./pages";
+import { Home, Club, Notice, Promotion, ClubDetail, PromotionDetail, ClubSearch, ClubManagement, ClubSignUp, ClubBoard,ClubFAQ,ClubIntroduce,ClubSchedule} from "./pages";
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
@@ -45,6 +45,7 @@ function App() {
             <Route path="clubschedule" element={<ClubSchedule/>}></Route>
             <Route path="clubsignup" element={<ClubSignUp/>}></Route>
           </Route>
+          <Route path="/promotiondetail/:id" element={<PromotionDetail/>}></Route>
           <Route path="/club/search/" element={<ClubSearch />} />
           <Route path="/login" element={<Login />} />
         </Routes>

@@ -90,7 +90,7 @@ export default function Promotion() {
                     "w-[200px] h-[360px] 2xl:w-[300px] 2xl:h-[440px] rounded-xl shadow-lg transition hover:scale-110"
                   }
                   onClick={() => {
-                    navigate("/clubdetail/" + promotion._id);
+                    navigate("/promotiondetail/" + promotion._id);
                   }}
                 >
                   <div
