@@ -2,6 +2,7 @@ import axios from "axios";
 import { baseUrl } from "../common/global";
 import { useState } from "react";
 import setAuthorization from "../utils/setAuthorizationToken";
+import { Location } from "react-router-dom";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -32,10 +33,12 @@ export default function Login() {
                 setMessage("로그인 성공!" + access_token);
                 localStorage.setItem("access_token", access_token);
                 setAuthorization(access_token);
+                window.location.reload();
               })
               .catch((err) => {
                 console.log(err.response.data.detail);
                 setMessage(err.response.data.detail);
+                alert("로그인 안됐어요ㅠㅠ");
               });
           }}
         >

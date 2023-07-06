@@ -3,24 +3,28 @@ import Calendar from "./Calendar";
 import axios from 'axios';
 import { baseUrl } from "../common/global";
 import Login from "../pages/Login";
-import {App} from "../App";
+import { App } from "../App";
 axios.defaults.baseURL = baseUrl;
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-export default function SideBar(token) {
+
+export default function SideBar() {
   let [myclub, setMyclub] = useState(true);
   let [schedule, setSchedule] = useState(true);
   let [register, setRegister] = useState(true);
   let [interesting, setInteresting] = useState(true);
   let [mytext, setMyText] = useState(true);
   let [mystate, setMyState] = useState(false);
-  
-    if(!token){
-      return(
+
+  let token = localStorage.getItem('access_token');
+  console.log(token);
+
+  if (token) {
+    return (
       <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
 
         <div className="flex items-center mt-[15px]">
-        {/* h-[56px] w-[56px] bg-main_mid rounded-full p-0 m-0  */}
+          {/* h-[56px] w-[56px] bg-main_mid rounded-full p-0 m-0  */}
           <span class="text-[56px] text-4F4F4F material-symbols-outlined">
             account_circle
           </span>
@@ -31,7 +35,7 @@ export default function SideBar(token) {
           <button
             className="mt-[25px] ml-[5px] material-symbols-outlined"
             onClick={() => {
-               setMyState(!mystate);
+              setMyState(!mystate);
             }}
           >
             expand_more
@@ -40,7 +44,7 @@ export default function SideBar(token) {
             notifications
           </span>
         </div>
-          {mystate == true ? <Modal /> : null}
+        {mystate == true ? <Modal /> : null}
         <div className="flex mt-[40px]">
           <div className="side_title">나의 동아리</div>
           <button
@@ -55,7 +59,7 @@ export default function SideBar(token) {
         {myclub == true ? <MyClub /> : null}
         <div className="side_title mt-[20px]">월간 일정</div>
         <div className={''}>
-          <Calendar/>
+          <Calendar />
         </div>
         <div className="flex mt-[25px]">
           <div className="side_title">이번주 일정</div>
@@ -93,7 +97,7 @@ export default function SideBar(token) {
           </button>
         </div>
         {interesting == true ? <Interesting /> : null}
-  
+
         <div className="flex mt-[20px]">
           <div className="side_title">내가 작성한 글</div>
           <button
@@ -106,15 +110,16 @@ export default function SideBar(token) {
           </button>
         </div>
         {mytext == true ? <MyText /> : null}
-        <div className={'mt-[32px]'}/>
+        <div className={'mt-[32px]'} />
       </div>
-    );}
-    else{
-      return(
+    );
+  }
+  else {
+    return (
       <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
-      <Login></Login>
+        <Login></Login>
       </div>);
-    }
+  }
 }
 
 function Modal() {
