@@ -1,84 +1,143 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "./Calendar";
+import axios from 'axios';
+import { baseUrl } from "../common/global";
+import Login from "../pages/Login";
+import { useNavigate } from "react-router-dom";
+
+axios.defaults.baseURL = baseUrl;
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
 export default function SideBar() {
+  const navigate = useNavigate();
+
   let [myclub, setMyclub] = useState(true);
   let [schedule, setSchedule] = useState(true);
   let [register, setRegister] = useState(true);
   let [interesting, setInteresting] = useState(true);
   let [mytext, setMyText] = useState(true);
+  let [mystate, setMyState] = useState(false);
+  
+  let [user, setUser] = useState({});
 
-  return (
+  useEffect(()=>{
+        axios.get('api/user/info').then(response =>{
+            setUser(response.data)
+        });
+    }, []);
 
-    <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
-      <div className="flex mt-[40px]">
-        <div className="side_title">나의 동아리</div>
-        <button
-          class="ml-[215px] material-symbols-outlined"
-          onClick={() => {
-            setMyclub(!myclub);
-          }}
-        >
-          expand_more
-        </button>
-      </div>
-      {myclub == true ? <MyClub /> : null}
-      <div className="side_title mt-[20px]">월간 일정</div>
-      <div className={''}>
-        <Calendar/>
-      </div>
-      <div className="flex mt-[25px]">
-        <div className="side_title">이번주 일정</div>
-        <button
-          class="ml-[215px] material-symbols-outlined"
-          onClick={() => {
-            setSchedule(!schedule);
-          }}
-        >
-          expand_more
-        </button>
-      </div>
-      {schedule == true ? <WeekSchedule /> : null}
-      <div className="flex mt-[20px]">
-        <div className="side_title">동아리 신청 내역</div>
-        <button
-          className="ml-[175px] material-symbols-outlined"
-          onClick={() => {
-            setRegister(!register);
-          }}
-        >
-          expand_more
-        </button>
-      </div>
-      {register == true ? <Register /> : null}
-      <div className="flex mt-[20px]">
-        <div className="side_title">관심 동아리</div>
-        <button
-          class="ml-[215px] material-symbols-outlined"
-          onClick={() => {
-            setInteresting(!interesting);
-          }}
-        >
-          expand_more
-        </button>
-      </div>
-      {interesting == true ? <Interesting /> : null}
+  let token = localStorage.getItem('access_token');
+  // 토큰증명 추가 필요
+  if (token) {
+    return (
+      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
 
-      <div className="flex mt-[20px]">
-        <div className="side_title">내가 작성한 글</div>
-        <button
-          class="ml-[195px] material-symbols-outlined"
-          onClick={() => {
-            setMyText(!mytext);
-          }}
-        >
-          expand_more
-        </button>
+        <div className="flex items-center mt-[15px]">
+          {/* h-[56px] w-[56px] bg-main_mid rounded-full p-0 m-0  */}
+          <span class="text-[56px] text-4F4F4F material-symbols-outlined"
+          onClick={()=>{
+              navigate("/mypage/");
+          }}>
+            account_circle
+          </span>
+          <div className="pl-[8px] leading-[20px]">
+            <div>안녕하세요,</div>
+            <div>{user.username}님
+              <i className=" ml-[8px] fa-solid fa-play fa-rotate-90 fa-2xs" style={{color: "#a7aaae"}} 
+                onClick={() => {
+                setMyState(!mystate);
+                }}>
+              </i>
+            </div>
+          </div>
+          {/* <button
+            className="mt-[25px] ml-[5px] material-symbols-outlined"
+            
+          >
+            expand_more
+          </button> */}
+          
+          <span class="ml-[78px] material-symbols-outlined">
+            notifications
+          </span>
+        </div>
+        {mystate == true ? <Modal /> : null}
+        <div className="flex mt-[40px]">
+          <div className="side_title" >나의 동아리</div>
+          <button
+            class="ml-[215px] material-symbols-outlined"
+            onClick={() => {
+              setMyclub(!myclub);
+            }}
+          >
+            expand_more
+          </button>
+        </div>
+        {myclub == true ? <MyClub /> : null}
+        <div className="side_title mt-[20px]">월간 일정</div>
+        <div className={''}>
+          <Calendar />
+        </div>
+        <div className="flex mt-[25px]">
+          <div className="side_title">이번주 일정</div>
+          <button
+            class="ml-[215px] material-symbols-outlined"
+            onClick={() => {
+              setSchedule(!schedule);
+            }}
+          >
+            expand_more
+          </button>
+        </div>
+        {schedule == true ? <WeekSchedule /> : null}
+        <div className="flex mt-[20px]">
+          <div className="side_title">동아리 신청 내역</div>
+          <button
+            className="ml-[175px] material-symbols-outlined"
+            onClick={() => {
+              setRegister(!register);
+            }}
+          >
+            expand_more
+          </button>
+        </div>
+        {register == true ? <Register /> : null}
+        <div className="flex mt-[20px]">
+          <div className="side_title">관심 동아리</div>
+          <button
+            class="ml-[215px] material-symbols-outlined"
+            onClick={() => {
+              setInteresting(!interesting);
+            }}
+          >
+            expand_more
+          </button>
+        </div>
+        {interesting == true ? <Interesting /> : null}
+
+        <div className="flex mt-[20px]">
+          <div className="side_title">내가 작성한 글</div>
+          <button
+            class="ml-[195px] material-symbols-outlined"
+            onClick={() => {
+              setMyText(!mytext);
+            }}
+          >
+            expand_more
+          </button>
+        </div>
+        {mytext == true ? <MyText /> : null}
+        <div className={'mt-[32px]'} />
       </div>
-      {mytext == true ? <MyText /> : null}
-      <div className={'mt-[32px]'}/>
-    </div>
-  );
+    );
+  }
+  else {
+    return (
+      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
+        <Login></Login>
+      </div>);
+  }
 }
 
 function Modal() {
@@ -87,7 +146,7 @@ function Modal() {
       <div className="relative">
         <div
           className={
-            "grid grid-rows-2 pt-[15px] pl-[15px] absolute w-[150px] h-[100px] ml-[75px] bg-white rounded-xl shadow-md z-1"
+            "grid grid-rows-2 pt-[15px] pl-[15px] absolute w-[150px] h-[100px] ml-[50px] bg-white rounded-xl shadow-md z-1"
           }
         >
           <div className="flex gap-2">

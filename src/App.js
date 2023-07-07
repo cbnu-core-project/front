@@ -1,9 +1,10 @@
 import { Routes, Route, NavLink } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import { Home, Club, Notice, Promotion, ClubDetail, ClubSearch, ClubManagement, ClubSignUp, ClubBoard,ClubFAQ,ClubIntroduce,ClubSchedule} from "./pages";
+import { Home, Club, Mypage, Notice, Promotion, ClubDetail, ClubSearch, ClubManagement, ClubSignUp, ClubBoard,ClubFAQ,ClubIntroduce,ClubSchedule} from "./pages";
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
+import setAuthorization from "./utils/setAuthorizationToken";
 
 // access_token 디코딩을 위한 함수
 function decodeToken(token) {
@@ -18,6 +19,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
+      setAuthorization(token);
       const decodedToken = decodeToken(token);
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodedToken.exp < currentTime) {
@@ -35,6 +37,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/club" element={<Club />} />
+          <Route path="/mypage/" element={<Mypage />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/promotion" element={<Promotion />} />
           <Route path="/clubdetail/:id" element={<ClubDetail />}>
