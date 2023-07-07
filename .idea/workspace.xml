@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a1cd0d5-9e72-4092-b5da-4cc6c883066e" name="Changes" comment="" />
+    <list default="true" id="7a1cd0d5-9e72-4092-b5da-4cc6c883066e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/16.pack" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/16.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/17.pack" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/17.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/18.pack" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/18.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/default-development/19.pack" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/default-development/19.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SideBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SideBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Notice.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Notice.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/clubdetail/ClubDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/clubdetail/ClubDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/clubdetail/ClubIntroduce.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/clubdetail/ClubIntroduce.jsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -91,7 +101,7 @@
       <workItem from="1687950467721" duration="5250000" />
       <workItem from="1688286257684" duration="17171000" />
       <workItem from="1688365716900" duration="10872000" />
-      <workItem from="1688701026420" duration="6877000" />
+      <workItem from="1688701026420" duration="7196000" />
     </task>
     <servers />
   </component>
