@@ -93,8 +93,22 @@ export default function Login() {
           ──────── SNS 계정으로 로그인 ────────
         </div>
 
-        <div className={'text-gray2 text-center font-[Pv] font-bold'}>
-            1 2 3 4
+        <div className={'flex gap-7 justify-center'}>
+          <img src={"/images/naverlogo.png"} className={'w-[56px] h-[56px] rounded-full'}
+            onClick={(() => {
+              alert("네이버 간편로그인입니다.");
+            })}>
+          </img>
+          <img src={"/images/naverlogo.png"} className={'w-[56px] h-[56px] rounded-full'}
+            onClick={(() => {
+              alert("네이버 간편로그인입니다.");
+            })}></img>
+          <img src={"/images/naverlogo.png"} className={'w-[56px] h-[56px] rounded-full'} onClick={(() => {
+            alert("네이버 간편로그인입니다.");
+          })}></img>
+          <img src={"/images/naverlogo.png"} className={'w-[56px] h-[56px] rounded-full'} onClick={(() => {
+            alert("네이버 간편로그인입니다.");
+          })}></img>
         </div>
 
       </div>
