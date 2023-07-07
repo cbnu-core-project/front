@@ -1,6 +1,20 @@
 import { Routes, Route, NavLink } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import { Home, Club, Mypage, Notice, Promotion, ClubDetail, ClubSearch, ClubManagement, ClubSignUp, ClubBoard,ClubFAQ,ClubIntroduce,ClubSchedule} from "./pages";
+import {
+  Home,
+  Club,
+  Mypage,
+  Notice,
+  Promotion,
+  ClubDetail,
+  ClubSearch,
+  ClubManagement,
+  ClubSignUp,
+  ClubBoard,
+  ClubFAQ,
+  ClubIntroduce,
+  ClubSchedule,
+} from "./pages";
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
@@ -18,13 +32,13 @@ function decodeToken(token) {
 
 // 토큰 만료기간 확인 후, 만료 처리
 function App() {
-  const [token, setToken] = useRecoilState(tokenState)
+  const [token, setToken] = useRecoilState(tokenState);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
       setAuthorization(token);
-      setToken(token)
+      setToken(token);
 
       const decodedToken = decodeToken(token);
       const currentTime = Math.floor(Date.now() / 1000);
@@ -32,6 +46,8 @@ function App() {
         // 토큰이 만료되었으므로 로그아웃 또는 새로운 토큰 요청 등의 처리를 수행
         console.log("토큰 만료된거임");
         localStorage.removeItem("access_token");
+        setAuthorization();
+        setToken("");
       }
     }
   }, []);
