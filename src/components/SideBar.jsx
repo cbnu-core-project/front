@@ -37,11 +37,14 @@ export default function SideBar() {
   
   if (token) {
     return (
-      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
+      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10"
+      onClick={() => {
+        setMyState(false);
+        }}>
 
         <div className="flex items-center mt-[15px]">
           {/* h-[56px] w-[56px] bg-main_mid rounded-full p-0 m-0  */}
-          <span class="text-[56px] text-4F4F4F material-symbols-outlined"
+          <span class="text-[56px] text-4F4F4F material-symbols-outlined cursor-pointer"
           onClick={()=>{
               navigate("/mypage/");
           }}>
@@ -50,9 +53,10 @@ export default function SideBar() {
           <div className="pl-[8px] leading-[20px]">
             <div>안녕하세요,</div>
             <div>{user.username}님
-              <i className=" ml-[8px] fa-solid fa-play fa-rotate-90 fa-2xs" style={{color: "#a7aaae"}} 
-                onClick={() => {
+              <i className="cursor-pointer ml-[8px] fa-solid fa-play fa-rotate-90 fa-2xs" style={{color: "#a7aaae"}} 
+                onClick={(event) => {
                 setMyState(!mystate);
+                event.stopPropagation();
                 }}>
               </i>
             </div>
@@ -161,7 +165,7 @@ function Modal() {
             <span class="material-symbols-outlined">account_circle</span>
             <div>프로필 사용</div>
           </div>
-          <div className="flex gap-2"
+          <div className="flex gap-2 cursor-pointer"
             onClick={()=>{
               localStorage.removeItem("access_token");
               setAuthorization()
