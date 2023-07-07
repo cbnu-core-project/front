@@ -27,12 +27,22 @@ export const homePromotionTabState = atom({
   default: 0,
 });
 
-export const PromotionTabState = atom({
-  key: "PromotionTabState",
+export const promotionTabState = atom({
+  key: "promotionTabState",
   default: 0,
 });
 
 export const tokenState = atom({
   key: "tokenState",
   default: ""
+})
+
+export const schedulesState = atom({
+  key: "schedulesState",
+  default: [],
+})
+
+export const selectedDateState = atom({
+  key: "selectedDateState",
+  default: []
 })

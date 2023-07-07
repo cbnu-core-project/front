@@ -47,18 +47,18 @@ function App() {
           <Route path="/notice" element={<Notice />} />
           <Route path="/promotion" element={<Promotion />} />
           <Route path="/clubdetail/:id" element={<ClubDetail />}>
-            <Route path="clubboard" element={<ClubBoard/>}></Route>
-            <Route path="clubfaq" element={<ClubFAQ/>}></Route>
-            <Route path="clubintroduce" element={<ClubIntroduce/>}></Route>
-            <Route path="clubmanagement" element={<ClubManagement/>}></Route>
-            <Route path="clubschedule" element={<ClubSchedule/>}></Route>
-            <Route path="clubsignup" element={<ClubSignUp/>}></Route>
+            <Route path="clubboard" element={<ClubBoard />}></Route>
+            <Route path="clubfaq" element={<ClubFAQ />}></Route>
+            <Route path="clubintroduce" element={<ClubIntroduce />}></Route>
+            <Route path="clubmanagement" element={<ClubManagement />}></Route>
+            <Route path="clubschedule" element={<ClubSchedule />}></Route>
+            <Route path="clubsignup" element={<ClubSignUp />}></Route>
           </Route>
           <Route path="/club/search/" element={<ClubSearch />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </div>
-       <SideBar />
+      <SideBar />
     </>
   );
 }

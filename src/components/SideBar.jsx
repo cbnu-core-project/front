@@ -35,7 +35,6 @@ export default function SideBar() {
 
  
   
-  // 토큰증명 추가 필요
   if (token) {
     return (
       <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
@@ -194,7 +193,7 @@ function MyClub() {
 
 function Register() {
   return (
-    <div className="w-[355px] h-[55px] bg-white flex rounded-2xl mt-[10px]">
+    <div className="w-full h-[55px] bg-white flex rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[10px]">
         <div className="text-black text-h7 font-[300]">[코어] 직무 동아리</div>
         <div className="text-gray text-h7 font-[300]">
@@ -215,7 +214,7 @@ function WeekSchedule() {
         <div className="text-[10px] font-[200] text-white">Sun</div>
         <div className="text-h6 font-[600]  text-white">15</div>
       </div>
-      <div className="flex flex-col w-[300px] h-[80px] bg-white pl-[10px] pt-[10px]">
+      <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
         <div className="text-black text-h7 font-[300]">코어 동아리 회의</div>
         <div className="text-gray text-h7 font-[300]">18:00~22:00</div>
         <div className="text-gray text-h7 font-[300]">NH관 202호</div>
@@ -241,7 +240,7 @@ function Interesting() {
 
 function MyText() {
   return (
-    <div className="w-[355px] h-[55px] bg-white rounded-2xl mt-[10px]">
+    <div className="w-full h-[55px] bg-white rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[13px]">
         <div className="flex mt-[10px]">
           <div className="w-[2px] h-[13px] bg-main_mid mt-[3px] rounded-sm"></div>
