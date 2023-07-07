@@ -12,11 +12,11 @@ const Notice = () => {
   };
 
   const selectCategory = (category) => {
-    setSelectedCategory(category);
+    setSelectedCategory(category);  
     setIsCategoryOpen(false);
   };
 
-  // 게시글 목록 데이터
+  // 게시글 목록 데이터 여기서 주석을 수정하면 어떤일이 일어날까요?용용
   const posts = [
     { id: 1, title: '게시글 1', author: '작성자 1', date: '2023-06-30' },
     { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },

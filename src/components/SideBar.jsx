@@ -3,50 +3,74 @@ import Calendar from "./Calendar";
 import axios from 'axios';
 import { baseUrl } from "../common/global";
 import Login from "../pages/Login";
-import { App } from "../App";
+import { useNavigate } from "react-router-dom";
+import setAuthorization from "../utils/setAuthorizationToken";
+import { useRecoilState } from "recoil";
+import { tokenState } from "../store";
+
 axios.defaults.baseURL = baseUrl;
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
+
+
 export default function SideBar() {
+  const navigate = useNavigate();
+
   let [myclub, setMyclub] = useState(true);
   let [schedule, setSchedule] = useState(true);
   let [register, setRegister] = useState(true);
   let [interesting, setInteresting] = useState(true);
   let [mytext, setMyText] = useState(true);
   let [mystate, setMyState] = useState(false);
+  
+  let [user, setUser] = useState({});
+  let [token, setToken] = useRecoilState(tokenState)
 
-  let token = localStorage.getItem('access_token');
-  console.log(token);
+  useEffect(()=>{
+        axios.get('api/user/info').then(response =>{
+            setUser(response.data)
+        });
+    }, [token]);
 
+ 
+  
   if (token) {
     return (
       <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
 
         <div className="flex items-center mt-[15px]">
           {/* h-[56px] w-[56px] bg-main_mid rounded-full p-0 m-0  */}
-          <span class="text-[56px] text-4F4F4F material-symbols-outlined">
+          <span class="text-[56px] text-4F4F4F material-symbols-outlined"
+          onClick={()=>{
+              navigate("/mypage/");
+          }}>
             account_circle
           </span>
-          <div className="pl-[8px]">
+          <div className="pl-[8px] leading-[20px]">
             <div>안녕하세요,</div>
-            <div className="font-[600] ">부리부리 대마왕님</div>
+            <div>{user.username}님
+              <i className=" ml-[8px] fa-solid fa-play fa-rotate-90 fa-2xs" style={{color: "#a7aaae"}} 
+                onClick={() => {
+                setMyState(!mystate);
+                }}>
+              </i>
+            </div>
           </div>
-          <button
+          {/* <button
             className="mt-[25px] ml-[5px] material-symbols-outlined"
-            onClick={() => {
-              setMyState(!mystate);
-            }}
+            
           >
             expand_more
-          </button>
+          </button> */}
+          
           <span class="ml-[78px] material-symbols-outlined">
             notifications
           </span>
         </div>
         {mystate == true ? <Modal /> : null}
         <div className="flex mt-[40px]">
-          <div className="side_title">나의 동아리</div>
+          <div className="side_title" >나의 동아리</div>
           <button
             class="ml-[215px] material-symbols-outlined"
             onClick={() => {
@@ -123,19 +147,26 @@ export default function SideBar() {
 }
 
 function Modal() {
+  const [token, setToken] = useRecoilState(tokenState)
+
   return (
     <>
       <div className="relative">
         <div
           className={
-            "grid grid-rows-2 pt-[15px] pl-[15px] absolute w-[150px] h-[100px] ml-[75px] bg-white rounded-xl shadow-md z-1"
+            "grid grid-rows-2 pt-[15px] pl-[15px] absolute w-[150px] h-[100px] ml-[50px] bg-white rounded-xl shadow-md z-1"
           }
         >
           <div className="flex gap-2">
             <span class="material-symbols-outlined">account_circle</span>
             <div>프로필 사용</div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2"
+            onClick={()=>{
+              localStorage.removeItem("access_token");
+              setAuthorization()
+              setToken("")
+            }}>
             <span class="material-symbols-outlined">power_rounded</span>
             <div>로그아웃</div>
           </div>
@@ -162,7 +193,7 @@ function MyClub() {
 
 function Register() {
   return (
-    <div className="w-[355px] h-[55px] bg-white flex rounded-2xl mt-[10px]">
+    <div className="w-full h-[55px] bg-white flex rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[10px]">
         <div className="text-black text-h7 font-[300]">[코어] 직무 동아리</div>
         <div className="text-gray text-h7 font-[300]">
@@ -183,7 +214,7 @@ function WeekSchedule() {
         <div className="text-[10px] font-[200] text-white">Sun</div>
         <div className="text-h6 font-[600]  text-white">15</div>
       </div>
-      <div className="flex flex-col w-[300px] h-[80px] bg-white pl-[10px] pt-[10px]">
+      <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
         <div className="text-black text-h7 font-[300]">코어 동아리 회의</div>
         <div className="text-gray text-h7 font-[300]">18:00~22:00</div>
         <div className="text-gray text-h7 font-[300]">NH관 202호</div>
@@ -209,7 +240,7 @@ function Interesting() {
 
 function MyText() {
   return (
-    <div className="w-[355px] h-[55px] bg-white rounded-2xl mt-[10px]">
+    <div className="w-full h-[55px] bg-white rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[13px]">
         <div className="flex mt-[10px]">
           <div className="w-[2px] h-[13px] bg-main_mid mt-[3px] rounded-sm"></div>
@@ -225,63 +256,5 @@ function MyText() {
         </div>
       </div>
     </div>
-  );
-}
-
-function SideBar2() {
-  return (
-    <>
-      <aside
-        className={
-          "w-side bg-background h-screen overflow-y-scroll fixed right-0 top-0"
-        }
-      >
-        <div>사이드바</div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <div>스크롤</div>
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </aside>
-    </>
   );
 }

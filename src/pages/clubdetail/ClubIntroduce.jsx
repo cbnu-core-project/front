@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { readOneClub } from "../../api/club";
 
 export default function ClubIntroduce() {
@@ -8,6 +8,11 @@ export default function ClubIntroduce() {
   function getPost() {
     readOneClub(id).then((res) => setPost(res.data[0]));
   }
+
+  useEffect(()=>{
+    getPost()
+  }, [])
+
   return (
     <>
       <div className={"p-2 ml-[56px]"}>
@@ -23,8 +28,9 @@ export default function ClubIntroduce() {
               "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] shadow-lg rounded-xl"
             }
           >
-            <div className={"flex p-2 mt-[20px] ml-[24px] gap-3"}>
-              <p className={"text-h2 font-bold "}>코어</p>
+            <div className={"flex p-2 ml-[9px] gap-3"}>
+              <p className={"text-h2 font-bold "}>{post.title}</p>
+
               <div className={"gap-2 flex mt-[9px]"}>
                 <div
                   className={
