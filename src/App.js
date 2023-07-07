@@ -5,6 +5,8 @@ import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
 import setAuthorization from "./utils/setAuthorizationToken";
+import { tokenState } from "./store";
+import { useRecoilState } from "recoil";
 
 // access_token 디코딩을 위한 함수
 function decodeToken(token) {
@@ -16,10 +18,14 @@ function decodeToken(token) {
 
 // 토큰 만료기간 확인 후, 만료 처리
 function App() {
+  const [token, setToken] = useRecoilState(tokenState)
+
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
       setAuthorization(token);
+      setToken(token)
+
       const decodedToken = decodeToken(token);
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodedToken.exp < currentTime) {

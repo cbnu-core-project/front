@@ -4,10 +4,15 @@ import axios from 'axios';
 import { baseUrl } from "../common/global";
 import Login from "../pages/Login";
 import { useNavigate } from "react-router-dom";
+import setAuthorization from "../utils/setAuthorizationToken";
+import { useRecoilState } from "recoil";
+import { tokenState } from "../store";
 
 axios.defaults.baseURL = baseUrl;
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -20,14 +25,16 @@ export default function SideBar() {
   let [mystate, setMyState] = useState(false);
   
   let [user, setUser] = useState({});
+  let [token, setToken] = useRecoilState(tokenState)
 
   useEffect(()=>{
         axios.get('api/user/info').then(response =>{
             setUser(response.data)
         });
-    }, []);
+    }, [token]);
 
-  let token = localStorage.getItem('access_token');
+ 
+  
   // 토큰증명 추가 필요
   if (token) {
     return (
@@ -141,6 +148,8 @@ export default function SideBar() {
 }
 
 function Modal() {
+  const [token, setToken] = useRecoilState(tokenState)
+
   return (
     <>
       <div className="relative">
@@ -153,7 +162,12 @@ function Modal() {
             <span class="material-symbols-outlined">account_circle</span>
             <div>프로필 사용</div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2"
+            onClick={()=>{
+              localStorage.removeItem("access_token");
+              setAuthorization()
+              setToken("")
+            }}>
             <span class="material-symbols-outlined">power_rounded</span>
             <div>로그아웃</div>
           </div>
@@ -243,63 +257,5 @@ function MyText() {
         </div>
       </div>
     </div>
-  );
-}
-
-function SideBar2() {
-  return (
-    <>
-      <aside
-        className={
-          "w-side bg-background h-screen overflow-y-scroll fixed right-0 top-0"
-        }
-      >
-        <div>사이드바</div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <div>스크롤</div>
-        <br />
-        <br />
-        <br /> <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </aside>
-    </>
   );
 }

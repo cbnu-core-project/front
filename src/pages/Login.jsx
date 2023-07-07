@@ -3,11 +3,14 @@ import { baseUrl } from "../common/global";
 import { useState } from "react";
 import setAuthorization from "../utils/setAuthorizationToken";
 import { Location } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { tokenState } from "../store";
 
 axios.defaults.baseURL = baseUrl;
 
 export default function Login() {
   const [message, setMessage] = useState("");
+  const [token, setToken] = useRecoilState(tokenState)
 
   return (
     <>
@@ -32,8 +35,9 @@ export default function Login() {
                 const { access_token } = res.data;
                 setMessage("로그인 성공!" + access_token);
                 localStorage.setItem("access_token", access_token);
+                setToken(access_token)
                 setAuthorization(access_token);
-                window.location.reload();
+                // window.location.reload();
               })
               .catch((err) => {
                 console.log(err.response.data.detail);

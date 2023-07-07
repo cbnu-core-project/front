@@ -31,3 +31,8 @@ export const PromotionTabState = atom({
   key: "PromotionTabState",
   default: 0,
 });
+
+export const tokenState = atom({
+  key: "tokenState",
+  default: ""
+})
