@@ -18,7 +18,7 @@ export default function ClubDetail() {
         <ClubTabBar />
       </div>
 
-      <Outlet />
+      <Outlet post={post}/>
     </>
   );
 }
