@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import Calendar from "./Calendar";
-import axios from 'axios';
+import axios from "axios";
 import { baseUrl } from "../common/global";
 import Login from "../pages/Login";
 import { useNavigate } from "react-router-dom";
-import setAuthorization from "../utils/setAuthorizationToken";
+import { setAccessToken, setRefreshToken } from "../utils/token";
 import { useRecoilState } from "recoil";
 import { tokenState } from "../store";
 
 axios.defaults.baseURL = baseUrl;
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
-
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -23,42 +19,46 @@ export default function SideBar() {
   let [interesting, setInteresting] = useState(true);
   let [mytext, setMyText] = useState(true);
   let [mystate, setMyState] = useState(false);
-  
+
   let [user, setUser] = useState({});
-  let [token, setToken] = useRecoilState(tokenState)
+  let [token, setToken] = useRecoilState(tokenState);
 
-  useEffect(()=>{
-        axios.get('api/user/info').then(response =>{
-            setUser(response.data)
-        });
-    }, [token]);
+  useEffect(() => {
+    axios.get("api/user/info").then((response) => {
+      setUser(response.data);
+    });
+  }, [token]);
 
- 
-  
   if (token) {
     return (
-      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10"
-      onClick={() => {
-        setMyState(false);
-        }}>
-
+      <div
+        className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10"
+        onClick={() => {
+          setMyState(false);
+        }}
+      >
         <div className="flex items-center mt-[15px]">
           {/* h-[56px] w-[56px] bg-main_mid rounded-full p-0 m-0  */}
-          <span class="text-[56px] text-4F4F4F material-symbols-outlined cursor-pointer"
-          onClick={()=>{
+          <span
+            class="text-[56px] text-4F4F4F material-symbols-outlined cursor-pointer"
+            onClick={() => {
               navigate("/mypage/");
-          }}>
+            }}
+          >
             account_circle
           </span>
           <div className="pl-[8px] leading-[20px]">
             <div>안녕하세요,</div>
-            <div>{user.username}님
-              <i className="cursor-pointer ml-[8px] fa-solid fa-play fa-rotate-90 fa-2xs" style={{color: "#a7aaae"}} 
+            <div>
+              {user.username}님
+              <i
+                className="cursor-pointer ml-[8px] fa-solid fa-play fa-rotate-90 fa-2xs"
+                style={{ color: "#a7aaae" }}
                 onClick={(event) => {
-                setMyState(!mystate);
-                event.stopPropagation();
-                }}>
-              </i>
+                  setMyState(!mystate);
+                  event.stopPropagation();
+                }}
+              ></i>
             </div>
           </div>
           {/* <button
@@ -67,14 +67,12 @@ export default function SideBar() {
           >
             expand_more
           </button> */}
-          
-          <span class="ml-[78px] material-symbols-outlined">
-            notifications
-          </span>
+
+          <span class="ml-[78px] material-symbols-outlined">notifications</span>
         </div>
         {mystate == true ? <Modal /> : null}
         <div className="flex mt-[40px]">
-          <div className="side_title" >나의 동아리</div>
+          <div className="side_title">나의 동아리</div>
           <button
             class="ml-[215px] material-symbols-outlined"
             onClick={() => {
@@ -86,7 +84,7 @@ export default function SideBar() {
         </div>
         {myclub == true ? <MyClub /> : null}
         <div className="side_title mt-[20px]">월간 일정</div>
-        <div className={''}>
+        <div className={""}>
           <Calendar />
         </div>
         <div className="flex mt-[25px]">
@@ -138,20 +136,20 @@ export default function SideBar() {
           </button>
         </div>
         {mytext == true ? <MyText /> : null}
-        <div className={'mt-[32px]'} />
+        <div className={"mt-[32px]"} />
       </div>
     );
-  }
-  else {
+  } else {
     return (
       <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
         <Login></Login>
-      </div>);
+      </div>
+    );
   }
 }
 
 function Modal() {
-  const [token, setToken] = useRecoilState(tokenState)
+  const [token, setToken] = useRecoilState(tokenState);
 
   return (
     <>
@@ -165,12 +163,14 @@ function Modal() {
             <span class="material-symbols-outlined">account_circle</span>
             <div>프로필 사용</div>
           </div>
-          <div className="flex gap-2 cursor-pointer"
-            onClick={()=>{
-              localStorage.removeItem("access_token");
-              setAuthorization()
-              setToken("")
-            }}>
+          <div
+            className="flex gap-2 cursor-pointer"
+            onClick={() => {
+              setAccessToken();
+              setRefreshToken();
+              setToken("");
+            }}
+          >
             <span class="material-symbols-outlined">power_rounded</span>
             <div>로그아웃</div>
           </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { baseUrl } from "../common/global";
 import { useState } from "react";
-import setAuthorization from "../utils/setAuthorizationToken";
+import { setAccessToken, setRefreshToken } from "../utils/token";
 import { Location } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { tokenState } from "../store";
@@ -40,18 +40,18 @@ export default function Login() {
                 },
               })
               .then((res) => {
-                const { access_token } = res.data;
-                setMessage("로그인 성공!" + access_token);
+                const { access_token, refresh_token } = res.data;
+                setMessage("로그인 성공!");
                 Swal.fire({
                   position: "top-end",
                   icon: "success",
                   title: "로그인 성공 !",
                   showConfirmButton: false,
-                  timer: 500,
+                  timer: 1000,
                 });
-                localStorage.setItem("access_token", access_token);
                 setToken(access_token);
-                setAuthorization(access_token);
+                setAccessToken(access_token);
+                setRefreshToken(refresh_token);
                 // window.location.reload();
               })
               .catch((err) => {
