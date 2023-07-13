@@ -5,20 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a1cd0d5-9e72-4092-b5da-4cc6c883066e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/images/소프트웨어야놀자.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/promotiondetail/PromotionDetail.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/promotion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/promotion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/home/HomeClubList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/HomeClubList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/home/HomeNoticeList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/HomeNoticeList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/home/HomePromotionList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/HomePromotionList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Club.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Club.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Promotion.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Promotion.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/clubdetail/ClubFAQ.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/clubdetail/ClubFAQ.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/clubdetail/ClubIntroduce.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/clubdetail/ClubIntroduce.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/clubdetail/ClubSignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/clubdetail/ClubSignUp.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/global.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +109,7 @@
       <workItem from="1688365716900" duration="10872000" />
       <workItem from="1688701026420" duration="8480000" />
       <workItem from="1688713135618" duration="458000" />
-      <workItem from="1689239668105" duration="1462000" />
+      <workItem from="1689239668105" duration="3100000" />
     </task>
     <servers />
   </component>
