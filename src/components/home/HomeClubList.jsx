@@ -54,7 +54,7 @@ export default function HomeClubList() {
               return (
                 <div
                   className={
-                    "w-[200px] h-[240px] 2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
+                    "2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
                   }
                   onClick={() => {
                     navigate("/clubdetail/" + post._id);
@@ -160,7 +160,7 @@ const HomeClubTab = (props) => {
 
 const Image = (props) => {
   return (
-    <div className={"2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
+    <div className={"h-[200px] 2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
       <img src={`${baseUrl}/${props.post.image_urls[0]}`} alt="img" className={"rounded-t-lg"} />
     </div>
   );

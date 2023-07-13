@@ -2,16 +2,25 @@ import axios from "axios";
 import { baseUrl } from "../common/global";
 import { useState } from "react";
 import setAuthorization from "../utils/setAuthorizationToken";
+import { Location } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { tokenState } from "../store";
 
 axios.defaults.baseURL = baseUrl;
 
 export default function Login() {
   const [message, setMessage] = useState("");
+  const [token, setToken] = useRecoilState(tokenState)
 
   return (
     <>
+
+      <div className={'text-h0 font-[Pv] font-extrabold text-center mt-64'}>
+        SIGN UP
+      </div>
+      <div className={'text-h4 font-[Pv] text-center mt-2'}> 서비스 이용을 위해 로그인 해주세요.</div>
       <div>
-        <form
+        <form className={'text-center '}
           onSubmit={(e) => {
             e.preventDefault();
             console.log("클릭?");
@@ -31,25 +40,37 @@ export default function Login() {
                 const { access_token } = res.data;
                 setMessage("로그인 성공!" + access_token);
                 localStorage.setItem("access_token", access_token);
+                setToken(access_token)
                 setAuthorization(access_token);
+                // window.location.reload();
               })
               .catch((err) => {
                 console.log(err.response.data.detail);
                 setMessage(err.response.data.detail);
+                alert("로그인 안됐어요ㅠㅠ");
               });
           }}
         >
           <div>
-            <input className={"border"} type="text" name="username" />
+            <input className={"rounded-3xl p-5 w-[406px] mt-20"} type="text" name="username" placeholder="아이디를 입력하세요" />
           </div>
           <div>
-            <input className={"border"} type="password" name="password" />
+            <input className={"rounded-3xl p-5 mt-3 w-[406px]"} type="password" name="password" placeholder="비밀번호를 입력하세요" />
           </div>
           <div>{message}</div>
-          <button type={"submit"} className={"border"}>
-            제출
+          <button type={"submit"} className={"rounded-3xl p-5 mt-8 font-[Pv] text-h6 font-bold text-white bg-main_mid w-[406px]"}>
+            로그인
           </button>
         </form>
+
+        <div className={'text-h6 font-[Pv] text-center mt-5'}>
+          <span className={'mr-5'}> 아이디 찾기 </span>
+          <span> │ </span>
+          <span className={'mx-5'}> 비밀번호 찾기 </span>
+          <span> │ </span>
+          <span className={'ml-5'}> 회원가입 </span>
+        </div>
+
         <div>
           <button
             onClick={() => {
@@ -64,9 +85,18 @@ export default function Login() {
                 });
             }}
           >
-            현재 로그인 되어있나? 서버에 확인
+            loginTest
           </button>
         </div>
+
+        <div className={'mt-20 text-center text-darkgray text-h6 font-[Pv] font-bold'}>
+          ──────── SNS 계정으로 로그인 ────────
+        </div>
+
+        <div className={'text-gray2 text-center font-[Pv] font-bold'}>
+            1 2 3 4
+        </div>
+
       </div>
     </>
   );
