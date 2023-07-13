@@ -7,7 +7,6 @@ import { baseUrl } from "../../common/global";
 import { usePagination } from "@mantine/hooks";
 import { readAllClubs, readSomeClubs } from "../../api/club";
 
-
 export default function HomePromotionList() {
   const navigate = useNavigate();
   const [promotions, setPromotions] = useRecoilState(promotionsState);
@@ -42,8 +41,8 @@ export default function HomePromotionList() {
 
   useEffect(() => {
     // homeTab 변경 시 page 원래대로 1로 되돌리기
-    onChange(1)
-  }, [homeTab])
+    onChange(1);
+  }, [homeTab]);
 
   return (
     <>
@@ -52,16 +51,34 @@ export default function HomePromotionList() {
         <div className={"grid grid-cols-4"}>
           {promotions.map((promotion) => {
             return (
-              <div
-                className={
-                  "w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px] rounded-xl transition hover:scale-110 bg-gradient-to-b from-white to-black z-10"
-                }
-              >
+              <div className="relative">
                 <img
-                  className={"w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px]  overflow-y-scroll"}
-                  src={`${baseUrl}/${promotion.image_url}`}
-                  alt={"marketing"}
-                />
+                    className={
+                      "w-[200px] h-[300px] 2xl:w-[303px] 2xl:h-[440px] overflow-y-scroll"
+                    }
+                    src={`${baseUrl}/${promotion.image_url}`}
+                    alt={"marketing"}
+                  />
+                <div
+                  className={
+                    "w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px] rounded-xl transition hover:scale-110 bg-gradient-to-b from-white to-black opacity-20 absolute top-0 z-10"
+                  }
+                >
+                  
+                  <div className={""}>
+                    <div className={"text-h3 text-white font-bold"}>
+                      {promotion.title}
+                    </div>
+                    <div className={"text-h7 text-white"}>
+                      {promotion.club_name}
+                    </div>
+                    <div
+                      className={
+                        "w-[76px] h-[24px] rounded-xl border border-white"
+                      }
+                    ></div>
+                  </div>
+                </div>
               </div>
             );
           })}

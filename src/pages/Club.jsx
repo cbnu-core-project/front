@@ -8,7 +8,6 @@ import { baseUrl } from "../common/global";
 import { usePagination } from "@mantine/hooks";
 import { Pagination } from "@mantine/core";
 
-
 axios.defaults.baseURL = baseUrl;
 
 export default function Club() {
@@ -23,7 +22,6 @@ export default function Club() {
     page,
     onChange,
   });
-
 
   const countClassificationPosts = () => {
     let i = 0;
@@ -44,18 +42,20 @@ export default function Club() {
   };
 
   const getPosts = () => {
-    readSomeClubs((page - 1) * 16, 16, homeTab).then((res) => setPosts(res.data));
+    readSomeClubs((page - 1) * 16, 16, homeTab).then((res) =>
+      setPosts(res.data)
+    );
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     countAllPosts();
-  }, [])
+  }, []);
 
   useEffect(() => {
     getPosts();
     countClassificationPosts();
     // document.title = `${count[0] + count[1]}개의 동아리가 함께 하고 있습니다 | Core`;
-    console.log('af')
+    console.log("af");
   }, [homeTab, page]);
 
   return (
@@ -90,14 +90,21 @@ export default function Club() {
               return (
                 <div
                   className={
-                    "w-[300px] h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
+                    "w-[302px] h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
                   }
                   onClick={() => {
                     navigate("/clubdetail/" + post._id);
                   }}
                 >
                   <Image post={post} />
-                  <Content post={post} />
+                  <div
+                    className={
+                      "w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl"
+                    }
+                  >
+                    <Content post={post} />
+                  </div>
+                  
                 </div>
               );
             })}
@@ -119,7 +126,11 @@ export default function Club() {
         {/*</div>*/}
 
         <div className={""}>
-          <Pagination total={Math.ceil((count[0] + count[1]) / 16)} boundaries={1} onChange={onChange}/>
+          <Pagination
+            total={Math.ceil((count[0] + count[1]) / 16)}
+            boundaries={1}
+            onChange={onChange}
+          />
           {/*<button className={"font-bold "}>{page}</button>*/}
         </div>
 
@@ -202,9 +213,9 @@ const PromotionTab = () => {
 
 const Image = (props) => {
   return (
-    <div className={"2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
+    <div className={"2xl:w-[302px] 2xl:h-[200px] overflow-y-scroll"}>
       <img
-        src={`${baseUrl}/${props.post.image_url}`}
+        src={`${baseUrl}/${props.post.image_urls[0]}`}
         alt="img"
         className={"rounded-t-lg"}
       />
@@ -214,33 +225,51 @@ const Image = (props) => {
 
 const Content = (props) => {
   return (
-    <div className={"p-3"}>
-      <div className={"gap-2 flex "}>
-        <div className={"text-h5 2xl:text-xl font-bold grid content-center"}>
+    <div className={"mx-[20px] my-[16px]"}>
+      <div className={"gap-[10px] flex"}>
+        <div className={"text-h3 2xl:text-h3 font-bold grid content-center"}>
           {props.post.title}
         </div>
         <div
           className={
-            "text-h8 w-[85px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-gray text-darkgray rounded-xl px-3"
+            "2xl:w-[80px] 2xl:h-[24px] 2xl:text-h7 text-center text-md border border-gray text-darkgray rounded-xl px-2 py-[2px] mt-[3px]"
           }
         >
           {props.post.classification === 0 ? "중앙 동아리" : "직무 동아리"}
         </div>
       </div>
-      <div className={"hidden 2xl:block"}>
+      <div className={"hidden 2xl:block text-h6 mt-[2px]"}>
         {props.post.content.length > 35
           ? props.post.content.slice(0, 35) + "..."
           : props.post.content}
       </div>
-      <div className={"block 2xl:hidden text-h7 mt-[3px]"}>
-        {props.post.content.length > 17
-          ? props.post.content.slice(0, 17) + "..."
+      <div className={"block 2xl:hidden text-h6"}>
+        {props.post.content.length > 19
+          ? props.post.content.slice(0, 19) + "..."
           : props.post.content}
       </div>
-      <div className={"gap-1 flex mt-[20px]"}>
-        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag1} </div>
-        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag2} </div>
-        <div className={"h-[16px] bg-gray3 rounded-xl text-[10px] text-midgray"}># {props.post.tag3} </div>
+      <div className={"gap-2 flex mt-[18px]"}>
+        <div
+          className={
+            "h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"
+          }
+        >
+          #{props.post.tag1}
+        </div>
+        <div
+          className={
+            "h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg text-h7 text-midgray"
+          }
+        >
+          #{props.post.tag2}
+        </div>
+        <div
+          className={
+            "h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg text-h7 text-midgray"
+          }
+        >
+          #{props.post.tag3}
+        </div>
       </div>
     </div>
   );

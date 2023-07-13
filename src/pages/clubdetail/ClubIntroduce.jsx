@@ -1,76 +1,96 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState} from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { readOneClub } from "../../api/club";
+import { readAllPromotions, readOnePromotion } from "../../api/promotion";
 import { baseUrl } from "../../common/global";
-
-
+import { promotionsState } from "../../store";
+import { useRecoilState } from "recoil";
 
 export default function ClubIntroduce() {
   const { id } = useParams();
-  const [posts, setPost] = useState({});
+  const [posts, setPosts] = useState({});
+  const [promotions, setPromotions] = useRecoilState(promotionsState);
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
-  function getPost() {
-    readOneClub(id).then((res) => setPost(res.data[0]));
+  function getClubPost() {
+    readOneClub(id).then((res) => setPosts(res.data[0]));
+  }
+
+  function getPromotionPost() {
+    readAllPromotions(0).then((res) => setPromotions(res.data));
   }
 
   useEffect(() => {
-    getPost();
+    getClubPost();
+    getPromotionPost();
   }, []);
 
   return (
     <>
+      {console.log(promotions)}
       <div className={"p-2 ml-[56px]"}>
         <div className={"flex gap-8"}>
           {/*동아리 활동*/}
           <div
             className={
-              "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden overflow-x-scroll"
+              "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden"
             }
           >
-            <div className={'flex transition -translate-x-['+ count +'00%]'}>
-              <img
-                src={`${baseUrl}/${posts.image_url}`}
-                alt={"1"}
-                className={"w-[637px] h-[432px]"}
-              ></img>
-              <img
-                src={`${baseUrl}/${posts.image_url}`}
-                alt={"2"}
-                className={"w-[637px] h-[432px]"}
-              ></img>
-              <img
-                src={`${baseUrl}/${posts.image_url}`}
-                alt={"3"}
-                className={"w-[637px] h-[432px]"}
-              ></img>
+            <div className={"flex transition -translate-x-[" + count + "00%]"}>
+                <img
+                  src={`${baseUrl}/${posts.image_url}`}
+                  alt={"1"}
+                  className={"w-[637px] h-[432px]"}
+                ></img>
+                <img
+                  src={`${baseUrl}/${posts.image_url}`}
+                  alt={"2"}
+                  className={"w-[637px] h-[432px]"}
+                ></img>
+                <img
+                  src={`${baseUrl}/${posts.image_url}`}
+                  alt={"3"}
+                  className={"w-[637px] h-[432px]"}
+                ></img>
             </div>
             <div
-              className={"flex gap-2 absolute inset-x-[300px] bottom-[20px]"}
+              className={"flex gap-2 inset-x-[300px] bottom-[20px] fixed z-10 "}
             >
               <button
-                className={count == 0? "w-[6px] h-[6px] rounded-xl z-10  bg-white" : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"}
+                className={
+                  count == 0
+                    ? "w-[6px] h-[6px] rounded-xl z-10  bg-white"
+                    : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"
+                }
                 onClick={() => {
                   setCount(0);
                 }}
                 slide
               ></button>
               <button
-                className={count == 1? "w-[6px] h-[6px] rounded-xl z-10  bg-white" : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"}
+                className={
+                  count == 1
+                    ? "w-[6px] h-[6px] rounded-xl z-10  bg-white"
+                    : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"
+                }
                 onClick={() => {
                   setCount(1);
                 }}
               ></button>
               <button
-                className={count == 2? "w-[6px] h-[6px] rounded-xl z-10  bg-white" : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"}
+                className={
+                  count == 2
+                    ? "w-[6px] h-[6px] rounded-xl z-10  bg-white"
+                    : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"
+                }
                 onClick={() => {
                   setCount(2);
                 }}
               ></button>
             </div>
-            
           </div>
-          
+
           <div
             className={
               "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] shadow-lg rounded-xl"
@@ -81,7 +101,7 @@ export default function ClubIntroduce() {
               <div className={"gap-2 flex mt-[9px]"}>
                 <div
                   className={
-                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md"
+                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[8px] py-[]"
                   }
                 >
                   {posts.tag1}
@@ -160,9 +180,10 @@ export default function ClubIntroduce() {
           {/*동아리 프로그램*/}
           <div
             className={
-              "overflow-hidden 2xl:w-[358px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center bg-gradient-to-t from-white"
+              "overflow-hidden 2xl:w-[358px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center relative"
             }
           >
+            {/* <div className="bg-main from-white absolute z-10 top-0"></div> */}
             <p className={"font-bold text-h2 py-6"}>동아리 프로그램</p>
             <div
               className={
@@ -312,26 +333,31 @@ export default function ClubIntroduce() {
             <div className={"border-t border-gray2 w-[390px] h-[430px]"}>
               <div className={"h-[24px]"} />
               <div className={"flex gap-6 ml-[10px]"}>
-                <div
-                  className={
-                    "w-[171px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
-                  }
-                >
-                  <img src={`${baseUrl}/${posts.image_url}`} className={"h-[258px]"}></img>
-                  <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>
-                    디자인팀 신입부원 모집
-                  </div>
-                </div>
-                <div
-                  className={
-                    "w-[100px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
-                  }
-                >
-                  <img src={`${baseUrl}/${posts.image_url}`} className={"h-[258px]"}></img>
-                  <div className={"h-16 text-h5 font-bold px-[10px] py-2"}>
-                    디자인팀 신입부원 모집
-                  </div>
-                </div>
+                {promotions.map((promotion) => {
+                  return (
+                    <>
+                      <div
+                        className={
+                          "w-[171px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
+                        }
+                        onClick={() => {
+                          navigate("/promotiondetail/" + promotion._id);
+                        }}
+                      >
+                        <img
+                          src={`${baseUrl}/${promotion.image_url}`}
+                          alt={"1"}
+                          className={"h-[258px]"}
+                        ></img>
+                        <div
+                          className={"h-16 text-h5 font-bold px-[10px] py-2"}
+                        >
+                          {promotion.title}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
               </div>
             </div>
           </div>
