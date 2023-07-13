@@ -48,9 +48,10 @@ export default function Promotion() {
       setPromotions(res.data)
     );
   };
-  useEffect(()=>{
+
+  useEffect(() => {
     countAllPosts();
-  }, [])
+  }, []);
 
   useEffect(() => {
     getPosts();
@@ -71,8 +72,9 @@ export default function Promotion() {
         <div className={"mt-[32px]"} />
         <ul className={"list-disc list-inside"}>
           <li>
-            중앙 동아리 <span className={"font-bold"}>{countAll[0]}개</span> | 직무
-            동아리 <span className={"font-bold"}>{countAll[1]}개</span> 홍보중
+            중앙 동아리 <span className={"font-bold"}>{countAll[0]}개</span> |
+            직무 동아리 <span className={"font-bold"}>{countAll[1]}개</span>{" "}
+            홍보중
           </li>
         </ul>
       </div>
@@ -87,22 +89,22 @@ export default function Promotion() {
               return (
                 <div
                   className={
-                    "w-[200px] h-[360px] 2xl:w-[300px] 2xl:h-[440px] rounded-xl shadow-lg transition hover:scale-110"
+                    "w-[200px] h-[360px] 2xl:w-[300px] 2xl:h-[528px] rounded-xl shadow-lg transition hover:scale-110"
                   }
                   onClick={() => {
-                    navigate("/clubdetail/" + promotion._id);
+                    navigate("/promotiondetail/" + promotion._id);
                   }}
                 >
                   <div
                     className={
-                      "w-[200px] h-[290px] 2xl:w-[300px] 2xl:h-[330px] rounded-t-xl"
+                      "w-[200px] h-[290px] 2xl:w-[300px] 2xl:h-[440px] rounded-t-xl"
                     }
                   >
                     <Image promotion={promotion} />
                   </div>
                   <div
                     className={
-                      "w-[200px] h-[70px] 2xl:w-[300px] 2xl:h-[110px] rounded-b-xl mt-2"
+                      "w-[200px] h-[70px] 2xl:w-[300px] 2xl:h-[88px] rounded-b-xl mt-2"
                     }
                   >
                     <Content promotion={promotion} />
@@ -115,7 +117,11 @@ export default function Promotion() {
       </div>
       <div className={"w-full p-16 flex justify-center"}>
         <div className={""}>
-          <Pagination total={Math.ceil((count[0] + count[1]) / 16)} boundaries={1} onChange={onChange}/>
+          <Pagination
+            total={Math.ceil((count[0] + count[1]) / 16)}
+            boundaries={1}
+            onChange={onChange}
+          />
         </div>
       </div>
     </div>
@@ -184,7 +190,7 @@ const PromotionTab = (props) => {
 
 const Image = (props) => {
   return (
-    <div className={"2xl:w-[300px] 2xl:h-[200px]"}>
+    <div className={"2xl:w-[300px] 2xl:h-[440px]"}>
       <img
         src={`${baseUrl}/${props.promotion.image_url}`}
         alt="img"
@@ -196,21 +202,21 @@ const Image = (props) => {
 
 const Content = (props) => {
   return (
-    <div className={"ml-[12px]"}>
+    <div className={"ml-[20px] my-[16px]"}>
       <div className={"text-h5 2xl:text-xl font-bold"}>
         {props.promotion.title.length > 14
           ? props.promotion.title.slice(0, 14) + "..."
           : props.promotion.title}
       </div>
-      <div className={"flex 2xl:flex gap-1 mt-[3px]"}>
+      <div className={"flex 2xl:flex gap-x-2 mt-2"}>
         <div
           className={
-            "text-h8 w-[85px] 2xl:w-[130px] 2xl:text-lg text-center 2xl:ml-3 text-md border border-darkgray text-darkgray rounded-xl px-3"
+            "text-h8 w-[85px] 2xl:w-[78px] 2xl:h-[24px] 2xl:text-h7 text-center text-md border border-darkgray text-darkgray rounded-xl px-2 py-[2px]"
           }
         >
           {props.promotion.classification === 1 ? "중앙 동아리" : "직무 동아리"}
         </div>
-        <div className={"text-h8 text-darkgray mt-[1px]"}>
+        <div className={"text-h8 text-darkgray mt-[3px]"}>
           {props.promotion.club_name}
         </div>
       </div>

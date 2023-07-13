@@ -30,7 +30,7 @@ export default function HomeNoticeList() {
                 <li
                   className={
                     index === 4
-                      ? "px-[24px] py-[21px] flex justify-between hover:bg-gray3"
+                      ? "px-[24px] py-[21px] flex justify-between hover:bg-gray3 rounded-[20px]"
                       : "px-[24px] py-[21px] flex justify-between border-b-[0.5px] border-gray2 hover:bg-gray3"
                   }
                 >

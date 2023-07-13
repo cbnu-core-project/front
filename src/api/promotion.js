@@ -12,6 +12,10 @@ export const readAllPromotions = (classification) => {
   );
 };
 
+export const readOnePromotion = (objectId) => {
+  return axios.get(`/api/promotion/${objectId}`);
+};
+
 export const readSomePromotions = (skip, limit, classification) => {
   if (classification === 0) {
     return axios.get(`/api/promotions/some/?skip=${skip}&limit=${limit}`);
