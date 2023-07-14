@@ -3,7 +3,7 @@ import Calendar from "./Calendar";
 import axios from "axios";
 import { baseUrl } from "../common/global";
 import Login from "../pages/Login";
-import { useNavigate } from "react-router-dom";
+import { useInRouterContext, useNavigate } from "react-router-dom";
 import setAuthorization from "../utils/setAuthorizationToken";
 import { useRecoilState } from "recoil";
 import { tokenState } from "../store";
@@ -21,12 +21,13 @@ export default function SideBar() {
   const navigate = useNavigate();
   //사이드바 세부적인 열기/닫기 기능 구현을 위한 변수들, 구역마다 함수로 빼놓음
   let [myclub, setMyclub] = useState(true); //나의 동아리
-  let [schedule, setSchedule] = useState(true); //월간 일정
+  let [calender, setCalender] = useState(true); //월간 일정
+  let [schedule, setSchedule] = useState(true); //이번주 일정
   let [register, setRegister] = useState(true); //동아리 신청내역
   let [interesting, setInteresting] = useState(true); //관심 동아리
   let [mytext, setMyText] = useState(true); //내가 작성한 글
   let [mystate, setMyState] = useState(false); //닉네임 옆 역삼각형 누를 때 생기는 창(모달)
-
+  
   let [user, setUser] = useState({}); //유저 정보
   let [token, setToken] = useRecoilState(tokenState); //토큰
 
@@ -53,7 +54,7 @@ export default function SideBar() {
           >
             account_circle
           </span>
-          <div className="pl-[8px] leading-[20px]">
+          <div className="pl-[8px] leading-[20px] w-full">
             <div>안녕하세요,</div>
             {/* 유저 닉네임 들어감 */}
             <div>
@@ -69,14 +70,14 @@ export default function SideBar() {
             </div>
           </div>
 
-          <span class="cursor-pointer ml-[78px] material-symbols-outlined">notifications</span>
+          <span class="cursor-pointer ml-outo material-symbols-outlined">notifications</span>
         {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
         </div>
         {mystate == true ? <Modal /> : null} 
-        <div className="flex mt-[40px]">
-          <div className="side_title">나의 동아리</div>
+        <div className="flex mt-[40px] ">
+          <div className="side_title ">나의 동아리</div>
           <button
-            class="ml-auto material-symbols-outlined"
+            class="ml-auto material-symbols-outlined "
             onClick={() => {
               setMyclub(!myclub);
             }}//버튼 클릭 시에 '나의 동아리' 정보 열림/닫힘
@@ -86,14 +87,24 @@ export default function SideBar() {
           {/* 참일 때 '나의 동아리' 정보 열림*/}
         </div>
         {myclub == true ? <MyClub /> : null}
-        <div className="side_title mt-[20px]">월간 일정</div>
-        <div className={""}>
-          <Calendar />
+        
+        <div className="flex mt-[20px] w-full">
+          <div className="side_title ">월간 일정</div>
+          <button
+              class="ml-auto material-symbols-outlined"
+              onClick={() => {
+                setCalender(!calender);//버튼 클릭 시에 '월간 일정' 정보 열림/닫힘
+              }}
+            >
+              expand_more
+          </button>
+          
         </div>
-        <div className="flex mt-[25px]">
+        {calender == true ? <Calendar /> : null}{/* 참일 때 '이번주 일정' 정보 열림*/}
+        <div className="flex mt-[25px] w-full">
           <div className="side_title">이번주 일정</div>
           <button
-            class="ml-[215px] material-symbols-outlined"
+            class="ml-auto material-symbols-outlined"
             onClick={() => {
               setSchedule(!schedule);
             }}//버튼 클릭 시에 '이번주 일정' 정보 열림/닫힘
@@ -103,10 +114,10 @@ export default function SideBar() {
         </div>
         {schedule == true ? <WeekSchedule /> : null}
         {/* 참일 때 '이번주 일정' 정보 열림*/}
-        <div className="flex mt-[20px]">
+        <div className="flex mt-[20px] w-full">
           <div className="side_title">동아리 신청 내역</div>
           <button
-            className="ml-[175px] material-symbols-outlined"
+            className="ml-auto material-symbols-outlined"
             onClick={() => {
               setRegister(!register);
             }}
@@ -117,22 +128,22 @@ export default function SideBar() {
         {register == true ? <Register /> : null}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
-          <div className="side_title">관심 동아리</div>
-          <button
-            class="ml-[215px] material-symbols-outlined"
-            onClick={() => {
-              setInteresting(!interesting);//버튼 클릭 시에 '관심 동아리' 정보 열림/닫힘
-            }}
-          >
-            expand_more
-          </button>
+            <div className="side_title w-full ">관심 동아리</div>
+            <button
+              class="ml-outo material-symbols-outlined"
+              onClick={() => {
+                setInteresting(!interesting);//버튼 클릭 시에 '관심 동아리' 정보 열림/닫힘
+              }}
+            >
+              expand_more
+            </button>
         </div>
         {interesting == true ? <Interesting /> : null}
           {/* 참일 때 '관심동아리' 정보 열림*/}
-        <div className="flex mt-[20px]">
+        <div className="flex mt-[20px] w-full">
           <div className="side_title">내가 작성한 글</div>
           <button
-            class="ml-[195px] material-symbols-outlined"
+            class="ml-auto material-symbols-outlined"
             onClick={() => {
               setMyText(!mytext);//버튼 클릭 시에 '내가 작성한 글' 정보 열림/닫힘
             }}
@@ -191,6 +202,8 @@ function MyClub() { //'내 동아리'정보
   let [token, setToken] = useRecoilState(tokenState);
   let [clubs, setClubs] = useState([]); //모든 동아리 이름 정보
 
+  const navigate = useNavigate();
+
   useEffect(() => { //유저 동아리 정보 불러옴
     axios.get("api/user/clubs").then((response) => {
       setUserInfo(response.data);
@@ -210,10 +223,15 @@ function MyClub() { //'내 동아리'정보
             for (let i = 0; i < userInfo.length; i++) {
               if (club['_id'] == userInfo[i]) { //모든 동아리 아이디 하나씩 유저 동아리와 동일한지 비교
                 return ( //일치하면 실행
-                  <div>
+                  <div className="cursor-pointer" onClick={()=>{
+                    navigate("/clubdetail/"+userInfo[i]+"/clubintroduce")
+                    window.location.reload()
+                  }}>
                     {/* 사각 아이콘 안에 첫글자만 보여줌 */}
-                    <div className="club_icon">{club.title.charAt(0)}</div> 
-                    <div className="club_text">{club.title}</div>
+                    <div className="grid justify-center">
+                    <div className="club_icon">{club.title.charAt(0)}</div>
+                    </div>
+                    <div className="text-center ">{club.title}</div>
                     {/* 동아리 이름 출력 */}
                   </div>
                   );

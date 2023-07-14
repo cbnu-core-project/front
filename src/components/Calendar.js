@@ -3,6 +3,9 @@ import { selectedDateState, schedulesState } from "../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+//구글아이콘 링크
+
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState); // [year, month, day] 리스트로 만듬
@@ -63,26 +66,25 @@ const Calendar = () => {
   };
 
   return (
-    <div className="w-max-md mx-auto p-4">
+    <div className="w-max-md mx-auto p-4 bg-white mt-[10px] rounded-3xl">
       <div className="flex items-center justify-between mb-4">
-        <button
-          className="text-midgray hover:text-darkgray"
+        <span className="material-symbols-outlined text-midgray hover:text-darkgray"
           onClick={goToPrevMonth}
         >
-          Prev
-        </button>
+          chevron_left
+        </span>
         <h2 className="text-h2 font-bold">
-          {currentDate.toLocaleString("default", {
+          {/* {currentDate.toLocaleString("default", {
             month: "long",
             year: "numeric",
-          })}
+          })} */}
+          {`${currentDate.getFullYear()}.${String(currentDate.getMonth() + 1).padStart(2, "0")}`}
         </h2>
-        <button
-          className="text-midgray hover:text-darkgray"
+        <span className="material-symbols-outlined text-midgray hover:text-darkgray"
           onClick={goToNextMonth}
         >
-          Next
-        </button>
+          chevron_right
+        </span>      
       </div>
       <div className="grid grid-cols-7 gap-2">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (

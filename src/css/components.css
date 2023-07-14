@@ -44,7 +44,7 @@
     }
 
     .club_icon{
-        @apply w-[50px] h-[50px] bg-main_mid rounded-xl text-center text-white font-[600] pt-[12px]
+        @apply  w-[50px] h-[50px] bg-main_mid rounded-xl text-center text-white font-[600] pt-[12px]
     }
 
     .club_text{
