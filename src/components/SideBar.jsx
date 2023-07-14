@@ -172,8 +172,9 @@ function Modal() { //최상단 닉네임 옆 역삼각형 누르면 뜨는 창
           <div
             className="flex gap-2 cursor-pointer"
             onClick={() => {
-              localStorage.removeItem("access_token"); //'로그아웃' 클릭시에 로그아웃 진행
-              setAuthorization(); 
+              // 로그아웃
+              setAccessToken()
+              setRefreshToken()
               setToken("");//빈 토큰 설정==로그아웃
             }}
           >
