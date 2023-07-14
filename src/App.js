@@ -4,35 +4,25 @@ import { Home, Club, Mypage, Notice,PromotionDetail, Promotion, ClubDetail, Club
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
-import setAuthorization from "./utils/setAuthorizationToken";
+import { checkAccessTokenAndRefreshToken, setAccessToken } from "./utils/token";
 import { tokenState } from "./store";
 import { useRecoilState } from "recoil";
-
-// access_token 디코딩을 위한 함수
-function decodeToken(token) {
-  const base64Url = token.split(".")[1];
-  const base64 = base64Url.replace("-", "+").replace("_", "/");
-  const decodedData = JSON.parse(window.atob(base64));
-  return decodedData;
-}
+import axios from "axios";
 
 // 토큰 만료기간 확인 후, 만료 처리
 function App() {
-  const [token, setToken] = useRecoilState(tokenState)
+  const [token, setToken] = useRecoilState(tokenState);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      setAuthorization(token);
-      setToken(token)
-
-      const decodedToken = decodeToken(token);
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decodedToken.exp < currentTime) {
-        // 토큰이 만료되었으므로 로그아웃 또는 새로운 토큰 요청 등의 처리를 수행
-        console.log("토큰 만료된거임");
-        localStorage.removeItem("access_token");
-      }
+    const refresh_token = checkAccessTokenAndRefreshToken();
+    if (refresh_token) {
+      axios
+        .post("/api/refresh", { refresh_token: refresh_token })
+        .then((res) => {
+          const new_access_token = res.data;
+          setAccessToken(new_access_token);
+          setToken(new_access_token);
+        });
     }
   }, []);
 
