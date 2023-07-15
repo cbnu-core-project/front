@@ -13,6 +13,14 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const [token, setToken] = useRecoilState(tokenState);
 
+  const REST_API_KEY = "40d478c8d7447b20143b402959fd7ed8";
+  const REDIRECT_URI = "http://localhost:3000";
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+  const handleLogin = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
+
   return (
     <>
       <div className={"text-h0 font-[Pv] font-extrabold text-center mt-64"}>
@@ -127,8 +135,10 @@ export default function Login() {
           ──────── SNS 계정으로 로그인 ────────
         </div>
 
-        <div className={"text-gray2 text-center font-[Pv] font-bold"}>
-          1 2 3 4
+        <div className={"text-black text-center font-[Pv] font-bold"}>
+          <button className={"bg-red_error"} onClick={handleLogin}>
+            카카오로 바로 시작
+          </button>
         </div>
       </div>
     </>
