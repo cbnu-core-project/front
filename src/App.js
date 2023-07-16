@@ -20,6 +20,7 @@ import Login from "./pages/Login";
 import { useEffect } from "react";
 import {
   checkAccessTokenAndRefreshToken,
+  getAccessToken,
   setAccessToken,
   setRefreshToken,
 } from "./utils/token";
@@ -32,7 +33,8 @@ import { baseUrl } from "./common/global";
 function App() {
   const [token, setToken] = useRecoilState(tokenState);
   const PARAMS = new URL(document.location).searchParams;
-  const KAKAO_CODE = PARAMS.get("code");
+  const CODE = PARAMS.get("code");
+  const STATE = PARAMS.get("state");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,22 +48,50 @@ function App() {
     //       setToken(new_access_token);
     //     });
     // }
-
-    // 로그인해서 kakao코드가 쿼리스트링에 존재 할 때만 실행
-    if (KAKAO_CODE) {
+    let access_token = getAccessToken();
+    console.log(access_token);
+    if (access_token) {
+      // 헤더 등록을 위해 한 번 더 set
+      setAccessToken(access_token);
       axios
-        .post(`${baseUrl}/oauth/kakao/callback`, { code: KAKAO_CODE })
+        .get("/oauth/kakao/protected")
         .then((res) => {
-          const { access_token, refresh_token } = res.data;
-          setAccessToken(access_token);
-          setRefreshToken(refresh_token);
-          navigate("/");
           setToken(access_token);
         })
         .catch((err) => {
-          console.log("에러남");
           console.log(err);
         });
+    }
+    if (CODE) {
+      if (STATE == "kakao") {
+        axios
+          .post(`${baseUrl}/oauth/kakao/login`, { code: CODE })
+          .then((res) => {
+            const { access_token, refresh_token } = res.data;
+            setAccessToken(access_token);
+            setRefreshToken(refresh_token);
+            navigate("/");
+            setToken(access_token);
+          })
+          .catch((err) => {
+            console.log("에러남");
+            console.log(err);
+          });
+      } else if (STATE == "naver") {
+        axios
+          .post(`${baseUrl}/oauth/kakao/login`, { code: CODE })
+          .then((res) => {
+            const { access_token, refresh_token } = res.data;
+            setAccessToken(access_token);
+            setRefreshToken(refresh_token);
+            navigate("/");
+            setToken(access_token);
+          })
+          .catch((err) => {
+            console.log("에러남");
+            console.log(err);
+          });
+      }
     }
   }, []);
 

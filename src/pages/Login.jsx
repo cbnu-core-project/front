@@ -13,12 +13,22 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const [token, setToken] = useRecoilState(tokenState);
 
-  const REST_API_KEY = "40d478c8d7447b20143b402959fd7ed8";
-  const REDIRECT_URI = "http://localhost:3000";
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const KAKAO_REST_API_KEY = "40d478c8d7447b20143b402959fd7ed8";
+  const KAKAO_STATE = "kakao";
+  const KAKAO_REDIRECT_URI = "http://localhost:3000";
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code&state=${KAKAO_STATE}`;
 
-  const handleLogin = () => {
+  const NAVER_CLIENT_ID = "zB5gfqdBq1a0jq6vr_zv";
+  const NAVER_STATE = "naver";
+  const NAVER_REDIRECT_URI = "http://localhost:3000";
+  const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${NAVER_STATE}&redirect_uri=${NAVER_REDIRECT_URI}`;
+
+  const handleKakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
+  };
+
+  const handleNaverLogin = () => {
+    window.location.href = NAVER_AUTH_URL;
   };
 
   return (
@@ -136,8 +146,11 @@ export default function Login() {
         </div>
 
         <div className={"text-black text-center font-[Pv] font-bold"}>
-          <button className={"bg-red_error"} onClick={handleLogin}>
+          <button className={"bg-red_error p-2"} onClick={handleKakaoLogin}>
             카카오로 바로 시작
+          </button>
+          <button className={"bg-main p-2"} onClick={handleNaverLogin}>
+            네이버로 바로 시작
           </button>
         </div>
       </div>
