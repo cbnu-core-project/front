@@ -18,12 +18,7 @@ import {
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
-import {
-  checkAccessTokenAndRefreshToken,
-  getAccessToken,
-  setAccessToken,
-  setRefreshToken,
-} from "./utils/token";
+import { getAccessToken, setAccessToken, setRefreshToken } from "./utils/token";
 import { tokenState } from "./store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
