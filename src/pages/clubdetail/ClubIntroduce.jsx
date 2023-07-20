@@ -273,7 +273,7 @@ export default function ClubIntroduce() {
               "w-[454px] h-[512px] 2xl:w-[454px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center"
             }
           >
-            <p className={"font-bold text-h2 py-6"}>주요 활동내역</p>
+            <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
             <div
               className={
                 "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll"
