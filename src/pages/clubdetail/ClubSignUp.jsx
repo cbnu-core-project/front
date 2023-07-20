@@ -166,7 +166,7 @@ function ManagerSignUp() {
                   </div>
                   <div className={"w-[160px]"}>
                     <p className={"text-h5 text-center py-[6px]"}>
-                      소프트웨어학과
+                      소프트웨어학ㅁㅁㄴㅇㅁㄴㅇ과
                     </p>
                   </div>
                   <div className={"w-[155px]"}>

@@ -57,10 +57,10 @@ const Notice = () => {
 
   return (
     <div className="container mx-auto mt-8 px-4">
-      <h1 className="text-4xl font-bold text-center mt-4 text-white">공지 사항</h1>
+      <h1 className="text-4xl font-bold text-center mt-4 text-white">공지사항</h1>
       <div className="flex items-center justify-center mb-10 mt-10">
       <h1 className="text-4xl text-center mr-2 text-main_mid">서비스</h1>
-        <h1 className="text-4xl font-bold text-center text-main">공지 사항</h1>
+        <h1 className="text-4xl font-bold text-center text-main">공지사항</h1>
       </div>
       
 
