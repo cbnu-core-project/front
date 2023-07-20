@@ -44,10 +44,29 @@
     }
 
     .club_icon{
-        @apply w-[50px] h-[50px] bg-main_mid rounded-xl text-center text-white font-[600] pt-[12px]
+        @apply  w-[50px] h-[50px] bg-main_mid rounded-xl text-center text-white font-[600] pt-[12px]
     }
 
     .club_text{
         @apply text-center text-h8 font-[300]
     }
+    .signup_wait{
+        @apply w-[100px] h-[40px] bg-[#FF990033] text-[#FF5C00] rounded-md text-h5 
+    }
+    .signup_done{
+        @apply w-[100px] h-[40px] bg-[#DAF9CFB2] text-darkgray rounded-md text-h5
+    }
+    .signup_accept{
+        @apply w-[100px] h-[40px] bg-sub text-white rounded-md text-h5
+    }
+    .signup_deny{
+        @apply w-[100px] h-[40px] bg-[#C1C1C1] text-white rounded-md text-h5
+    }
+    .management_president{
+        @apply w-[74px] h-[40px] bg-main_mid rounded-md text-white py-[6px] px-[23px]
+    }
+    .member_delete{
+        @apply w-[100px] h-[40px] bg-[#FF847C7D] rounded-md text-h5
+    }
+
 }
