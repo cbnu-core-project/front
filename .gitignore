@@ -43,5 +43,6 @@ packages/react-devtools-inline/dist
 packages/react-devtools-shell/dist
 
 node_modules
-node_modules
 src/common/global.js
+.idea
+.idea/workspace.xml
