@@ -33,23 +33,13 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const refresh_token = checkAccessTokenAndRefreshToken();
-    // if (refresh_token) {
-    //   axios
-    //     .post("/api/refresh", { refresh_token: refresh_token })
-    //     .then((res) => {
-    //       const new_access_token = res.data;
-    //       setAccessToken(new_access_token);
-    //       setToken(new_access_token);
-    //     });
-    // }
     let access_token = getAccessToken();
     console.log(access_token);
     if (access_token) {
       // 헤더 등록을 위해 한 번 더 set
       setAccessToken(access_token);
       axios
-        .get("/oauth/kakao/protected")
+        .get("/api/common/protected")
         .then((res) => {
           setToken(access_token);
         })
@@ -73,8 +63,9 @@ function App() {
             console.log(err);
           });
       } else if (STATE == "naver") {
+        console.log("네이버로 로그인");
         axios
-          .post(`${baseUrl}/oauth/kakao/login`, { code: CODE })
+          .post(`${baseUrl}/oauth/naver/login`, { code: CODE })
           .then((res) => {
             const { access_token, refresh_token } = res.data;
             setAccessToken(access_token);
