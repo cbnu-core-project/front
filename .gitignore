@@ -44,3 +44,4 @@ packages/react-devtools-shell/dist
 
 node_modules
 node_modules
+src/common/global.js
