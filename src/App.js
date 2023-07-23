@@ -18,11 +18,18 @@ import {
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
 import { useEffect } from "react";
-import { getAccessToken, setAccessToken, setRefreshToken } from "./utils/token";
+import {
+  getAccessToken,
+  getRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from "./utils/token";
 import { tokenState } from "./store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import { baseUrl } from "./common/global";
+import { useQuery } from "react-query";
+import { getCookie } from "./utils/cookie";
 
 // 토큰 만료기간 확인 후, 만료 처리
 function App() {
@@ -31,6 +38,62 @@ function App() {
   const CODE = PARAMS.get("code");
   const STATE = PARAMS.get("state");
   const navigate = useNavigate();
+
+  function postAccessToken() {
+    return axios
+      .post(`${baseUrl}/api/refresh`, {
+        refresh_token: getRefreshToken(),
+      })
+      .then((res) => {
+        console.log("Access token 재발급");
+        setAccessToken(res.data.access_token);
+        setToken(res.data.access_token);
+      });
+  }
+
+  // 40분마다 refresh
+  useQuery(["refresh_token"], postAccessToken, {
+    refetchInterval: 40 * 60 * 1000, // 40분 마다 refresh하여 access_token 재발급
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: false, // 윈도우 포커스 변경에 의한 refetch 비활성화
+    cacheTime: 0, // 캐시 시간을 0으로 설정하여 캐시 사용하지 않음
+    onError: () => {
+      alert("로그인이 필요합니다.");
+      setToken("");
+    },
+  });
+
+  function kakaoLogin() {
+    return axios
+      .post(`${baseUrl}/oauth/kakao/login`, { code: CODE })
+      .then((res) => {
+        const { access_token, refresh_token } = res.data;
+        setAccessToken(access_token);
+        setRefreshToken(refresh_token);
+        navigate("/");
+        setToken(access_token);
+      })
+      .catch((err) => {
+        console.log("에러남");
+        console.log(err);
+      });
+  }
+
+  function naverLogin() {
+    return axios
+      .post(`${baseUrl}/oauth/naver/login`, { code: CODE })
+      .then((res) => {
+        const { access_token, refresh_token } = res.data;
+        setAccessToken(access_token);
+        setRefreshToken(refresh_token);
+        navigate("/");
+        setToken(access_token);
+      })
+      .catch((err) => {
+        console.log("에러남");
+        console.log(err);
+      });
+  }
 
   useEffect(() => {
     let access_token = getAccessToken();
@@ -49,34 +112,9 @@ function App() {
     }
     if (CODE) {
       if (STATE == "kakao") {
-        axios
-          .post(`${baseUrl}/oauth/kakao/login`, { code: CODE })
-          .then((res) => {
-            const { access_token, refresh_token } = res.data;
-            setAccessToken(access_token);
-            setRefreshToken(refresh_token);
-            navigate("/");
-            setToken(access_token);
-          })
-          .catch((err) => {
-            console.log("에러남");
-            console.log(err);
-          });
+        kakaoLogin();
       } else if (STATE == "naver") {
-        console.log("네이버로 로그인");
-        axios
-          .post(`${baseUrl}/oauth/naver/login`, { code: CODE })
-          .then((res) => {
-            const { access_token, refresh_token } = res.data;
-            setAccessToken(access_token);
-            setRefreshToken(refresh_token);
-            navigate("/");
-            setToken(access_token);
-          })
-          .catch((err) => {
-            console.log("에러남");
-            console.log(err);
-          });
+        naverLogin();
       }
     }
   }, []);
