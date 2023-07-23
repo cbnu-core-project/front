@@ -10,7 +10,6 @@ import Swal from "sweetalert2";
 axios.defaults.baseURL = baseUrl;
 
 export default function Login() {
-  const [message, setMessage] = useState("");
   const [token, setToken] = useRecoilState(tokenState);
 
   const KAKAO_REST_API_KEY = "40d478c8d7447b20143b402959fd7ed8";
@@ -59,7 +58,6 @@ export default function Login() {
               })
               .then((res) => {
                 const { access_token, refresh_token } = res.data;
-                setMessage("로그인 성공!");
                 Swal.fire({
                   position: "top-end",
                   icon: "success",
@@ -74,7 +72,6 @@ export default function Login() {
               })
               .catch((err) => {
                 // console.log(err.response.data.detail);
-                setMessage(err.response.data.detail);
                 Swal.fire({
                   title: "로그인 실패!",
                   text: err.response.data.detail,
@@ -100,7 +97,6 @@ export default function Login() {
               placeholder="비밀번호를 입력하세요"
             />
           </div>
-          <div>{message}</div>
           <button
             type={"submit"}
             className={
@@ -117,24 +113,6 @@ export default function Login() {
           <span className={"mx-5"}> 비밀번호 찾기 </span>
           <span> │ </span>
           <span className={"ml-5"}> 회원가입 </span>
-        </div>
-
-        <div>
-          <button
-            onClick={() => {
-              axios
-                .get("/protected")
-                .then((res) => {
-                  setMessage("로그인 되어있네" + res.data);
-                })
-                .catch((err) => {
-                  setMessage(err.response.data.detail);
-                  // console.log(err.response.data.detail);
-                });
-            }}
-          >
-            loginTest
-          </button>
         </div>
 
         <div

@@ -10,8 +10,8 @@ import { tokenState } from "../store";
 import { readAllClubs } from "../api/club";
 
 axios.defaults.baseURL = baseUrl;
- 
- //google icon 불러오는 링크
+
+//google icon 불러오는 링크
 <link
   rel="stylesheet"
   href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
@@ -27,17 +27,19 @@ export default function SideBar() {
   let [interesting, setInteresting] = useState(true); //관심 동아리
   let [mytext, setMyText] = useState(true); //내가 작성한 글
   let [mystate, setMyState] = useState(false); //닉네임 옆 역삼각형 누를 때 생기는 창(모달)
-  
+
   let [user, setUser] = useState({}); //유저 정보
   let [token, setToken] = useRecoilState(tokenState); //토큰
 
-  useEffect(() => { //유저 정보 받아옴
+  useEffect(() => {
+    //유저 정보 받아옴
     axios.get("api/user/info").then((response) => {
       setUser(response.data);
     });
   }, [token]);
 
-  if (token) { //로그인 됐을 때만 보임
+  if (token) {
+    //로그인 됐을 때만 보임
     return (
       <div
         className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10"
@@ -58,56 +60,58 @@ export default function SideBar() {
             <div>안녕하세요,</div>
             {/* 유저 닉네임 들어감 */}
             <div>
-              {user.username}님 
+              {user.nickname}님
               <i
                 className="cursor-pointer ml-[8px] fa-solid fa-play fa-rotate-90 fa-2xs"
                 style={{ color: "#a7aaae" }}
                 onClick={(event) => {
                   setMyState(!mystate); //클릭 시 창 열림/닫힘
-                  event.stopPropagation(); //배경에 설정해놓은 setMyState(false)가 이 구역에서는 실행되지 않도록 함 
+                  event.stopPropagation(); //배경에 설정해놓은 setMyState(false)가 이 구역에서는 실행되지 않도록 함
                 }}
               ></i>
             </div>
           </div>
 
-          <span class="cursor-pointer ml-outo material-symbols-outlined">notifications</span>
-        {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
+          <span class="cursor-pointer ml-outo material-symbols-outlined">
+            notifications
+          </span>
+          {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
         </div>
-        {mystate == true ? <Modal /> : null} 
+        {mystate == true ? <Modal /> : null}
         <div className="flex mt-[40px] ">
           <div className="side_title ">나의 동아리</div>
           <button
             class="ml-auto material-symbols-outlined "
             onClick={() => {
               setMyclub(!myclub);
-            }}//버튼 클릭 시에 '나의 동아리' 정보 열림/닫힘
+            }} //버튼 클릭 시에 '나의 동아리' 정보 열림/닫힘
           >
             expand_more
           </button>
           {/* 참일 때 '나의 동아리' 정보 열림*/}
         </div>
         {myclub == true ? <MyClub /> : null}
-        
+
         <div className="flex mt-[20px] w-full">
           <div className="side_title ">월간 일정</div>
           <button
-              class="ml-auto material-symbols-outlined"
-              onClick={() => {
-                setCalender(!calender);//버튼 클릭 시에 '월간 일정' 정보 열림/닫힘
-              }}
-            >
-              expand_more
+            class="ml-auto material-symbols-outlined"
+            onClick={() => {
+              setCalender(!calender); //버튼 클릭 시에 '월간 일정' 정보 열림/닫힘
+            }}
+          >
+            expand_more
           </button>
-          
         </div>
-        {calender == true ? <Calendar /> : null}{/* 참일 때 '이번주 일정' 정보 열림*/}
+        {calender == true ? <Calendar /> : null}
+        {/* 참일 때 '이번주 일정' 정보 열림*/}
         <div className="flex mt-[25px] w-full">
           <div className="side_title">이번주 일정</div>
           <button
             class="ml-auto material-symbols-outlined"
             onClick={() => {
               setSchedule(!schedule);
-            }}//버튼 클릭 시에 '이번주 일정' 정보 열림/닫힘
+            }} //버튼 클릭 시에 '이번주 일정' 정보 열림/닫힘
           >
             expand_more
           </button>
@@ -128,24 +132,24 @@ export default function SideBar() {
         {register == true ? <Register /> : null}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
-            <div className="side_title w-full ">관심 동아리</div>
-            <button
-              class="ml-outo material-symbols-outlined"
-              onClick={() => {
-                setInteresting(!interesting);//버튼 클릭 시에 '관심 동아리' 정보 열림/닫힘
-              }}
-            >
-              expand_more
-            </button>
+          <div className="side_title w-full ">관심 동아리</div>
+          <button
+            class="ml-outo material-symbols-outlined"
+            onClick={() => {
+              setInteresting(!interesting); //버튼 클릭 시에 '관심 동아리' 정보 열림/닫힘
+            }}
+          >
+            expand_more
+          </button>
         </div>
         {interesting == true ? <Interesting /> : null}
-          {/* 참일 때 '관심동아리' 정보 열림*/}
+        {/* 참일 때 '관심동아리' 정보 열림*/}
         <div className="flex mt-[20px] w-full">
           <div className="side_title">내가 작성한 글</div>
           <button
             class="ml-auto material-symbols-outlined"
             onClick={() => {
-              setMyText(!mytext);//버튼 클릭 시에 '내가 작성한 글' 정보 열림/닫힘
+              setMyText(!mytext); //버튼 클릭 시에 '내가 작성한 글' 정보 열림/닫힘
             }}
           >
             expand_more
@@ -156,7 +160,8 @@ export default function SideBar() {
         <div className={"mt-[32px]"} />
       </div>
     );
-  } else { //로그아웃 시에 보임
+  } else {
+    //로그아웃 시에 보임
     return (
       <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
         <Login></Login>
@@ -165,7 +170,8 @@ export default function SideBar() {
   }
 }
 
-function Modal() { //최상단 닉네임 옆 역삼각형 누르면 뜨는 창
+function Modal() {
+  //최상단 닉네임 옆 역삼각형 누르면 뜨는 창
   const [token, setToken] = useRecoilState(tokenState);
 
   return (
@@ -184,9 +190,9 @@ function Modal() { //최상단 닉네임 옆 역삼각형 누르면 뜨는 창
             className="flex gap-2 cursor-pointer"
             onClick={() => {
               // 로그아웃
-              setAccessToken()
-              setRefreshToken()
-              setToken("");//빈 토큰 설정==로그아웃
+              setAccessToken();
+              setRefreshToken();
+              setToken(""); //빈 토큰 설정==로그아웃
             }}
           >
             <span class="material-symbols-outlined">power_rounded</span>
@@ -198,20 +204,23 @@ function Modal() { //최상단 닉네임 옆 역삼각형 누르면 뜨는 창
   );
 }
 
-function MyClub() { //'내 동아리'정보 
+function MyClub() {
+  //'내 동아리'정보
   let [userInfo, setUserInfo] = useState([]); //유저 동아리 정보
   let [token, setToken] = useRecoilState(tokenState);
   let [clubs, setClubs] = useState([]); //모든 동아리 이름 정보
 
   const navigate = useNavigate();
 
-  useEffect(() => { //유저 동아리 정보 불러옴
+  useEffect(() => {
+    //유저 동아리 정보 불러옴
     axios.get("api/user/clubs").then((response) => {
       setUserInfo(response.data);
     });
   }, [token]);
 
-  useEffect(() => { //모든 동아리 정보 불러옴
+  useEffect(() => {
+    //모든 동아리 정보 불러옴
     readAllClubs(0).then((res) => {
       setClubs(res.data);
     });
@@ -220,33 +229,37 @@ function MyClub() { //'내 동아리'정보
   return (
     <>
       <div className="grid grid-cols-5 gap-[18px] mt-[10px]">
-          {clubs.map((club) => { 
-            for (let i = 0; i < userInfo.length; i++) {
-              if (club['_id'] == userInfo[i]) { //모든 동아리 아이디 하나씩 유저 동아리와 동일한지 비교
-                return ( //일치하면 실행
-                  <div className="cursor-pointer" onClick={()=>{
-                    navigate("/clubdetail/"+userInfo[i]+"/clubintroduce")
-                    window.location.reload()
-                  }}>
-                    {/* 사각 아이콘 안에 첫글자만 보여줌 */}
-                    <div className="grid justify-center">
+        {clubs.map((club) => {
+          for (let i = 0; i < userInfo.length; i++) {
+            if (club["_id"] == userInfo[i]) {
+              //모든 동아리 아이디 하나씩 유저 동아리와 동일한지 비교
+              return (
+                //일치하면 실행
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    navigate("/clubdetail/" + userInfo[i] + "/clubintroduce");
+                    window.location.reload();
+                  }}
+                >
+                  {/* 사각 아이콘 안에 첫글자만 보여줌 */}
+                  <div className="grid justify-center">
                     <div className="club_icon">{club.title.charAt(0)}</div>
-                    </div>
-                    <div className="text-center ">{club.title}</div>
-                    {/* 동아리 이름 출력 */}
                   </div>
-                  );
-              }
+                  <div className="text-center ">{club.title}</div>
+                  {/* 동아리 이름 출력 */}
+                </div>
+              );
             }
-          })}
+          }
+        })}
       </div>
-    
-    
     </>
   );
 }
 
-function Register() { //'동아리 신청내역'정보
+function Register() {
+  //'동아리 신청내역'정보
   return (
     <div className="w-full h-[55px] bg-white flex rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[10px]">
@@ -262,7 +275,8 @@ function Register() { //'동아리 신청내역'정보
   );
 }
 
-function WeekSchedule() {//'이번주 일정'정보
+function WeekSchedule() {
+  //'이번주 일정'정보
   return (
     <div className="flex mt-[10px] gap-[5px]">
       <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
@@ -278,7 +292,8 @@ function WeekSchedule() {//'이번주 일정'정보
   );
 }
 
-function Interesting() {//'관심동아리'정보
+function Interesting() {
+  //'관심동아리'정보
   return (
     <div className="flex gap-[18px] mt-[10px]">
       <div flex flex-row>
@@ -293,7 +308,8 @@ function Interesting() {//'관심동아리'정보
   );
 }
 
-function MyText() {//'내가 작성한 글'정보
+function MyText() {
+  //'내가 작성한 글'정보
   return (
     <div className="w-full h-[55px] bg-white rounded-2xl mt-[10px]">
       <div className="flex flex-col justify-center ml-[13px]">

@@ -38,21 +38,21 @@ export default function ClubIntroduce() {
   }
 
   activity.sort((a, b) => {
-    //주요활동내역 "연도별" 정렬
+    //주요활동내역 연도별 정렬
     if (a.year > b.year) return -1;
     if (a.year < b.year) return 1;
     return 0;
   });
 
   activity.sort((a, b) => {
-    //주요활동내역 "달별" 정렬
+    //주요활동내역 달별 정렬
     if (a.year === b.year) if (a.month < b.month) return -1;
     if (a.month > b.month) return 1;
     return 0;
   });
 
   activity.sort((a, b) => {
-    //주요활동내역 내용 "ㄱㄴㄷ순" 정렬
+    //주요활동내역 내용 ㄱㄴㄷ순 정렬
     if (a.month === b.month && a.year === b.year)
       if (a.title < b.title) return -1;
     if (a.title > b.title) return 1;
@@ -83,10 +83,10 @@ export default function ClubIntroduce() {
               "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden z-[-1]"
             }
           >
-              <img
-                src={`${baseUrl}/${posts.image_url}`}
-                className={"w-[637px] h-[432px] "}
-              ></img>
+            <img
+              src={`${baseUrl}/${posts.image_url}`}
+              className={"w-[637px] h-[432px]"}
+            ></img>
           </div>
 
           <div
@@ -231,7 +231,7 @@ export default function ClubIntroduce() {
               className={
                 "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll"
               }
-            >
+            > 
               {activity.map((acti) => { //연도 선택적으로 시각화(우회해서 작성)
                 prev_length = list.length //연도 추가전 리스트 길이 저장 
                 if (list.find((element) => element == acti.year) == null) { 
@@ -303,17 +303,32 @@ export default function ClubIntroduce() {
                           className={"h-[258px]"}
                         ></img>
                         <div
-                          className={"h-16 text-h5 font-bold px-[10px] py-2"}
+                          className={"w-[70px] h-auto text-[30px] font-light"}
                         >
-                          {promotion.title}
+                          {acti.year}
                         </div>
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
-            </div>
-          </div> */}
+                      ) : null}
+                      <div className={"w-[320px] h-auto"}>
+                        <ul
+                          className={
+                            "marker:text-main_default list-disc list-inside ml-5 "
+                          }
+                        >
+          //                 {/*나중에 반복문으로 뺄거임*/}
+          {/* //                 <li className={"text-h4 mt-[5px]"}>
+          //                   <span className={"text-h3 mr-6 text-gray"}>
+          //                     {String(acti.month).padStart(2, "0")}
+          //                   </span>
+          //                   {acti.title}
+          //                 </li>
+          //               </ul>
+          //             </div>
+          //           </div> 
+          //         </>
+          //       );
+          //     })}
+          //   </div>
+           </div> */}
         </div>
         <div className={"h-[80px]"} />
       </div>

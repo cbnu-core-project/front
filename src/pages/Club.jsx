@@ -104,7 +104,6 @@ export default function Club() {
                   >
                     <Content post={post} />
                   </div>
-                  
                 </div>
               );
             })}
@@ -239,14 +238,14 @@ const Content = (props) => {
         </div>
       </div>
       <div className={"hidden 2xl:block text-h6 mt-[2px]"}>
-        {props.post.content.length > 35
-          ? props.post.content.slice(0, 35) + "..."
-          : props.post.content}
+        {props.post.main_content.length > 35
+          ? props.post.main_content.slice(0, 35) + "..."
+          : props.post.main_content}
       </div>
       <div className={"block 2xl:hidden text-h6"}>
-        {props.post.content.length > 19
-          ? props.post.content.slice(0, 19) + "..."
-          : props.post.content}
+        {props.post.main_content.length > 19
+          ? props.post.main_content.slice(0, 19) + "..."
+          : props.post.main_content}
       </div>
       <div className={"gap-2 flex mt-[18px]"}>
         <div
