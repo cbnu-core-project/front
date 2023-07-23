@@ -5,12 +5,20 @@ import { readAllPromotions, readOnePromotion } from "../../api/promotion";
 import { baseUrl } from "../../common/global";
 import { promotionsState } from "../../store";
 import { useRecoilState } from "recoil";
+import axios from "axios";
+
+axios.defaults.baseURL = baseUrl;
 
 export default function ClubIntroduce() {
   const { id } = useParams();
   const [posts, setPosts] = useState({});
   const [promotions, setPromotions] = useRecoilState(promotionsState);
   const [count, setCount] = useState(0);
+  const [activity, setActivity] = useState([]); //동아리 주요활동 내역
+  let prev_length; //주요활동내역의 년도 시각화에 필요한 변수1
+  let list = []; //2
+  let after_length; //3
+
   const navigate = useNavigate();
 
   function getClubPost() {
@@ -21,14 +29,43 @@ export default function ClubIntroduce() {
     readAllPromotions(0).then((res) => setPromotions(res.data));
   }
 
+  function getClubActivityHistory() {
+    //주요활동내역 가져옴
+    axios
+      .get(`api/club_activity_history/${id}`)
+      .then((res) => setActivity(res.data));
+  }
+
+  activity.sort((a, b) => {
+    //주요활동내역 연도별 정렬
+    if (a.year > b.year) return -1;
+    if (a.year < b.year) return 1;
+    return 0;
+  });
+
+  activity.sort((a, b) => {
+    //주요활동내역 달별 정렬
+    if (a.year === b.year) if (a.month < b.month) return -1;
+    if (a.month > b.month) return 1;
+    return 0;
+  });
+
+  activity.sort((a, b) => {
+    //주요활동내역 내용 ㄱㄴㄷ순 정렬
+    if (a.month === b.month && a.year === b.year)
+      if (a.title < b.title) return -1;
+    if (a.title > b.title) return 1;
+    return 0;
+  });
+
   useEffect(() => {
     getClubPost();
     getPromotionPost();
+    getClubActivityHistory();
   }, []);
 
   return (
     <>
-      {console.log(promotions)}
       <div className={"p-2 ml-[56px]"}>
         <div className={"flex gap-8"}>
           {/*동아리 활동*/}
@@ -37,58 +74,10 @@ export default function ClubIntroduce() {
               "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden"
             }
           >
-            <div className={"flex transition -translate-x-[" + count + "00%]"}>
-                <img
-                  src={`${baseUrl}/${posts.image_url}`}
-                  alt={"1"}
-                  className={"w-[637px] h-[432px]"}
-                ></img>
-                <img
-                  src={`${baseUrl}/${posts.image_url}`}
-                  alt={"2"}
-                  className={"w-[637px] h-[432px]"}
-                ></img>
-                <img
-                  src={`${baseUrl}/${posts.image_url}`}
-                  alt={"3"}
-                  className={"w-[637px] h-[432px]"}
-                ></img>
-            </div>
-            <div
-              className={"flex gap-2 inset-x-[300px] bottom-[20px] fixed z-10 "}
-            >
-              <button
-                className={
-                  count == 0
-                    ? "w-[6px] h-[6px] rounded-xl z-10  bg-white"
-                    : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"
-                }
-                onClick={() => {
-                  setCount(0);
-                }}
-                slide
-              ></button>
-              <button
-                className={
-                  count == 1
-                    ? "w-[6px] h-[6px] rounded-xl z-10  bg-white"
-                    : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"
-                }
-                onClick={() => {
-                  setCount(1);
-                }}
-              ></button>
-              <button
-                className={
-                  count == 2
-                    ? "w-[6px] h-[6px] rounded-xl z-10  bg-white"
-                    : "w-[6px] h-[6px] rounded-xl z-10  bg-gray"
-                }
-                onClick={() => {
-                  setCount(2);
-                }}
-              ></button>
-            </div>
+            <img
+              src={`${baseUrl}/${posts.image_url}`}
+              className={"w-[637px] h-[432px]"}
+            ></img>
           </div>
 
           <div
@@ -274,91 +263,50 @@ export default function ClubIntroduce() {
             }
           >
             <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
+
             <div
               className={
                 "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll"
               }
             >
-              <div className={"mt-6 flex"}>
-                <div className={"w-[70px] h-auto text-[30px] font-light "}>
-                  2022
-                </div>
-                <div className={"w-[320px] h-auto"}>
-                  <p className={"list-disc list-inside ml-5 "}>
-                    {/*나중에 반복문으로 뺄거임*/}
-                    <li className={"text-h4 mt-[5px]"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                    <li className={"text-h4 mt-6"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                    <li className={"text-h4 mt-6"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                    <li className={"text-h4 mt-6"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                    <li className={"text-h4 mt-6"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                    <li className={"text-h4 mt-6"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                    <li className={"text-h4 mt-6"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                    <li className={"text-h4 mt-6"}>
-                      <span className={"text-h3 mr-6 text-gray"}>06</span>
-                      직무분석 경진대회 장려상 수상
-                    </li>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/*홍보 게시판 프로그램*/}
-          <div
-            className={
-              "w-[430px] h-[512px] 2xl:w-[454px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center"
-            }
-          >
-            <p className={"font-bold text-h2 py-6 "}>홍보 게시판</p>
-            <div className={"border-t border-gray2 w-[390px] h-[430px]"}>
-              <div className={"h-[24px]"} />
-              <div className={"flex gap-6 ml-[10px]"}>
-                {promotions.map((promotion) => {
-                  return (
-                    <>
-                      <div
-                        className={
-                          "w-[171px] h-[180px] 2xl:w-[171px] 2xl:h-[322px] rounded-xl shadow-lg transition hover:scale-110"
-                        }
-                        onClick={() => {
-                          navigate("/promotiondetail/" + promotion._id);
-                        }}
-                      >
-                        <img
-                          src={`${baseUrl}/${promotion.image_url}`}
-                          alt={"1"}
-                          className={"h-[258px]"}
-                        ></img>
+              {activity.map((acti) => {
+                prev_length = list.length;
+                if (list.find((element) => element == acti.year) == null) {
+                  list.push(acti.year);
+                }
+                // 추가하는 코드
+                //리스트 중복제거 코드
+                after_length = list.length;
+
+                return (
+                  <>
+                    <div className={"mt-6 flex"}>
+                      {prev_length != after_length ? (
                         <div
-                          className={"h-16 text-h5 font-bold px-[10px] py-2"}
+                          className={"w-[70px] h-auto text-[30px] font-light"}
                         >
-                          {promotion.title}
+                          {acti.year}
                         </div>
+                      ) : null}
+                      <div className={"w-[320px] h-auto"}>
+                        <ul
+                          className={
+                            "marker:text-main_default list-disc list-inside ml-5 "
+                          }
+                        >
+                          {/*나중에 반복문으로 뺄거임*/}
+                          <li className={"text-h4 mt-[5px]"}>
+                            <span className={"text-h3 mr-6 text-gray"}>
+                              {String(acti.month).padStart(2, "0")}
+                            </span>
+                            {acti.title}
+                          </li>
+                        </ul>
                       </div>
-                    </>
-                  );
-                })}
-              </div>
+                    </div>
+                  </>
+                );
+              })}
             </div>
           </div>
         </div>

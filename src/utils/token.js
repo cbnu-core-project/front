@@ -16,7 +16,7 @@ export function setRefreshToken(refresh_token) {
     setCookie("refresh_token", refresh_token, {
       path: "/",
       secure: true,
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 60 * 24 * 14,
     });
   } else {
     removeCookie("refresh_token");
