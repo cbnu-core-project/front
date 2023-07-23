@@ -8,10 +8,15 @@ import { RecoilRoot } from "recoil";
 import "font-awesome/css/font-awesome.min.css";
 import { MantineProvider } from "@mantine/core";
 import { CookiesProvider } from "react-cookie";
+import { QueryClientProvider, QueryClient } from "react-query";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const queryClient = new QueryClient();
+
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <QueryClientProvider client={queryClient}>
     <CookiesProvider>
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <BrowserRouter>
@@ -21,5 +26,6 @@ root.render(
         </BrowserRouter>
       </MantineProvider>
     </CookiesProvider>
-  </React.StrictMode>
+  </QueryClientProvider>
+  // </React.StrictMode>
 );

@@ -6,7 +6,6 @@ import { readAllClubs, readSomeClubs } from "../../api/club";
 import { usePagination } from "@mantine/hooks";
 import { baseUrl } from "../../common/global";
 
-
 export default function HomeClubList() {
   const [posts, setPosts] = useRecoilState(clubsState);
   const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
@@ -41,8 +40,8 @@ export default function HomeClubList() {
 
   useEffect(() => {
     // homeTab 변경 시 page 원래대로 1로 되돌리기
-    onChange(1)
-  }, [homeTab])
+    onChange(1);
+  }, [homeTab]);
 
   return (
     <>
@@ -61,8 +60,12 @@ export default function HomeClubList() {
                   }}
                 >
                   <Image post={post} />
-                  <div className={"w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl"}>
-                  <Content post={post} />
+                  <div
+                    className={
+                      "w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl"
+                    }
+                  >
+                    <Content post={post} />
                   </div>
                 </div>
               );
@@ -79,7 +82,7 @@ export default function HomeClubList() {
               navigate("/club");
             }}
           >
-            전체보기 
+            전체보기
           </button>
         </div>
       </div>
@@ -161,7 +164,11 @@ const HomeClubTab = (props) => {
 const Image = (props) => {
   return (
     <div className={"h-[200px] 2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
-      <img src={`${baseUrl}/${props.post.image_urls[0]}`} alt="img" className={"rounded-t-lg"} />
+      <img
+        src={`${baseUrl}/${props.post.image_urls[0]}`}
+        alt="img"
+        className={"rounded-t-lg"}
+      />
     </div>
   );
 };
@@ -182,19 +189,37 @@ const Content = (props) => {
         </div>
       </div>
       <div className={"hidden 2xl:block"}>
-        {props.post.content.length > 17
-          ? props.post.content.slice(0, 17) + "..."
-          : props.post.content}
+        {props.post.main_content.length > 17
+          ? props.post.main_content.slice(0, 17) + "..."
+          : props.post.main_content}
       </div>
       <div className={"block 2xl:hidden text-h7 mt-[3px]"}>
-        {props.post.content.length > 12
-          ? props.post.content.slice(0, 12) + "..."
-          : props.post.content}
+        {props.post.main_content.length > 12
+          ? props.post.main_content.slice(0, 12) + "..."
+          : props.post.main_content}
       </div>
       <div className={"gap-1 flex mt-[16px]"}>
-        <div className={"h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"}># {props.post.tag1} </div>
-        <div className={"h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"}># {props.post.tag2} </div>
-        <div className={"h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"}># {props.post.tag3} </div>
+        <div
+          className={
+            "h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"
+          }
+        >
+          # {props.post.tag1}{" "}
+        </div>
+        <div
+          className={
+            "h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"
+          }
+        >
+          # {props.post.tag2}{" "}
+        </div>
+        <div
+          className={
+            "h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"
+          }
+        >
+          # {props.post.tag3}{" "}
+        </div>
       </div>
     </div>
   );
