@@ -1,3 +1,5 @@
+import DropdownMenu from '../../components/DropDownMenu';
+
 export default function ClubSignUp() {
     return (
         <>
@@ -148,11 +150,8 @@ function UserSignUp() {
                 </div>
 
                 <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-                    <input
-                        className={"bg-gray3 h-[48px] w-[150px] mr-[10px] rounded-xl text-h5 p-2"}
-                        placeholder={"형식 선택"}
-                    ></input>
-                    <div className={"w-[150px] p-2 text-h5"}>
+                    <DropdownMenu/>
+                    <div className={"w-[150px] p-2 text-h5 ml-[20px]"}>
                         필수 여부
                     </div>
                     <div className={"w-[150px] p-2"}>
@@ -170,7 +169,9 @@ function UserSignUp() {
                     ></input>
                 </div>
 
-            
+        
+                
+
         
 
                 <div className={"w-[700px] h-auto mx-auto mt-[16px] text-h3 flex justify-end mb-[10px] "}>
