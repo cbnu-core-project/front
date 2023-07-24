@@ -34,20 +34,20 @@ export const promotionTabState = atom({
 
 export const tokenState = atom({
   key: "tokenState",
-  default: ""
-})
+  default: "",
+});
 
 export const schedulesState = atom({
   key: "schedulesState",
   default: [],
-})
+});
 
 export const selectedDateState = atom({
   key: "selectedDateState",
-  default: []
-})
+  default: [],
+});
 
 export const club_application_form = atom({
   key: "club_application_form",
-  default: []
-})
+  default: [],
+});
