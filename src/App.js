@@ -40,15 +40,29 @@ function App() {
   const navigate = useNavigate();
 
   function postAccessToken() {
-    return axios
-      .post(`${baseUrl}/api/refresh`, {
-        refresh_token: getRefreshToken(),
-      })
-      .then((res) => {
-        console.log("Access token 재발급");
-        setAccessToken(res.data.access_token);
-        setToken(res.data.access_token);
-      });
+    if (getRefreshToken()) {
+      return axios
+        .post(`${baseUrl}/api/refresh`, {
+          refresh_token: getRefreshToken(),
+        })
+        .then((res) => {
+          console.log("Access token 재발급");
+          // 카카오 토큰 구조상의 문제로, 보류
+          /*
+        axios
+          .post(`${baseUrl}/api/access_token/logout`, {
+            access_token: getAccessToken(),
+          })
+          .then(); // 그 전 access_token 로그아웃 처리
+         */
+          setAccessToken(res.data.access_token);
+          setToken(res.data.access_token);
+        })
+        .catch((err) => {
+          console.log(err);
+          setRefreshToken();
+        });
+    }
   }
 
   // 40분마다 refresh
@@ -58,7 +72,7 @@ function App() {
     refetchOnWindowFocus: false, // 윈도우 포커스 변경에 의한 refetch 비활성화
     cacheTime: 0, // 캐시 시간을 0으로 설정하여 캐시 사용하지 않음
     onError: () => {
-      alert("로그인이 필요합니다.");
+      alert("다시 로그인이 필요합니다.");
       setToken("");
     },
   });
@@ -96,20 +110,19 @@ function App() {
   }
 
   useEffect(() => {
-    let access_token = getAccessToken();
-    console.log(access_token);
-    if (access_token) {
-      // 헤더 등록을 위해 한 번 더 set
-      setAccessToken(access_token);
-      axios
-        .get("/api/common/protected")
-        .then((res) => {
-          setToken(access_token);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    // let access_token = getAccessToken();
+    // if (access_token) {
+    //   // 헤더 등록을 위해 한 번 더 set
+    //   setAccessToken(access_token);
+    //   axios
+    //     .get("/api/common/protected")
+    //     .then((res) => {
+    //       setToken(access_token);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
     if (CODE) {
       if (STATE == "kakao") {
         kakaoLogin();
@@ -139,7 +152,6 @@ function App() {
           </Route>
           <Route path="/club/search/" element={<ClubSearch />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/kakaologin" element={<div>카카오리다이렉트</div>} />
         </Routes>
       </div>
       <SideBar />

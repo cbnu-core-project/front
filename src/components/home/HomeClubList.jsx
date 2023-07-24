@@ -45,7 +45,8 @@ export default function HomeClubList() {
 
   return (
     <>
-      <div className={"px-8 2xl:px-16"}>
+      {/* 최소크기 1300px 로 정했음 */}
+      <div className={"px-8 2xl:px-16 min-w-[1300px]"}>
         <HomeClubTab pagination={pagination} page={page} />
         <article className={""}>
           <div className={"grid grid-cols-4 gap-10"}>
@@ -53,7 +54,7 @@ export default function HomeClubList() {
               return (
                 <div
                   className={
-                    "2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
+                    "w-[302px] h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
                   }
                   onClick={() => {
                     navigate("/clubdetail/" + post._id);
@@ -163,7 +164,7 @@ const HomeClubTab = (props) => {
 
 const Image = (props) => {
   return (
-    <div className={"h-[200px] 2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
+    <div className={"h-[200px] w-[302px] overflow-y-scroll"}>
       <img
         src={`${baseUrl}/${props.post.image_urls[0]}`}
         alt="img"

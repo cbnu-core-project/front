@@ -4,7 +4,11 @@ import axios from "axios";
 import { baseUrl } from "../common/global";
 import Login from "../pages/Login";
 import { useNavigate } from "react-router-dom";
-import { setAccessToken, setRefreshToken } from "../utils/token";
+import {
+  getAccessToken,
+  setAccessToken,
+  setRefreshToken,
+} from "../utils/token";
 import { useRecoilState } from "recoil";
 import { tokenState } from "../store";
 import { readAllClubs } from "../api/club";
@@ -189,10 +193,19 @@ function Modal() {
           <div
             className="flex gap-2 cursor-pointer"
             onClick={() => {
-              // 로그아웃
-              setAccessToken();
-              setRefreshToken();
-              setToken(""); //빈 토큰 설정==로그아웃
+              axios
+                .post("/api/header/access_token/logout", {
+                  access_token: getAccessToken(),
+                })
+                .then((res) => {
+                  // 로그아웃
+                  setAccessToken();
+                  setRefreshToken();
+                  setToken(""); //빈 토큰 설정==로그아웃
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             }}
           >
             <span class="material-symbols-outlined">power_rounded</span>
