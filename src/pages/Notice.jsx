@@ -20,7 +20,7 @@ const Notice = () => {
   const handleSelect = (e) => {
     setSelected(e.target.value);
   };
-  
+
   const getPosts = () => {
     readSomeNotices((page - 1) * 9, 9).then((res) => {
       setPosts(res.data);
@@ -45,43 +45,50 @@ const Notice = () => {
 
   useEffect(() => {
     getPosts();
-  },[page]);
+  }, [page]);
 
 
   return (
     <>
       <div className={"w-[1434px]"}>
-        <div className={"mt-[164px] mb-8 text-center text-main font-[Pv] text-h1"}>
-          서비스 
+        <div className={"mt-[160px] mb-8 text-center text-main font-[Pv] text-h1"}>
+          서비스
           <span className={'font-bold'}> 공지사항</span>
         </div>
         <form className={'mt-2'}>
           <select className={'ml-16 w-[200px] h-[44px] font-bold rounded-2xl border border-gray text-h5'}>
-            <option value={"1"}>제목</option>
-            <option value={"2"}> 작성자</option>
-            <option value={"3"}> 제목 + 작성자</option>
+            <option value={"1"}>   제목</option>
+            <option value={"2"}>   작성자</option>
+            <option value={"3"}>   제목 + 작성자</option>
           </select>
-          <input 
+          <input
             className={'ml-[32px] w-[1038px] h-[44px] border border-gray rounded-2xl text-h5'}
             placeholder={"  검색어를 입력해보세요."}
           />
-          <button 
+          <button
             type={"submit"}
             className={"ml-2 w-[44px] h-[44px] rounded-3xl bg-main_mid text-h3 text-white"}>
             🔍︎
           </button>
         </form>
-        <div>
+        <div className={"w-[1306px] h-[576px] rounded-2xl bg-background ml-16 mt-8"}>
           {posts.map((post) => {
-            console.log(post);
             return (
-              <div>
-                {DateFromObject(post._id).toISOString()};
+              <div className={'font-[Pv] h-[22px] p-[30px] flex justify-between'}>
+                <button 
+                  onClick={() => {
+                    alert("아직 개발 안됐어요")
+                  }}>
+                  {post.title}
+                </button>
+                <div>
+                    {DateFromObject(post._id).toISOString().substring(0, 10)}
+                </div>
               </div>
             )
           })}
         </div>
-        <div className={""}>
+        <div className={"ml-[653px] mt-6"}>
           <Pagination
             total={Math.ceil((count) / 9)}
             boundaries={1}
@@ -97,5 +104,6 @@ const Notice = () => {
 function DateFromObject(objid) { //오브젝트 아이디로부터 시간 받아오는 함수
   return new Date(parseInt(objid.substring(0, 8), 16) * 1000);
 }
+
 
 export default Notice;
