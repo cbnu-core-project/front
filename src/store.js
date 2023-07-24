@@ -46,3 +46,8 @@ export const selectedDateState = atom({
   key: "selectedDateState",
   default: []
 })
+
+export const club_application_form = atom({
+  key: "club_application_form",
+  default: []
+})
