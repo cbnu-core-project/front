@@ -29,9 +29,14 @@ export default function ClubSignUp() {
   useEffect(() => {
     getClubApplicationForm();
   }, []);
+
   return (
     <>
-      <UserSignUp formData={formData} />
+      {formData ? (
+        <UserSignUp formData={formData} />
+      ) : (
+        <div>가입 신청 기간이 아닙니다.</div>
+      )}
     </>
   );
 }
