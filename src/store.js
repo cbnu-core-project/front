@@ -46,3 +46,8 @@ export const selectedDateState = atom({
   key: "selectedDateState",
   default: []
 })
+
+export const addingImgState = atom({
+  key: "addingImgState",
+  default: true
+})
