@@ -6,6 +6,7 @@ import { baseUrl } from "../../common/global";
 import { promotionsState, addingImgState } from "../../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -75,6 +76,11 @@ export default function ClubIntroduce() {
     getClubProgram();
   }, []);
 
+  // 이미지 업로드 버튼 눌러서, state가 바뀌면 다시 바뀐 이미지를 불러오기
+  useEffect(() => {
+    getClubPost();
+  }, [AddImg]);
+
   return (
     <>
       {AddImg == true ? <Addimg /> : null} {/* 사진 수정 창 */}
@@ -83,12 +89,12 @@ export default function ClubIntroduce() {
           {/*동아리 활동*/}
           <div
             className={
-              "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden z-[-1]"
+              "relative w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden"
             }
           >
-            <div className="absolute">
+            <div className="absolute z-10">
               <button
-                className="relative flex items-center gap-[5px] ml-[480px] my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                className="flex items-center gap-[5px] ml-[480px] my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
                 onClick={() => {
                   setAddImg(true);
                 }}
@@ -97,10 +103,13 @@ export default function ClubIntroduce() {
                 <div>수정하기</div>
               </button>
             </div>
-            <img
-              src={`${baseUrl}/${posts.image_urls[0]}`}
-              className={"w-[637px] h-[432px]"}
-            ></img>
+            <div>
+              <img
+                src={`${baseUrl}/${posts.image_urls[0]}`}
+                className={"w-[637px] h-[432px] relative"}
+                alt="main_image"
+              ></img>
+            </div>
           </div>
 
           <div
@@ -413,67 +422,20 @@ export default function ClubIntroduce() {
 function Addimg() {
   //동아리 이미지 수정 모달
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
-  const [image, setImage] = useState({ first: "" });
-
-  const handleChange = (e) => {
-    setImage({
-      first: e.target.files[0],
-    });
-  };
 
   return (
     <>
       <div className="fixed w-full h-full top-0 left-0 flex justify-center items-center z-20">
         <div className="bg-black w-full h-full opacity-50"></div>
-        <div className="absolute w-[454px] h-[404px] bg-white rounded-2xl ">
-          <div className="grid grid-rows-2 gap-[15px] px-[40px] py-[40px] h-[404px] ">
-            <div className=" grid grid-rows-2">
-              <div className="">
-                <div className="font-[700] text-[20px]">파일 첨부</div>
-                <p className="text-[16px] mt-[10px]">
-                  000MB 이하의 jpg, png 파일을 업로드 가능합니다.
-                </p>
-              </div>
-              <div className=" grid content-end">
-                <button className="bg-main_mid w-[152px] h-[48px] text-white rounded-xl text-[18px]">
-                  <input
-                    type="file"
-                    id="upload-button"
-                    style={{ display: "none" }}
-                    onChange={handleChange}
-                  />
-                  사진 파일 선택
-                </button>
-              </div>
+        <div className="absolute w-[454px] h-[570px] bg-white rounded-2xl ">
+          <div className="grid grid-rows-2 gap-[15px] px-[40px] py-[40px] h-[330px] ">
+            <div>
+              <div className="font-[700] text-[20px]">파일 첨부</div>
+              <p className="text-[16px] mt-[10px]">
+                000MB 이하의 이미지 파일을 업로드 가능합니다.
+              </p>
             </div>
-            <div className="grid grid-rows-2">
-              <div>
-                <div className="flex">
-                  <div className="flex items-center gap-[15px] border border-[#E5E5E5] rounded-full px-[15px] py-[7px]">
-                    파일 이름.png
-                    <div className="rounded-full bg-[#C1C1C1] w-[20px] h-[20px]">
-                      <span class="material-symbols-outlined text-white text-[10px] font-thin ml-[5px]">
-                        close
-                      </span>
-                      {/* 수직 정렬을 못하겠음 */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className=" flex place-self-end gap-[10px] text-[16px]">
-                <button
-                  className="w-[87px] h-[40px] border border-[#E5E5E5] rounded-md"
-                  onClick={() => {
-                    setAddImg(false);
-                  }}
-                >
-                  취소
-                </button>
-                <button className="bg-[#29CCC7] text-white w-[87px] h-[40px] rounded-md">
-                  완료하기
-                </button>
-              </div>
-            </div>
+            <UploadImageForm />
           </div>
         </div>
       </div>
@@ -481,6 +443,126 @@ function Addimg() {
   );
 }
 
-function UploadImg() {
-  return <></>;
-}
+const UploadImageForm = () => {
+  const { id } = useParams(); // club_objid
+  const [image, setImage] = useState({ preview: "", raw: "" });
+  const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    // console.log(URL.createObjectURL(e.target.files[0]));
+    // console.log(e.target.files[0]);
+    if (e.target.files.length) {
+      setImage({
+        preview: URL.createObjectURL(e.target.files[0]),
+        raw: e.target.files[0],
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    setImage({ preview: "", raw: "" });
+  };
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("image", image.raw);
+
+    if (image.raw == "") {
+      Swal.fire({
+        title: "올릴 이미지가 없습니다",
+        text: "이미지를 업로드 해 주세요 !",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
+      return;
+    }
+
+    await axios
+      .post("/image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        // console.log(res.data.image_url);
+        axios
+          .put(
+            `/api/club/image/update?club_objid=${id}&image_url=${res.data.image_url}`
+          )
+          .then((res) => {
+            setAddImg(false);
+          });
+      });
+  };
+
+  return (
+    <div>
+      <label
+        className="flex flex-col justify-center text-center bg-main_mid w-[152px] h-[48px] text-white rounded-xl text-[18px] cursor-pointer"
+        htmlFor={"upload-button"}
+      >
+        사진 파일 선택
+      </label>
+      <div className={"mt-[20px]"} />
+      <div className="grid grid-rows-2">
+        <div>
+          <div className="flex">
+            <div className="flex items-center gap-[15px] border border-[#E5E5E5] p-[10px] h-[150px]">
+              <label htmlFor="upload-button" className={"cursor-pointer"}>
+                {image.preview ? (
+                  <img
+                    src={image.preview}
+                    alt="dummy"
+                    width="140"
+                    height="140"
+                  />
+                ) : (
+                  <>
+                    <span className="fa-stack fa-2x mt-3 mb-2">
+                      {/*<i className="fas fa-circle fa-stack-2x" />*/}
+                      <i className="fas fa-store fa-stack-1x fa-invesrse" />
+                    </span>
+                    <h5 className="text-center">사진을 업로드 하세요.</h5>
+                  </>
+                )}
+              </label>
+              <input
+                type="file"
+                id="upload-button"
+                style={{ display: "none" }}
+                onChange={handleChange}
+                accept={"image/*"}
+              />
+              <div
+                className="text-center flex flex-col justify-center rounded-full bg-[#C1C1C1] w-[20px] h-[20px] cursor-pointer hover:bg-red_error"
+                onClick={handleDelete}
+              >
+                <span className="material-symbols-outlined text-white text-[10px] font-thin">
+                  close
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className=" flex place-self-end gap-[10px] text-[16px]">
+          <button
+            className="w-[87px] h-[40px] border border-[#E5E5E5] rounded-md"
+            onClick={() => {
+              setAddImg(false);
+            }}
+          >
+            취소
+          </button>
+          <button
+            className="bg-[#29CCC7] text-white w-[87px] h-[40px] rounded-md"
+            onClick={handleUpload}
+          >
+            업로드완료
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

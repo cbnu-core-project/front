@@ -42,6 +42,12 @@ export default function ClubSignUp() {
 }
 //일반 유저가 동아리 신청할 때 보이는 양식
 function UserSignUp(props) {
+  const [realname, setRealname] = useState("");
+  const [department, setDepartment] = useState("");
+  const [schoolNumber, setSchoolNumber] = useState("");
+  const [gender, setGender] = useState("");
+  // const [department, setDepartment] = useState("");
+
   const required = (bool_list) => {
     if (bool_list[1] == true) {
       return <span className={"text-sub"}>(필수)</span>;
@@ -119,6 +125,12 @@ function UserSignUp(props) {
             <input
               className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3 mt-[32px]"}
               placeholder={"ex) 홍길동"}
+              value={realname}
+              onChange={(e) => {
+                if (e.target.value.length <= 12) {
+                  setRealname(e.target.value);
+                }
+              }}
             ></input>
           </div>
         ) : (
@@ -134,6 +146,12 @@ function UserSignUp(props) {
             <input
               className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
               placeholder={"ex) OO학과"}
+              value={department}
+              onChange={(e) => {
+                if (e.target.value.length <= 16) {
+                  setDepartment(e.target.value);
+                }
+              }}
             ></input>
           </div>
         ) : (
@@ -148,6 +166,12 @@ function UserSignUp(props) {
             <input
               className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
               placeholder={"ex) 2021070015"}
+              value={schoolNumber}
+              onChange={(e) => {
+                if (e.target.value.length <= 10) {
+                  setSchoolNumber(e.target.value);
+                }
+              }}
             ></input>
           </div>
         ) : (
@@ -155,25 +179,41 @@ function UserSignUp(props) {
         )}
         {/*성별 (보이게 하는 것, 필수인지 체크)*/}
         {props.formData.gender[0] == true ? (
-          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <form className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
             <div className={"w-[150px] p-2 "}>
               성별 {required(props.formData.gender)}
             </div>
             <div className="">
               <input
-                type="checkbox"
+                type="radio"
                 className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
+                id={"male"}
+                value={"남자"}
+                name={"gender"}
+                onChange={(e) => {
+                  setGender(e.target.value);
+                }}
               />
-              <span className="text-h5 font-normal ml-[4px]">여자</span>
+              <label className="text-h5 font-normal ml-[4px]" for={"male"}>
+                남자
+              </label>
             </div>
             <div className=" ml-[8px]">
               <input
-                type="checkbox"
+                type="radio"
                 className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
+                id={"female"}
+                value={"여자"}
+                name={"gender"}
+                onChange={(e) => {
+                  setGender(e.target.value);
+                }}
               />
-              <span className="text-h5 font-normal ml-[4px]">남자</span>
+              <label className="text-h5 font-normal ml-[4px]" for={"female"}>
+                여자
+              </label>
             </div>
-          </div>
+          </form>
         ) : (
           <></>
         )}
