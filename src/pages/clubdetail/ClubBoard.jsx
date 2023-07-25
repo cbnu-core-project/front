@@ -153,14 +153,14 @@ const Content = (props) => {
         </div>
       </div>
       <div className={"hidden 2xl:block"}>
-        {props.post.content.length > 35
-          ? props.post.content.slice(0, 35) + "..."
-          : props.post.content}
+        {props.post.sub_content.length > 35
+          ? props.post.sub_content.slice(0, 35) + "..."
+          : props.post.sub_content}
       </div>
       <div className={"block 2xl:hidden text-h7 mt-[3px]"}>
-        {props.post.content.length > 17
-          ? props.post.content.slice(0, 17) + "..."
-          : props.post.content}
+        {props.post.sub_content.length > 17
+          ? props.post.sub_content.slice(0, 17) + "..."
+          : props.post.sub_content}
       </div>
     </div>
   );

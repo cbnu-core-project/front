@@ -1,73 +1,270 @@
+import DropdownMenu from "../../components/DropDownMenu";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { baseUrl } from "../../common/global";
+import { useRecoilState } from "recoil";
+import { club_application_form } from "../../store";
+
+axios.defaults.baseURL = baseUrl;
+
 export default function ClubSignUp() {
+  const { id } = useParams();
+  const [formData, setFormData] = useState({
+    gender: [],
+    phone_number: [],
+    email: [],
+    address: [],
+    questions: [],
+    school_number: [],
+  });
+
+  //가입 신청 양식 데이터 가져오는 함수
+  function getClubApplicationForm() {
+    //주요활동내역 가져옴
+    axios.get(`api/club_application_form/${id}`).then((res) => {
+      setFormData(res.data[0]);
+    });
+  }
+  useEffect(() => {
+    getClubApplicationForm();
+  }, []);
+
   return (
     <>
-      <ManagerSignUp />
+      {formData ? (
+        <UserSignUp formData={formData} />
+      ) : (
+        <div>가입 신청 기간이 아닙니다.</div>
+      )}
     </>
   );
 }
+//일반 유저가 동아리 신청할 때 보이는 양식
+function UserSignUp(props) {
+  const [realname, setRealname] = useState("");
+  const [department, setDepartment] = useState("");
+  const [schoolNumber, setSchoolNumber] = useState("");
+  const [gender, setGender] = useState("");
+  // const [department, setDepartment] = useState("");
 
-function UserSignUp() {
-  return (
-    <div className={"text-h1 font-bold "}>
-      <p className={"text-sub ml-[618px]"}> 코어 가입 신청서</p>
-      <div className={"w-[780px] h-[948px] rounded-xl shadow-lg mx-auto "}>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex "}>
-          <div className={"w-[150px] p-2 mt-[32px]"}>
-            이름 <span className={" text-sub"}>(필수)</span>
-          </div>
-          <input
-            className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3 mt-[32px]"}
-            placeholder={"ex) 홍길동"}
-          ></input>
-        </div>
+  const required = (bool_list) => {
+    if (bool_list[1] == true) {
+      return <span className={"text-sub"}>(필수)</span>;
+    } else {
+      return null;
+    }
+  };
+
+  const testType = (data) => {
+    if (data.type == 0) {
+      return (
         <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
           <div className={"w-[150px] p-2"}>
-            학과 <span className={"text-sub"}>(필수)</span>
+            {data.question}
+            {data.required == true ? (
+              <span className={"text-sub"}>(필수)</span>
+            ) : null}
           </div>
-          <input
-            className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
-            placeholder={"ex) OO학과"}
-          ></input>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            학번 <span className={"text-sub"}>(필수)</span>
-          </div>
-          <input
-            className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
-            placeholder={"ex) 2021070015"}
-          ></input>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            성별 <span className={"text-sub"}>(필수)</span>
-          </div>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            연락처 <span className={"text-sub"}>(필수)</span>
-          </div>
-          <input
-            className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
-            placeholder={"ex) 010-0000-0000"}
-          ></input>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>주소</div>
-          <input
-            className={"bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3"}
-            placeholder={"주소를 작성해주세요."}
-          ></input>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>지원동기</div>
           <input
             className={
               "bg-gray3 w-[550px] h-[300px] rounded-xl text-h5 overflow-y-scroll p-3"
             }
-            placeholder={"지원동기를 작성해주세요."}
           ></input>
         </div>
+      );
+    } else if (data.type == 1) {
+      return (
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>
+            파일 추가
+            {data.required == true ? (
+              <span className={"text-sub"}>(필수)</span>
+            ) : null}
+          </div>
+          <div>
+            <form>
+              <div className="w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal relative">
+                <label
+                  for="input_file"
+                  className="block p-4 -bottom-10 w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal"
+                >
+                  <img
+                    src="/images/attach_file.png"
+                    className="px-[14px] mb-1"
+                  ></img>
+                  파일 추가
+                </label>
+              </div>
+              <input
+                type="file"
+                accept="*.*"
+                multiple
+                required
+                id="input_file"
+                className="hidden"
+              />
+            </form>
+          </div>
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div className={"text-h1 font-bold "}>
+      <p className={"text-sub ml-[618px]"}> 코어 가입 신청서</p>
+      <div className={"w-[780px] h-auto rounded-xl shadow-lg mx-auto"}>
+        {/*이름 (보이게하는것, 필수인지 체크)*/}
+        {props.formData.realname == true ? (
+          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+            <div className={"w-[150px] p-2 mt-[32px]"}>
+              이름
+              <span className={" text-sub"}>(필수)</span>
+            </div>
+            <input
+              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3 mt-[32px]"}
+              placeholder={"ex) 홍길동"}
+              value={realname}
+              onChange={(e) => {
+                if (e.target.value.length <= 12) {
+                  setRealname(e.target.value);
+                }
+              }}
+            ></input>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {/*학과 (보이게 하 는것, 필수인지 체크)*/}
+        {props.formData.department == true ? (
+          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+            <div className={"w-[150px] p-2"}>
+              학과 <span className={"text-sub"}>(필수)</span>
+            </div>
+            <input
+              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+              placeholder={"ex) OO학과"}
+              value={department}
+              onChange={(e) => {
+                if (e.target.value.length <= 16) {
+                  setDepartment(e.target.value);
+                }
+              }}
+            ></input>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {/*학번 (보이게 하는 것, 필수인지 체크)*/}
+        {props.formData.school_number == true ? (
+          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+            <div className={"w-[150px] p-2"}>
+              학번 <span className={"text-sub"}>(필수)</span>
+            </div>
+            <input
+              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+              placeholder={"ex) 2021070015"}
+              value={schoolNumber}
+              onChange={(e) => {
+                if (e.target.value.length <= 10) {
+                  setSchoolNumber(e.target.value);
+                }
+              }}
+            ></input>
+          </div>
+        ) : (
+          <></>
+        )}
+        {/*성별 (보이게 하는 것, 필수인지 체크)*/}
+        {props.formData.gender[0] == true ? (
+          <form className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+            <div className={"w-[150px] p-2 "}>
+              성별 {required(props.formData.gender)}
+            </div>
+            <div className="">
+              <input
+                type="radio"
+                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
+                id={"male"}
+                value={"남자"}
+                name={"gender"}
+                onChange={(e) => {
+                  setGender(e.target.value);
+                }}
+              />
+              <label className="text-h5 font-normal ml-[4px]" for={"male"}>
+                남자
+              </label>
+            </div>
+            <div className=" ml-[8px]">
+              <input
+                type="radio"
+                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
+                id={"female"}
+                value={"여자"}
+                name={"gender"}
+                onChange={(e) => {
+                  setGender(e.target.value);
+                }}
+              />
+              <label className="text-h5 font-normal ml-[4px]" for={"female"}>
+                여자
+              </label>
+            </div>
+          </form>
+        ) : (
+          <></>
+        )}
+        {/*연락처 (보이게 하는 것, 필수인지 체크)*/}
+        {props.formData.phone_number[0] == true ? (
+          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+            <div className={"w-[150px] p-2"}>
+              연락처 {required(props.formData.phone_number)}
+            </div>
+            <input
+              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+              placeholder={"ex) 010-0000-0000"}
+            ></input>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {/*이메일 (보이게 하는 것, 필수인지 체크)*/}
+        {props.formData.email[0] == true ? (
+          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+            <div className={"w-[150px] p-2"}>
+              이메일 {required(props.formData.email)}
+            </div>
+            <input
+              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+              placeholder={"ex) 0000@naver.com"}
+            ></input>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {/*주소 (보이게 하는 것, 필수인지 체크)*/}
+        {props.formData.address[0] == true ? (
+          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+            <div className={"w-[150px] p-2"}>
+              주소
+              {required(props.formData.address)}
+            </div>
+            <input
+              className={"bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3"}
+              placeholder={"주소를 작성해주세요."}
+            ></input>
+          </div>
+        ) : null}
+        {/*추가적으로 설정*/}
+        {props.formData.questions.map((data) => {
+          return <>{testType(data)}</>;
+        })}
+
         <button
           type={"submit"}
           className={"w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"}
@@ -78,14 +275,13 @@ function UserSignUp() {
     </div>
   );
 }
+//동아리 관리자 가입 신청 현황
 function ManagerSignUp() {
   let posts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 100, 200, 300, 400, 500];
   return (
     <>
       <div className={" ml-[64px] w-[1306px] h-[40px] flex"}>
-        <div
-          className={"text-h1 font-bold text-sub ml-[580px] "}
-        >
+        <div className={"text-h1 font-bold text-sub ml-[580px] "}>
           가입신청 현황
         </div>
         <button
@@ -104,9 +300,7 @@ function ManagerSignUp() {
         }
       >
         <div
-          className={
-            "h-[72px] border-b-[2px] border-gray2 grid justify-center"
-          }
+          className={"h-[72px] border-b-[2px] border-gray2 grid justify-center"}
         >
           <div
             className={
@@ -120,25 +314,25 @@ function ManagerSignUp() {
               <p className="text-center">승인 현황</p>
             </div>
             <div className="w-[85px]">
-            <p className="text-center">이름</p>
+              <p className="text-center">이름</p>
             </div>
             <div className="w-[160px]">
-            <p className={"text-center"}>학과</p>
+              <p className={"text-center"}>학과</p>
             </div>
             <div className="w-[155px] ">
-            <p className="text-center">학번</p>
+              <p className="text-center">학번</p>
             </div>
             <div className="w-[178px] r">
-            <p className="text-center">전화번호</p>
+              <p className="text-center">전화번호</p>
             </div>
             <div className="w-[151px]">
-            <p className="text-center">신청 일자</p>
+              <p className="text-center">신청 일자</p>
             </div>
             <div className="w-[156px] ">
-            <p className="text-center">신청서</p>
+              <p className="text-center">신청서</p>
             </div>
             <div className="ml-auto w-[120px] ">
-            <p className="text-center">승인</p>
+              <p className="text-center">승인</p>
             </div>
           </div>
         </div>
@@ -199,5 +393,178 @@ function ManagerSignUp() {
         })}
       </div>
     </>
+  );
+}
+//동아리 관리자 가입 신청 양식 설정
+function User_Application_Form() {
+  return (
+    <div className={"text-h1 font-bold"}>
+      <p className={"text-sub text-center"}> 가입 신청서 양식 설정</p>
+      <div className={"w-[780px] max-h-screen rounded-xl shadow-lg mx-auto"}>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2 mt-[32px]"}>제목</div>
+          <input
+            className={
+              "bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3 mt-[32px]"
+            }
+            placeholder={"ex) OOO 3기 팀원 모집"}
+          ></input>
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>설명</div>
+          <input
+            className={"bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3"}
+            placeholder={"ex) 가입신청 관련 유의사항 및 공지내용"}
+          ></input>
+        </div>
+        <div
+          className={
+            "w-[700px] h-auto mx-auto mt-[32px] text-h3 flex font-bold"
+          }
+        >
+          신청서로 받아볼 항목들을 선택해주세요.
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>
+            이름 <span className={"text-sub"}>(필수)</span>
+          </div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>
+            학과 <span className={"text-sub"}>(필수)</span>
+          </div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>
+            학번 <span className={"text-sub"}>(필수)</span>
+          </div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>
+            연락처 <span className={"text-sub"}>(필수)</span>
+          </div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>성별</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+          <div className={"w-[150px] p-2"}>필수 여부</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>이메일</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+          <div className={"w-[150px] p-2"}>필수 여부</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+        </div>
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2"}>주소</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+          <div className={"w-[150px] p-2"}>필수 여부</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+            />
+          </div>
+        </div>
+
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <div className={"w-[150px] p-2 flex"}>
+            질문 추가
+            <button className="bg-gray2 h-7 w-7 rounded-full flex items-center justify-center text-black ml-[10px] mt-[3px]">
+              +
+            </button>
+          </div>
+        </div>
+
+        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
+          <DropdownMenu />
+          <div className={"w-[150px] p-2 text-h5 ml-[20px]"}>필수 여부</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border"
+            />
+          </div>
+        </div>
+
+        <div className={"w-[700px] h-auto mx-auto mt-[16px] text-h3 flex"}>
+          <input
+            className={"bg-gray3 h-[48px] w-[1000px] rounded-xl text-h5 p-3"}
+            placeholder={"질문을 입력해주세요."}
+          ></input>
+        </div>
+
+        <div
+          className={
+            "w-[700px] h-auto mx-auto mt-[16px] text-h3 flex justify-end mb-[10px] "
+          }
+        >
+          <button
+            type={"submit"}
+            className={
+              "w-[87px] h-[40px] text-h5 text-black border border-sub bg-white rounded-md mr-[10px]"
+            }
+          >
+            미리보기
+          </button>
+          <button
+            type={"submit"}
+            className={"w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"}
+          >
+            제출하기
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
