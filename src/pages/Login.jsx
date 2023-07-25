@@ -40,98 +40,106 @@ export default function Login() {
         서비스 이용을 위해 로그인 해주세요.
       </div>
       <div>
-        <form
-          className={"text-center "}
-          onSubmit={(e) => {
-            e.preventDefault();
-
-            const form_data = {
-              username: e.target.username.value,
-              password: e.target.password.value,
-            };
-
-            axios
-              .post("/api/login", form_data, {
-                headers: {
-                  "content-type": "application/x-www-form-urlencoded",
-                },
-              })
-              .then((res) => {
-                const { access_token, refresh_token } = res.data;
-                Swal.fire({
-                  position: "top-end",
-                  icon: "success",
-                  title: "로그인 성공 !",
-                  showConfirmButton: false,
-                  timer: 1000,
-                });
-                setToken(access_token);
-                setAccessToken(access_token);
-                setRefreshToken(refresh_token);
-                // window.location.reload();
-              })
-              .catch((err) => {
-                // console.log(err.response.data.detail);
-                Swal.fire({
-                  title: "로그인 실패!",
-                  text: err.response.data.detail,
-                  icon: "error",
-                  confirmButtonText: "확인",
-                });
-              });
-          }}
-        >
-          <div>
-            <input
-              className={"rounded-3xl p-5 w-[406px] mt-20"}
-              type="text"
-              name="username"
-              placeholder="아이디를 입력하세요"
-            />
-          </div>
-          <div>
-            <input
-              className={"rounded-3xl p-5 mt-3 w-[406px]"}
-              type="password"
-              name="password"
-              placeholder="비밀번호를 입력하세요"
-            />
-          </div>
-          <button
-            type={"submit"}
-            className={
-              "rounded-3xl p-5 mt-8 font-[Pv] text-h6 font-bold text-white bg-main_mid w-[406px]"
-            }
-          >
-            로그인
-          </button>
-        </form>
-
-        <div className={"text-h6 font-[Pv] text-center mt-5"}>
-          <span className={"mr-5"}> 아이디 찾기 </span>
-          <span> │ </span>
-          <span className={"mx-5"}> 비밀번호 찾기 </span>
-          <span> │ </span>
-          <span className={"ml-5"}> 회원가입 </span>
-        </div>
-
-        <div
-          className={
-            "mt-20 text-center text-darkgray text-h6 font-[Pv] font-bold"
-          }
-        >
-          ──────── SNS 계정으로 로그인 ────────
-        </div>
-
         <div className={"text-black text-center font-[Pv] font-bold"}>
-          <button className={"bg-red_error p-2"} onClick={handleKakaoLogin}>
-            카카오로 바로 시작
+          <button onClick={handleKakaoLogin}>
+            <img src={"/images/kakao_login_medium_wide.png"} width={350} />
           </button>
-          <button className={"bg-main p-2"} onClick={handleNaverLogin}>
-            네이버로 바로 시작
+          <button onClick={handleNaverLogin}>
+            <img src={"/images/naver_login/btnG_완성형.png"} width={350} />
           </button>
         </div>
+        <div className={"mt-[120px]"} />
       </div>
     </>
   );
 }
+
+// 안 쓰이는 기존 로그인 폼 컴포넌트
+// const _deprecated_form = () => {
+//   return (
+//     <>
+//       <form
+//         className={"text-center "}
+//         onSubmit={(e) => {
+//           e.preventDefault();
+//
+//           const form_data = {
+//             username: e.target.username.value,
+//             password: e.target.password.value,
+//           };
+//
+//           axios
+//             .post("/api/login", form_data, {
+//               headers: {
+//                 "content-type": "application/x-www-form-urlencoded",
+//               },
+//             })
+//             .then((res) => {
+//               const { access_token, refresh_token } = res.data;
+//               Swal.fire({
+//                 position: "top-end",
+//                 icon: "success",
+//                 title: "로그인 성공 !",
+//                 showConfirmButton: false,
+//                 timer: 1000,
+//               });
+//               setToken(access_token);
+//               setAccessToken(access_token);
+//               setRefreshToken(refresh_token);
+//               // window.location.reload();
+//             })
+//             .catch((err) => {
+//               // console.log(err.response.data.detail);
+//               Swal.fire({
+//                 title: "로그인 실패!",
+//                 text: err.response.data.detail,
+//                 icon: "error",
+//                 confirmButtonText: "확인",
+//               });
+//             });
+//         }}
+//       >
+//         <div>
+//           <input
+//             className={"rounded-3xl p-5 w-[406px] mt-20"}
+//             type="text"
+//             name="username"
+//             placeholder="아이디를 입력하세요"
+//           />
+//         </div>
+//         <div>
+//           <input
+//             className={"rounded-3xl p-5 mt-3 w-[406px]"}
+//             type="password"
+//             name="password"
+//             placeholder="비밀번호를 입력하세요"
+//           />
+//         </div>
+//         <button
+//           type={"submit"}
+//           className={
+//             "rounded-3xl p-5 mt-8 font-[Pv] text-h6 font-bold text-white bg-main_mid w-[406px]"
+//           }
+//         >
+//           로그인
+//         </button>
+//       </form>
+//
+//       <div className={"text-h6 font-[Pv] text-center mt-5"}>
+//         <span className={"mr-5"}> 아이디 찾기 </span>
+//         <span> │ </span>
+//         <span className={"mx-5"}> 비밀번호 찾기 </span>
+//         <span> │ </span>
+//         <span className={"ml-5"}> 회원가입 </span>
+//       </div>
+//
+//       <div
+//         className={
+//           "mt-20 text-center text-darkgray text-h6 font-[Pv] font-bold"
+//         }
+//       >
+//         ──────── SNS 계정으로 로그인 ────────
+//       </div>
+//     </>
+//   );
+// };
