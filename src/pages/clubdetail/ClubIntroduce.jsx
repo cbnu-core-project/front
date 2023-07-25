@@ -11,12 +11,16 @@ axios.defaults.baseURL = baseUrl;
 
 export default function ClubIntroduce() {
   const { id } = useParams();
-  const [posts, setPosts] = useState({ activity_tags: [] });
+  const [posts, setPosts] = useState({ activity_tags: [], image_urls: [] });
   const [promotions, setPromotions] = useRecoilState(promotionsState);
   const [count, setCount] = useState(0);
   const [activity, setActivity] = useState([]); //동아리 주요활동 내역
   const [programs, setPrograms] = useState([]); //동아리 활동 프로그램 내역
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
+  const [tagModfy, setTagModfy] = useState(true); //태그 수정
+  const [clubProgramModfy, setClubProgramModfy] = useState(true); //동아리 프로그램 수정
+  const [clubHistoryModfy, setClubHistoryModfy] = useState(true); //동아리 활동내역 수정
+
   let prev_length = 0; //주요활동내역의 년도 시각화에 필요한 변수1
   let list = []; //2
   let after_length = 0; //3
@@ -86,7 +90,7 @@ export default function ClubIntroduce() {
               <button
                 className="relative flex items-center gap-[5px] ml-[480px] my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
                 onClick={() => {
-                  setAddImg(true);                 
+                  setAddImg(true);
                 }}
               >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
@@ -94,8 +98,7 @@ export default function ClubIntroduce() {
               </button>
             </div>
             <img
-              // src={`${baseUrl}/${posts.image_url}`}
-              src={posts.image_urls}
+              src={`${baseUrl}/${posts.image_urls[0]}`}
               className={"w-[637px] h-[432px]"}
             ></img>
           </div>
@@ -130,9 +133,14 @@ export default function ClubIntroduce() {
                   {posts.tag3}
                 </div>
               </div>
-              <button className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
+              <button
+                className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                onClick={() => {
+                  setTagModfy(!tagModfy);
+                }}
+              >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+                <div>{tagModfy ? "수정하기" : "완료하기"}</div>
               </button>
             </div>
             <p className={"text-h3 ml-8"}>{posts.sub_content}</p>
@@ -156,20 +164,41 @@ export default function ClubIntroduce() {
                 </div>
                 <div
                   className={
-                    "grid grid-cols-4 gap-[10px] text-center mt-[16px]"
+                    "flex flex-wrap gap-[10px] gap-y-0 text-center max-h-[180px]"
                   }
                 >
                   {posts.activity_tags.map((tags) => {
                     return (
-                      <div
-                        className={
-                          "border border-sub text-sub rounded-lg h-[30px] font-bold px-[5px]"
-                        }
-                      >
-                        {tags}
-                      </div>
+                   
+                        <div className="h-[40px]">
+                          {tagModfy? null : <div className="relative ml-[80px] mb-[10px]">
+                            <div className="absolute rounded-full bg-[#FF0303] w-[20px] h-[20px]">
+                              <span class="material-symbols-outlined text-white text-[10px] font-thin ml-[5px]">
+                                close
+                              </span>
+                            </div>
+                          </div>}
+                          <div
+                            className={
+                              "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px]"
+                            }
+                          >
+                            {tags}
+                          </div>
+                        </div>
+                   
                     );
                   })}
+                  {tagModfy? null : <div className="h-[40px]">
+                    <button
+                      className=" bg-sub text-white rounded-lg h-[30px] font-[600] px-[10px] mt-[10px]"
+                      onClick={() => {
+                        // 태그 추가되도록 설정
+                      }}
+                    >
+                      + 활동 추가
+                    </button>
+                  </div>}      
                 </div>
               </div>
             </div>
@@ -187,9 +216,14 @@ export default function ClubIntroduce() {
             {/* <div className="bg-main from-white absolute top-0"></div> */}
             <div className="flex w-full gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>동아리 프로그램</div>
-              <button className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
+              <button
+                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                onClick={() => {
+                  setClubProgramModfy(!clubProgramModfy);
+                }}
+              >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+                <div>{clubProgramModfy ? "수정하기" : "완료하기"}</div>
               </button>
             </div>
             <div
@@ -200,13 +234,16 @@ export default function ClubIntroduce() {
               {/* 동아리 프로그램 세부내용 */}
               {programs.map((program) => {
                 return (
-                  <div className={"my-6"}>
-                    <div className={"h-[50px] my-6 flex gap-2"}>
-                      <div>
+                  <div className={""}>
+                    <div className={"h-[50px] flex gap-2"}>
+                      <div className={""}>
                         <p className={"text-h4 text-black"}>{program.title}</p>
                         <p className={"text-h7 text-darkgray"}>
                           {program.content}
                         </p>
+                        <button className="w-[47px] h-[32px] bg-gray rounded-md text-white font-[400] text-[12px] mt-[15px]">
+                          삭제
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -223,9 +260,14 @@ export default function ClubIntroduce() {
             {/* 활동내역 소제목 */}
             <div className="flex w-full">
               <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
-              <button className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
+              <button
+                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                onClick={() => {
+                  setClubHistoryModfy(!clubHistoryModfy);
+                }}
+              >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+                <div>{clubHistoryModfy ? "수정하기" : "완료하기"}</div>
               </button>
             </div>
             <div
@@ -368,8 +410,17 @@ export default function ClubIntroduce() {
   );
 }
 
-function Addimg() { //동아리 이미지 수정 모달
+function Addimg() {
+  //동아리 이미지 수정 모달
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
+  const [image, setImage] = useState({ first: "" });
+
+  const handleChange = (e) => {
+    setImage({
+      first: e.target.files[0],
+    });
+  };
+
   return (
     <>
       <div className="fixed w-full h-full top-0 left-0 flex justify-center items-center z-20">
@@ -379,17 +430,25 @@ function Addimg() { //동아리 이미지 수정 모달
             <div className=" grid grid-rows-2">
               <div className="">
                 <div className="font-[700] text-[20px]">파일 첨부</div>
-                <p className="text-[16px] mt-[10px]">000MB 이하의 jpg, png 파일을 업로드 가능합니다.</p>
+                <p className="text-[16px] mt-[10px]">
+                  000MB 이하의 jpg, png 파일을 업로드 가능합니다.
+                </p>
               </div>
               <div className=" grid content-end">
                 <button className="bg-main_mid w-[152px] h-[48px] text-white rounded-xl text-[18px]">
+                  <input
+                    type="file"
+                    id="upload-button"
+                    style={{ display: "none" }}
+                    onChange={handleChange}
+                  />
                   사진 파일 선택
                 </button>
               </div>
             </div>
             <div className="grid grid-rows-2">
               <div>
-              <div className="flex">
+                <div className="flex">
                   <div className="flex items-center gap-[15px] border border-[#E5E5E5] rounded-full px-[15px] py-[7px]">
                     파일 이름.png
                     <div className="rounded-full bg-[#C1C1C1] w-[20px] h-[20px]">
@@ -399,7 +458,7 @@ function Addimg() { //동아리 이미지 수정 모달
                       {/* 수직 정렬을 못하겠음 */}
                     </div>
                   </div>
-              </div>
+                </div>
               </div>
               <div className=" flex place-self-end gap-[10px] text-[16px]">
                 <button
@@ -420,4 +479,8 @@ function Addimg() { //동아리 이미지 수정 모달
       </div>
     </>
   );
+}
+
+function UploadImg() {
+  return <></>;
 }
