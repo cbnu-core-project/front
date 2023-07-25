@@ -6,6 +6,7 @@ import { baseUrl } from "../../common/global";
 import { promotionsState, addingImgState } from "../../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -70,6 +71,11 @@ export default function ClubIntroduce() {
     getClubActivityHistory();
     getClubProgram();
   }, []);
+
+  // 이미지 업로드 버튼 눌러서, state가 바뀌면 다시 바뀐 이미지를 불러오기
+  useEffect(() => {
+    getClubPost();
+  }, [AddImg]);
 
   return (
     <>
@@ -398,6 +404,7 @@ const UploadImageForm = () => {
   const { id } = useParams(); // club_objid
   const [image, setImage] = useState({ preview: "", raw: "" });
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     // console.log(URL.createObjectURL(e.target.files[0]));
@@ -419,7 +426,13 @@ const UploadImageForm = () => {
     const formData = new FormData();
     formData.append("image", image.raw);
 
-    if (image.raw == null) {
+    if (image.raw == "") {
+      Swal.fire({
+        title: "올릴 이미지가 없습니다",
+        text: "이미지를 업로드 해 주세요 !",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
       return;
     }
 
@@ -431,9 +444,13 @@ const UploadImageForm = () => {
       })
       .then((res) => {
         // console.log(res.data.image_url);
-        axios.put(
-          `/api/club/image/update?club_objid=${id}&image_url=${res.data.image_url}`
-        );
+        axios
+          .put(
+            `/api/club/image/update?club_objid=${id}&image_url=${res.data.image_url}`
+          )
+          .then((res) => {
+            setAddImg(false);
+          });
       });
   };
 
