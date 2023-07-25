@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { readOneClub } from "../../api/club";
 import { readAllPromotions, readOnePromotion } from "../../api/promotion";
 import { baseUrl } from "../../common/global";
-import { promotionsState } from "../../store";
+import { promotionsState, addingImgState } from "../../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 
@@ -11,15 +11,15 @@ axios.defaults.baseURL = baseUrl;
 
 export default function ClubIntroduce() {
   const { id } = useParams();
-  const [posts, setPosts] = useState({});
+  const [posts, setPosts] = useState({ activity_tags: [] });
   const [promotions, setPromotions] = useRecoilState(promotionsState);
   const [count, setCount] = useState(0);
   const [activity, setActivity] = useState([]); //동아리 주요활동 내역
   const [programs, setPrograms] = useState([]); //동아리 활동 프로그램 내역
-  let prev_length=0 //주요활동내역의 년도 시각화에 필요한 변수1
-  let list = []  //2
-  let after_length=0  //3
-
+  const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
+  let prev_length = 0; //주요활동내역의 년도 시각화에 필요한 변수1
+  let list = []; //2
+  let after_length = 0; //3
   const navigate = useNavigate();
 
   function getClubPost() {
@@ -61,9 +61,7 @@ export default function ClubIntroduce() {
 
   function getClubProgram() {
     //활동 프로그램 데이터 가져옴
-    axios
-      .get(`api/club_programs/${id}`)
-      .then((res) => setPrograms(res.data));
+    axios.get(`api/club_programs/${id}`).then((res) => setPrograms(res.data));
   }
 
   useEffect(() => {
@@ -75,6 +73,7 @@ export default function ClubIntroduce() {
 
   return (
     <>
+      {AddImg == true ? <Addimg /> : null} {/* 사진 수정 창 */}
       <div className={"p-2 ml-[56px]"}>
         <div className={"flex gap-8"}>
           {/*동아리 활동*/}
@@ -83,8 +82,20 @@ export default function ClubIntroduce() {
               "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden z-[-1]"
             }
           >
+            <div className="absolute">
+              <button
+                className="relative flex items-center gap-[5px] ml-[480px] my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                onClick={() => {
+                  setAddImg(true);                 
+                }}
+              >
+                <div class="material-symbols-outlined ml-[7px]">edit</div>
+                <div>수정하기</div>
+              </button>
+            </div>
             <img
-              src={`${baseUrl}/${posts.image_url}`}
+              // src={`${baseUrl}/${posts.image_url}`}
+              src={posts.image_urls}
               className={"w-[637px] h-[432px]"}
             ></img>
           </div>
@@ -99,34 +110,40 @@ export default function ClubIntroduce() {
               <div className={"gap-2 flex mt-[9px]"}>
                 <div
                   className={
-                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[8px] py-[]"
+                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
                   }
                 >
                   {posts.tag1}
                 </div>
                 <div
                   className={
-                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md"
+                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
                   }
                 >
                   {posts.tag2}
                 </div>
                 <div
                   className={
-                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md"
+                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
                   }
                 >
                   {posts.tag3}
                 </div>
               </div>
+              <button className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
+                <div class="material-symbols-outlined ml-[7px]">edit</div>
+                <div>수정하기</div>
+              </button>
             </div>
-            <p className={"text-h3 ml-8"}>{posts.content}</p>
-            <p className={"text-h6 px-8 py-4 text-darkgray"}>{posts.content}</p>
+            <p className={"text-h3 ml-8"}>{posts.sub_content}</p>
+            <p className={"text-h6 px-8 py-4 text-darkgray"}>
+              {posts.main_content}
+            </p>
             <div className={"grid place-content-center"}>
               <div className={"border-t mt-2 border-gray2 w-[573px] h-[120px]"}>
                 <div className={"mt-[24px]"} />
                 <div className={"flex gap-4"}>
-                  <p className={"font-bold text-h2"}>
+                  <p className={"font-bold text-h3"}>
                     우리는 이런 활동을 해요!
                   </p>
                   <p
@@ -139,34 +156,20 @@ export default function ClubIntroduce() {
                 </div>
                 <div
                   className={
-                    "flex grid grid-cols-4 gap-[10px] text-center mt-[16px]"
+                    "grid grid-cols-4 gap-[10px] text-center mt-[16px]"
                   }
                 >
-                  <div
-                    className={"border border-sub text-sub rounded-lg h-[30px]"}
-                  >
-                    {posts.tag1}
-                  </div>
-                  <div
-                    className={"border border-sub text-sub rounded-lg h-[30px]"}
-                  >
-                    {posts.tag2}
-                  </div>
-                  <div
-                    className={"border border-sub text-sub rounded-lg h-[30px]"}
-                  >
-                    {posts.tag3}
-                  </div>
-                  <div
-                    className={"border border-sub text-sub rounded-lg h-[30px]"}
-                  >
-                    {posts.tag1}
-                  </div>
-                  <div
-                    className={"border border-sub text-sub rounded-lg h-[30px]"}
-                  >
-                    {posts.tag2}
-                  </div>
+                  {posts.activity_tags.map((tags) => {
+                    return (
+                      <div
+                        className={
+                          "border border-sub text-sub rounded-lg h-[30px] font-bold px-[5px]"
+                        }
+                      >
+                        {tags}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -181,7 +184,7 @@ export default function ClubIntroduce() {
               "overflow-hidden 2xl:w-[358px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center relative"
             }
           >
-            {/* <div className="bg-main from-white absolute z-10 top-0"></div> */}
+            {/* <div className="bg-main from-white absolute top-0"></div> */}
             <div className="flex w-full gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>동아리 프로그램</div>
               <button className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
@@ -195,19 +198,17 @@ export default function ClubIntroduce() {
               }
             >
               {/* 동아리 프로그램 세부내용 */}
-              {programs.map((program)=>{
-                return(
+              {programs.map((program) => {
+                return (
                   <div className={"my-6"}>
                     <div className={"h-[50px] my-6 flex gap-2"}>
                       <div>
-                        <p className={"text-h4 text-black"}>
-                          {program.title}
-                        </p>
+                        <p className={"text-h4 text-black"}>{program.title}</p>
                         <p className={"text-h7 text-darkgray"}>
                           {program.content}
                         </p>
                       </div>
-                    </div>              
+                    </div>
                   </div>
                 );
               })}
@@ -231,27 +232,45 @@ export default function ClubIntroduce() {
               className={
                 "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll"
               }
-            > 
-              {activity.map((acti) => { //연도 선택적으로 시각화(우회해서 작성)
-                prev_length = list.length //연도 추가전 리스트 길이 저장 
-                if (list.find((element) => element == acti.year) == null) { 
+            >
+              {activity.map((acti) => {
+                //연도 선택적으로 시각화(우회해서 작성)
+                prev_length = list.length; //연도 추가전 리스트 길이 저장
+                if (list.find((element) => element == acti.year) == null) {
                   //현재 데이터의 연도가 리스트에 들어와 있지 않을 때만 해당 연도를 추가함(리스트 중복 제거 코드)
                   list.push(acti.year);
                 }
-                after_length = list.length //연도 추가 후 리스트 길이 저장
-                
+                after_length = list.length; //연도 추가 후 리스트 길이 저장
+
                 return (
                   <>
                     <div className={"mt-6 flex"}>
-                      {prev_length != after_length ? //추가전 리스트 길이와 추가 후 리스트 길이가 다를 때만 연도 출력
-                      <div className={"w-[70px] h-auto text-[30px] font-light"}>{acti.year}</div> 
-                      : <div className={"w-[70px] h-auto text-[30px] font-light text-white"}>{acti.year}</div>
-                      //길이 같을 때는 너비 맞춰주기 위해 흰색으로 출력                             
+                      {
+                        prev_length != after_length ? ( //추가전 리스트 길이와 추가 후 리스트 길이가 다를 때만 연도 출력
+                          <div
+                            className={"w-[70px] h-auto text-[30px] font-light"}
+                          >
+                            {acti.year}
+                          </div>
+                        ) : (
+                          <div
+                            className={
+                              "w-[70px] h-auto text-[30px] font-light text-white"
+                            }
+                          >
+                            {acti.year}
+                          </div>
+                        )
+                        //길이 같을 때는 너비 맞춰주기 위해 흰색으로 출력
                       }
                       <div className={"w-[320px] h-auto"}>
                         {/* 세부적인 데이터들 출력(월, 타이틀) */}
-                        
-                        <ul className={"marker:text-main_default list-disc list-inside ml-5"}>
+
+                        <ul
+                          className={
+                            "marker:text-main_default list-disc list-inside ml-5"
+                          }
+                        >
                           <div className="relative">
                             {/* list dot 주변에 길게 늘어진 선 ui */}
                             <div className="absolute ml-[2px] mt-[13px] w-[1px] h-[70px] bg-gray2 z-[-1]"></div>
@@ -270,7 +289,7 @@ export default function ClubIntroduce() {
               })}
             </div>
           </div>
-          {/*홍보 게시판 프로그램*/}
+          {/*홍보 게시판 프로그램-현재 ui만 있음 개발예정*/}
           <div
             className={
               "w-[430px] h-[512px] 2xl:w-[454px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center"
@@ -278,15 +297,44 @@ export default function ClubIntroduce() {
           >
             <div className="flex w-full gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>홍보 게시판</div>
-              <button className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
-                <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+              <button
+                className="flex items-center ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[167px] h-[40px] rounded-md"
+                onClick={() => {
+                  alert("서비스 준비중입니다");
+                }}
+              >
+                <div className="ml-[10px]">게시물 등록하기</div>
+                <span class="material-symbols-outlined">chevron_right</span>
               </button>
             </div>
             <div className={"border-t border-gray2 w-[390px] h-[430px]"}>
               <div className={"h-[24px]"} />
-              <div className={"flex gap-6 ml-[10px]"}>
-                {promotions.map((promotion) => {
+
+              <div className={"text-midgray h-[340px] ml-[100px] pt-[100px]"}>
+                둥록된 게시물이 없습니다.
+              </div>
+              <div className={"flex text-h6 ml-[140px]"}>
+                <button
+                  className={
+                    "border w-[28px] h-[28px] text-center border-gray2 rounded"
+                  }
+                  onClick={() => {}}
+                >
+                  <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button className={"mx-2"} onClick={() => {}}>
+                  <span className="font-bold">1</span> / 1
+                </button>
+                <button
+                  className={
+                    "border w-[28px] h-[28px] text-center border-gray2 rounded"
+                  }
+                  onClick={() => {}}
+                >
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+              </div>
+              {/* {promotions.map((promotion) => {
                   return (
                     <>
                       <div
@@ -310,12 +358,65 @@ export default function ClubIntroduce() {
                       </div>
                     </>
                   );
-                })}
-              </div>
+                })} */}
             </div>
           </div>
         </div>
         <div className={"h-[80px]"} />
+      </div>
+    </>
+  );
+}
+
+function Addimg() { //동아리 이미지 수정 모달
+  const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
+  return (
+    <>
+      <div className="fixed w-full h-full top-0 left-0 flex justify-center items-center z-20">
+        <div className="bg-black w-full h-full opacity-50"></div>
+        <div className="absolute w-[454px] h-[404px] bg-white rounded-2xl ">
+          <div className="grid grid-rows-2 gap-[15px] px-[40px] py-[40px] h-[404px] ">
+            <div className=" grid grid-rows-2">
+              <div className="">
+                <div className="font-[700] text-[20px]">파일 첨부</div>
+                <p className="text-[16px] mt-[10px]">000MB 이하의 jpg, png 파일을 업로드 가능합니다.</p>
+              </div>
+              <div className=" grid content-end">
+                <button className="bg-main_mid w-[152px] h-[48px] text-white rounded-xl text-[18px]">
+                  사진 파일 선택
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-rows-2">
+              <div>
+              <div className="flex">
+                  <div className="flex items-center gap-[15px] border border-[#E5E5E5] rounded-full px-[15px] py-[7px]">
+                    파일 이름.png
+                    <div className="rounded-full bg-[#C1C1C1] w-[20px] h-[20px]">
+                      <span class="material-symbols-outlined text-white text-[10px] font-thin ml-[5px]">
+                        close
+                      </span>
+                      {/* 수직 정렬을 못하겠음 */}
+                    </div>
+                  </div>
+              </div>
+              </div>
+              <div className=" flex place-self-end gap-[10px] text-[16px]">
+                <button
+                  className="w-[87px] h-[40px] border border-[#E5E5E5] rounded-md"
+                  onClick={() => {
+                    setAddImg(false);
+                  }}
+                >
+                  취소
+                </button>
+                <button className="bg-[#29CCC7] text-white w-[87px] h-[40px] rounded-md">
+                  완료하기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
