@@ -1,4 +1,4 @@
-import DropdownMenu from "../../components/DropDownMenu";
+import UserApplicationForm from "../../components/clubsignup/UserApplicationForm"
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { club_application_form } from "../../store";
 axios.defaults.baseURL = baseUrl;
 
 export default function ClubSignUp() {
-  const { id } = useParams();
+  const { id, objid } = useParams();
   const [formData, setFormData] = useState({
     gender: [],
     phone_number: [],
@@ -18,35 +18,54 @@ export default function ClubSignUp() {
     questions: [],
     school_number: [],
   });
+  const [listData, setListData] = useState({
+    user_objid: "",
+    club_objid: "",
+    title: "",
+    club_name: "",
+    approval: 0,
+    classification: 0,
+    data: "",
+  });
 
-  //가입 신청 양식 데이터 가져오는 함수
+  //가입 신청 양식 설정한 것을 데이터 가져오는 함수
   function getClubApplicationForm() {
     //주요활동내역 가져옴
     axios.get(`api/club_application_form/${id}`).then((res) => {
       setFormData(res.data[0]);
     });
   }
+  //관리자 입장에서 가입 신청 양식 설정
+  function getClubApplicationLists() {
+    axios.get(`api/club_application_lists/${id}`).then((res) => {
+      setListData(res.data[0]);
+    });
+  }
+
   useEffect(() => {
     getClubApplicationForm();
   }, []);
 
   return (
     <>
-      {formData ? (
-        <UserSignUp formData={formData} />
-      ) : (
-        <div>가입 신청 기간이 아닙니다.</div>
-      )}
+      {/* <UserSignUp formData={formData} id={id} listData={listData} /> */}
+      <UserApplicationForm formData={formData} listData={listData} id={id} objid={objid}/>
+      {/* <ManagerSignUp /> */}
     </>
   );
 }
 //일반 유저가 동아리 신청할 때 보이는 양식
 function UserSignUp(props) {
-  const [realname, setRealname] = useState("");
+  const [realname, setRealName] = useState("");
   const [department, setDepartment] = useState("");
   const [schoolNumber, setSchoolNumber] = useState("");
   const [gender, setGender] = useState("");
-  // const [department, setDepartment] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [shortForm, setShortForm] = useState("");
+  const [post, setPost] = useState("");
+  var d = new Date();
 
   const required = (bool_list) => {
     if (bool_list[1] == true) {
@@ -70,6 +89,12 @@ function UserSignUp(props) {
             className={
               "bg-gray3 w-[550px] h-[300px] rounded-xl text-h5 overflow-y-scroll p-3"
             }
+            value={shortForm}
+            onChange={(e) => {
+              if (e.target.value.length <= 1000) {
+                setShortForm(e.target.value);
+              }
+            }}
           ></input>
         </div>
       );
@@ -128,7 +153,8 @@ function UserSignUp(props) {
               value={realname}
               onChange={(e) => {
                 if (e.target.value.length <= 12) {
-                  setRealname(e.target.value);
+                  setRealName(e.target.value);
+                  console.log(realname);
                 }
               }}
             ></input>
@@ -170,6 +196,7 @@ function UserSignUp(props) {
               onChange={(e) => {
                 if (e.target.value.length <= 10) {
                   setSchoolNumber(e.target.value);
+                  console.log(realname);
                 }
               }}
             ></input>
@@ -187,9 +214,9 @@ function UserSignUp(props) {
               <input
                 type="radio"
                 className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
-                id={"male"}
                 value={"남자"}
-                name={"gender"}
+                id="male"
+                name="gender"
                 onChange={(e) => {
                   setGender(e.target.value);
                 }}
@@ -202,9 +229,9 @@ function UserSignUp(props) {
               <input
                 type="radio"
                 className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
-                id={"female"}
                 value={"여자"}
-                name={"gender"}
+                id="female"
+                name="gender"
                 onChange={(e) => {
                   setGender(e.target.value);
                 }}
@@ -226,6 +253,13 @@ function UserSignUp(props) {
             <input
               className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
               placeholder={"ex) 010-0000-0000"}
+              value={phoneNumber}
+              onChange={(e) => {
+                if (e.target.value.length <= 13) {
+                  setPhoneNumber(e.target.value);
+                  console.log(phoneNumber);
+                }
+              }}
             ></input>
           </div>
         ) : (
@@ -241,6 +275,13 @@ function UserSignUp(props) {
             <input
               className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
               placeholder={"ex) 0000@naver.com"}
+              value={email}
+              onChange={(e) => {
+                if (e.target.value.length <= 30) {
+                  setEmail(e.target.value);
+                  console.log(email);
+                }
+              }}
             ></input>
           </div>
         ) : (
@@ -257,6 +298,13 @@ function UserSignUp(props) {
             <input
               className={"bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3"}
               placeholder={"주소를 작성해주세요."}
+              value={address}
+              onChange={(e) => {
+                if (e.target.value.length <= 40) {
+                  setAddress(e.target.value);
+                  console.log(address);
+                }
+              }}
             ></input>
           </div>
         ) : null}
@@ -268,6 +316,34 @@ function UserSignUp(props) {
         <button
           type={"submit"}
           className={"w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"}
+          onClick={() => {
+            axios
+              .post("api/club_application_submit", {
+                title: `${props.listData.title}`,
+                content: "팀쿡 가두모집 중입니다.",
+                club_objid: `${props.id}`,
+                user_objid: "1",
+                club_name: `${props.listData.club_name}`,
+                deadline: d,
+                announcement_of_acceptance: d,
+                realname: realname,
+                department: department,
+                school_number: schoolNumber,
+                gender: gender,
+                phone_number: phoneNumber,
+                email: email,
+                address: address,
+                shortForm: shortForm,
+                questions: [],
+              })
+              .then((res) => {
+                axios.get("/api/club_application_submit").then((response) => {
+                  setPost(response.data);
+                  console.log(response.data);
+                  console.log(props.listData);
+                });
+              });
+          }}
         >
           제출하기
         </button>
@@ -393,178 +469,5 @@ function ManagerSignUp() {
         })}
       </div>
     </>
-  );
-}
-//동아리 관리자 가입 신청 양식 설정
-function User_Application_Form() {
-  return (
-    <div className={"text-h1 font-bold"}>
-      <p className={"text-sub text-center"}> 가입 신청서 양식 설정</p>
-      <div className={"w-[780px] max-h-screen rounded-xl shadow-lg mx-auto"}>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2 mt-[32px]"}>제목</div>
-          <input
-            className={
-              "bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3 mt-[32px]"
-            }
-            placeholder={"ex) OOO 3기 팀원 모집"}
-          ></input>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>설명</div>
-          <input
-            className={"bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3"}
-            placeholder={"ex) 가입신청 관련 유의사항 및 공지내용"}
-          ></input>
-        </div>
-        <div
-          className={
-            "w-[700px] h-auto mx-auto mt-[32px] text-h3 flex font-bold"
-          }
-        >
-          신청서로 받아볼 항목들을 선택해주세요.
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            이름 <span className={"text-sub"}>(필수)</span>
-          </div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            학과 <span className={"text-sub"}>(필수)</span>
-          </div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            학번 <span className={"text-sub"}>(필수)</span>
-          </div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            연락처 <span className={"text-sub"}>(필수)</span>
-          </div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>성별</div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-          <div className={"w-[150px] p-2"}>필수 여부</div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>이메일</div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-          <div className={"w-[150px] p-2"}>필수 여부</div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-        </div>
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>주소</div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-          <div className={"w-[150px] p-2"}>필수 여부</div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-            />
-          </div>
-        </div>
-
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2 flex"}>
-            질문 추가
-            <button className="bg-gray2 h-7 w-7 rounded-full flex items-center justify-center text-black ml-[10px] mt-[3px]">
-              +
-            </button>
-          </div>
-        </div>
-
-        <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <DropdownMenu />
-          <div className={"w-[150px] p-2 text-h5 ml-[20px]"}>필수 여부</div>
-          <div className={"w-[150px] p-2"}>
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-black rounded-sm border"
-            />
-          </div>
-        </div>
-
-        <div className={"w-[700px] h-auto mx-auto mt-[16px] text-h3 flex"}>
-          <input
-            className={"bg-gray3 h-[48px] w-[1000px] rounded-xl text-h5 p-3"}
-            placeholder={"질문을 입력해주세요."}
-          ></input>
-        </div>
-
-        <div
-          className={
-            "w-[700px] h-auto mx-auto mt-[16px] text-h3 flex justify-end mb-[10px] "
-          }
-        >
-          <button
-            type={"submit"}
-            className={
-              "w-[87px] h-[40px] text-h5 text-black border border-sub bg-white rounded-md mr-[10px]"
-            }
-          >
-            미리보기
-          </button>
-          <button
-            type={"submit"}
-            className={"w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"}
-          >
-            제출하기
-          </button>
-        </div>
-      </div>
-    </div>
   );
 }
