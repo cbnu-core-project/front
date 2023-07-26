@@ -65,12 +65,14 @@ export default function ClubIntroduce() {
     axios.get(`api/club_programs/${id}`).then((res) => setPrograms(res.data));
   }
 
+  // fix: 사이드바의 동아리를 누르면, location.reload()를 통해 이동을 하지 않고,
+  // navigate를 통해 부드럽게 이동하기 위해, id를 deps에 추가함
   useEffect(() => {
     getClubPost();
     getPromotionPost();
     getClubActivityHistory();
     getClubProgram();
-  }, []);
+  }, [id]);
 
   // 이미지 업로드 버튼 눌러서, state가 바뀌면 다시 바뀐 이미지를 불러오기
   useEffect(() => {
