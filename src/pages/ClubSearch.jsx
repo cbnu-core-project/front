@@ -25,7 +25,7 @@ export default function ClubSearch() {
   const countClassificationSearchPosts = () => {
     let i = 0;
     let j = 0;
-    searchAllClubs(query ,homeTab).then((res) => {
+    searchAllClubs(query, homeTab).then((res) => {
       res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
       setCount([i, j]);
     });
@@ -40,14 +40,13 @@ export default function ClubSearch() {
     });
   };
 
-
   const getPosts = () => {
     searchAllClubs(query, homeTab).then((res) => setPosts(res.data));
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     countAllPosts();
-  }, [])
+  }, []);
 
   useEffect(() => {
     console.log("작동");
@@ -103,7 +102,11 @@ export default function ClubSearch() {
       </div>
       <div className={"w-full p-16 flex justify-center"}>
         <div className={""}>
-          <Pagination total={Math.ceil((count[0] + count[1]) / 16)} boundaries={1} onChange={onChange}/>
+          <Pagination
+            total={Math.ceil((count[0] + count[1]) / 16)}
+            boundaries={1}
+            onChange={onChange}
+          />
         </div>
       </div>
     </div>
@@ -174,7 +177,11 @@ const ClubTab = () => {
 const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
-      <img src={`${baseUrl}/${props.post.image_url}`} alt="img" className={"rounded-t-lg"} />
+      <img
+        src={`${baseUrl}/${props.post.image_urls[0]}`}
+        alt="img"
+        className={"rounded-t-lg"}
+      />
     </div>
   );
 };
@@ -195,14 +202,14 @@ const Content = (props) => {
         </div>
       </div>
       <div className={"hidden 2xl:block"}>
-        {props.post.content.length > 35
-          ? props.post.content.slice(0, 35) + "..."
-          : props.post.content}
+        {props.post.main_content.length > 35
+          ? props.post.main_content.slice(0, 35) + "..."
+          : props.post.main_content}
       </div>
       <div className={"block 2xl:hidden text-sm"}>
-        {props.post.content.length > 12
-          ? props.post.content.slice(0, 12) + "..."
-          : props.post.content}
+        {props.post.main_content.length > 12
+          ? props.post.main_content.slice(0, 12) + "..."
+          : props.post.main_content}
       </div>
     </div>
   );
