@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { baseUrl } from "../../common/global";
 import { useState } from "react";
 
+
 axios.defaults.baseURL = baseUrl;
 
 
@@ -11,6 +12,7 @@ export default function ClubFAQ() {
   const { id } = useParams();
   const [post, setPost] = useState({faqs:[]}); //useEffect 실행속도가 느려서 데이터가 나중에들어가는데, 오류 방지를 위해 빈리스트 삽입
   const [count, setCount] = useState(-1);
+  const [token, setToken] = useRecoilState(tokenState);
 
   useEffect(() => {
     axios.get('/api/club_faq/' + id).then((res) => {
@@ -20,7 +22,7 @@ export default function ClubFAQ() {
 
   return (
     <>
-      <div className={"text-[38px] font-bold text-main ml-[628px]"}>자주 묻는 질문</div>
+      <div className={"text-[38px] font-bold text-sub ml-[628px]"}>자주 묻는 질문</div>
       <div className={"mt-[36px]"} />
       <ul
         className={
