@@ -1,8 +1,12 @@
 import axios from "axios";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { baseUrl } from "../../common/global";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { tokenState, userInfoState } from "../../store";
+import { useNavigate } from "react-router-dom";
+
 
 
 axios.defaults.baseURL = baseUrl;
@@ -20,9 +24,19 @@ export default function ClubFAQ() {
     });
   }, [])
 
+  const navigate = useNavigate();
+
   return (
     <>
-      <div className={"text-[38px] font-bold text-sub ml-[628px]"}>자주 묻는 질문</div>
+      <div className={"text-[32px] font-bold text-sub flex ml-[628px] justify-between"}>
+        자주 묻는 질문
+        {token 
+        ? <button className={'w-[155px] h-[40px] mt-2 font-[Pv] text-[20px] font-bold bg-sub text-white rounded-md mr-[64px]'}
+          onClick={() => {
+            navigate("./clubfaqsetting");
+          }}>
+          FAQ 설정하기</button> : ''}
+        </div>
       <div className={"mt-[36px]"} />
       <ul
         className={

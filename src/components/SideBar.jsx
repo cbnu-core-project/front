@@ -202,6 +202,7 @@ function Modal() {
                   setAccessToken();
                   setRefreshToken();
                   setToken(""); //빈 토큰 설정==로그아웃
+                  window.location.reload();
                 })
                 .catch((err) => {
                   console.log(err);

@@ -14,6 +14,7 @@ import {
   ClubFAQ,
   ClubIntroduce,
   ClubSchedule,
+  ClubFAQSetting,
 } from "./pages";
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
@@ -149,6 +150,7 @@ function App() {
             <Route path="clubmanagement" element={<ClubManagement />}></Route>
             <Route path="clubschedule" element={<ClubSchedule />}></Route>
             <Route path="clubsignup" element={<ClubSignUp />}></Route>
+            <Route path="clubfaq/clubfaqsetting" element={<ClubFAQSetting />}></Route>
           </Route>
           <Route path="/club/search/" element={<ClubSearch />} />
           <Route path="/login" element={<Login />} />
