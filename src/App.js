@@ -149,12 +149,7 @@ function App() {
             <Route path="clubintroduce" element={<ClubIntroduce />}></Route>
             <Route path="clubmanagement" element={<ClubManagement />}></Route>
             <Route path="clubschedule" element={<ClubSchedule />}></Route>
-            <Route path="clubsignup/:objid" element={<ClubSignUp />}>
-              <Route
-                path="userapplicationform"
-                element={<UserApplicationForm />}
-              ></Route>
-            </Route>
+            <Route path="clubsignup" element={<ClubSignUp />}></Route>
           </Route>
           <Route path="/club/search/" element={<ClubSearch />} />
           <Route path="/login" element={<Login />} />
