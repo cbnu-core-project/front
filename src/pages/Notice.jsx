@@ -1,196 +1,112 @@
-import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { noticesState } from '../store';
+import { readAllNotices, readSomeNotices } from '../api/notice';
+import { useNavigate } from 'react-router-dom';
+import { usePagination } from '@mantine/hooks';
+import axios from 'axios';
+import { baseUrl } from '../common/global';
+import { Pagination } from '@mantine/core';
 
+axios.defaults.baseURL = baseUrl;
 
 const Notice = () => {
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(9);
+  const [posts, setPosts] = useRecoilState(noticesState);
+  const [count, setCount] = useState(0);
+  const navigate = useNavigate();
+  const [page, onChange] = useState(1);
+  const [Selected, setSelected] = useState("");
 
-  const toggleCategory = () => {
-    setIsCategoryOpen(!isCategoryOpen);
+  const handleSelect = (e) => {
+    setSelected(e.target.value);
   };
 
-  const selectCategory = (category) => {
-    setSelectedCategory(category);  
-    setIsCategoryOpen(false);
+  const getPosts = () => {
+    readSomeNotices((page - 1) * 9, 9).then((res) => {
+      setPosts(res.data);
+    })
   };
 
-  // 게시글 목록 데이터 여기서 주석을 수정하면 어떤일이 일어날까요?용용
-  const posts = [
-    { id: 1, title: '게시글 1', author: '작성자 1', date: '2023-06-30' },
-    { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },
-    { id: 3, title: '게시글 3', author: '작성자 3', date: '2023-07-02' },
-    { id: 1, title: '게시글 1', author: '작성자 1', date: '2023-06-30' },
-    { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },
-    { id: 3, title: '게시글 3', author: '작성자 3', date: '2023-07-02' },
-    { id: 1, title: '게시글 1', author: '작성자 1', date: '2023-06-30' },
-    { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },
-    { id: 3, title: '게시글 4', author: '작성자 3', date: '2023-07-02' },
-    { id: 1, title: '게시글 1', author: '작성자 1', date: '2023-06-30' },
-    { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },
-    { id: 3, title: '게시글 3', author: '작성자 3', date: '2023-07-02' },
-    { id: 1, title: '게시글 111', author: '작성자 1', date: '2023-06-30' },
-    { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },
-    { id: 3, title: '게시글 3', author: '작성자 3', date: '2023-07-02' },
-    { id: 1, title: '게시글 1', author: '작성자 1', date: '2023-06-30' },
-    { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },
-    { id: 3, title: '게시글 3', author: '작성자 3', date: '2023-07-02' },
-    { id: 1, title: '게시글 1232', author: '작성자 1', date: '2023-06-30' },
-    { id: 2, title: '게시글 2', author: '작성자 2', date: '2023-07-01' },
-    { id: 3, title: '게시글 3', author: '작성자 3', date: '2023-07-02' },
-    // 추가적인 게시글 데이터를 여기에 추가
-  ];
+  const getCountPosts = () => { //전체 게시물 계산
+    readAllNotices().then((res) => {
+      setCount(res.data.length);
+    });
+  }
 
-  // 전체 페이지 수 계산
-  const totalPages = Math.ceil(posts.length / postsPerPage);
+  const pagination = usePagination({
+    total: Math.ceil(count / 9),
+    page,
+    onChange,
+  })
 
-  // 특정 페이지로 이동
-  const goToPage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  useEffect(() => {
+    getCountPosts();
+  }, []);
 
-  // 현재 페이지의 게시글 목록
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  useEffect(() => {
+    getPosts();
+  }, [page]);
+
 
   return (
-    <div className="container mx-auto mt-8 px-4">
-      <h1 className="text-4xl font-bold text-center mt-4 text-white">공지사항</h1>
-      <div className="flex items-center justify-center mb-10 mt-10">
-      <h1 className="text-4xl text-center mr-2 text-main_mid">서비스</h1>
-        <h1 className="text-4xl font-bold text-center text-main">공지사항</h1>
-      </div>
-      
-
-      {/* 게시글 분류와 검색 */}
-      <div className="flex items-center justify-between mb-4">
-        {/* 게시글 분류 */}
-        <div className="relative">
-          <button
-            type="button"
-            className="py-2 px-4 text-sm bg-white rounded-full px-6 focus:outlines-none text-blues border border-black mr-4"
-            onClick={toggleCategory}
-          >
-            {selectedCategory || '제목'}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 ml-2 -mr-1 inline-block align-middle"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path fillRule="evenodd" d="M6.5 7l5 5 5-5H6.5z" clipRule="evenodd" />
-            </svg>
-          </button>
-          {isCategoryOpen && (
-            <div className="absolute z-10 mt-2 bg-white rounded-md shadow-md">
-              <ul className="py-2">
-                <li>
-                  <button
-                    type="button"
-                    className="block px-4 py-2 text-sm hover:bg-gray-200 w-full text-left"
-                    onClick={() => selectCategory('카테고리 1')}
-                  >
-                    카테고리 1
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="block px-4 py-2 text-sm hover:bg-gray-200 w-full text-left"
-                    onClick={() => selectCategory('카테고리 2')}
-                  >
-                    카테고리 2
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="block px-4 py-2 text-sm hover:bg-gray-200 w-full text-left"
-                    onClick={() => selectCategory('카테고리 3')}
-                  >
-                    카테고리 3
-                  </button>
-                </li>
-                {/* 추가적인 카테고리 항목은 여기에 추가 */}
-              </ul>
-            </div>
-          )}
+    <>
+      <div className={"w-[1434px]"}>
+        <div className={"mt-[160px] mb-8 text-center text-main font-[Pv] text-h1"}>
+          서비스
+          <span className={'font-bold'}> 공지사항</span>
         </div>
-
-        {/* 게시글 검색 */}
-        <div className="flex-grow px-2">
+        <form className={'mt-2'}>
+          <select className={'ml-16 w-[200px] h-[44px] font-bold rounded-2xl border border-gray text-h5'}>
+            <option value={"1"}>   제목</option>
+            <option value={"2"}>   작성자</option>
+            <option value={"3"}>   제목 + 작성자</option>
+          </select>
           <input
-            type="text"
-            placeholder="검색어를 입력하세요"
-            className="py-2 px-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+            className={'ml-[32px] w-[1038px] h-[44px] border border-gray rounded-2xl text-h5'}
+            placeholder={"  검색어를 입력해보세요."}
           />
-        </div>
-        <button className="bg-main_mid rounded-full p-2 text-white">돋</button>
-      </div>
-
-      {/* 게시글 목록 */}
-      <ul className="mt-6 bg-main_light rounded-xl divide-y divide-midgray">
-        {currentPosts.map((post) => (
-          <li key={post.id} className="px-4 py-3 flex items-center justify-between">
-            <div className="flex-grow mr-4">
-              <p className="text-lg font-medium truncate">{post.title}</p>
-              <p className="text-sm text-midgray">{post.author}</p>
-            </div>
-            <p className="text-sm text-midgray">{post.date}</p>
-          </li>
-        ))}
-      </ul>
-
-      {/* 페이지 번호 */}
-      {/* <div className="flex items-center justify-center mt-6"> */}
-
-      <div className="flex justify-between">
-
-      <div className="flex justify-start mt-6">
-       <button
-          className="px-4 py-2 mr-2 text-sm font-medium text-gray bg-blue-500 rounded hover:bg-blue-600 border border-gray"
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          <span>{'<'}</span> 이전
-        </button>
-      </div>
-
-      
-      <div className="flex justify-center mt-6">
-        {Array.from({ length: totalPages }, (_, index) => (
           <button
-            key={index + 1}
-            className={`px-4 py-2 mx-1 text-sm rounded ${
-              currentPage === index + 1
-                ? 'text-black font-bold'
-                : 'text-black hover:font-bold'
-            }`}
-            onClick={() => goToPage(index + 1)}
-          >
-            {index + 1}
+            type={"submit"}
+            className={"ml-2 w-[44px] h-[44px] rounded-3xl bg-main_mid text-h3 text-white"}>
+            🔍︎
           </button>
-        ))}
+        </form>
+        <div className={"w-[1306px] rounded-2xl bg-background ml-16 mt-8"}>
+          {posts.map((post, index) => {
+            return (
+              <div className={'font-[Pv] px-[30px] py-[22px] flex justify-between ' + (index < 8 ? ' border-b border-gray2' : '')}>
+                
+                <button
+                  onClick={() => {
+                    alert("아직 개발 안됐어요")
+                  }}>
+                  {post.title.length > 70
+                    ? post.title.slice(0, 70) + "..."
+                    : post.title}
+                </button>
+                <div>
+                  {DateFromObject(post._id).toISOString().substring(0, 10)}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        <div className={"ml-[653px] mt-6"}>
+          <Pagination
+            total={Math.ceil((count) / 9)}
+            boundaries={1}
+            onChange={onChange}
+          />
+          {/*<button className={"font-bold "}>{page}</button>*/}
+        </div>
       </div>
-        
-      
-      <div className="flex justify-end mt-6">
-        <button
-          className="px-4 py-2 ml-2 text-sm font-medium text-gray bg-blue-500 rounded hover:bg-blue-600 border border-gray"
-          onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          다음 <span>{'>'}</span>
-        </button>
-      </div>
-
-      </div>
-      
-      
-     </div> 
-  );
+    </>
+  )
 };
+
+function DateFromObject(objid) { //오브젝트 아이디로부터 시간 받아오는 함수
+  return new Date(parseInt(objid.substring(0, 8), 16) * 1000);
+}
+
 
 export default Notice;

@@ -14,6 +14,7 @@ import {
   ClubFAQ,
   ClubIntroduce,
   ClubSchedule,
+  UserApplicationForm,
 } from "./pages";
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
