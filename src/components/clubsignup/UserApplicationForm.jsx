@@ -7,13 +7,23 @@ import { baseUrl } from "../../common/global";
 export default function UserApplicationForm(props) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [gender, setGender] = useState([false, false]);
   const [forms, setForms] = useState([]);
   const [type, setType] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   //////////////////////////
+  const [phoneNumber, setPhoneNumber] = useState([false, false])
+  const [phoneNumberChecked, setPhoneNumberChecked] = useState(false)
+  const [phoneNumberRequiredChecked, setPhoneNumberRequiredChecked] = useState(false)
+  const [gender, setGender] = useState([false, false]);
   const [genderChecked, setGenderChecked] = useState(false);
   const [genderRequiredChecked, setGenderRequiredChecked] = useState(false);
+  const [email, setEmail] = useState([false, false]);
+  const [emailChecked, setEmailChecked] = useState(false);
+  const [emailRequiredChecked, setEmailRequiredChecked] = useState(false)
+  const [address, setAddress] = useState([false, false]);
+  const [addressRequiredChecked, setAddressRequiredChecked] = useState(false)
+  const [addressChecked, setAddressChecked] = useState(false)
+  
 
   const handleMenuClick = (props) => {
     setIsOpen(!isOpen);
@@ -29,7 +39,7 @@ export default function UserApplicationForm(props) {
 
   function createApplicationForm() {
     axios
-      .put(`api/club_application_form/${props.id}`, {
+      .put(`api/club_application_form/club_objid/${props.id}`, {
         title: title,
         content: content,
         club_objid: `${props.id}`,
@@ -39,23 +49,23 @@ export default function UserApplicationForm(props) {
         realname: true,
         department: true,
         school_number: true,
-        gender: [true, true],
-        phone_number: [true, true],
-        email: [true, true],
-        address: [true],
+        gender: gender,
+        phone_number: phoneNumber,
+        email: email,
+        address: address,
         questions: forms,
       })
       .then((res) => {
-        axios.get(`api/club_application_form/${props.id}`).then((response) => {
+        axios.get(`api/club_application_form/club_objid/${props.id}`).then((response) => {
           setData(response.data[0]);
-          console.log(data);
+          console.log(response.data[0]);
         });
       });
   }
 
   function getClubApplicationForm() {
     //주요활동내역 가져옴
-    axios.get(`api/club_application_form/${props.id}`).then((res) => {
+    axios.get(`api/club_application_form/club_objid/${props.id}`).then((res) => {
       setData(res.data[0]);
     });
   }
@@ -64,9 +74,13 @@ export default function UserApplicationForm(props) {
     getClubApplicationForm();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(gender);
-  // }, [genderChecked, genderRequiredChecked]);
+//   useEffect(() => {
+//     console.log(phoneNumber);
+//   }, [phoneNumber, phoneNumberRequiredChecked]);
+
+// useEffect(()=> {
+//     console.log(forms)
+// }, [forms])
 
   return (
     <div className={"text-h1 font-bold"}>
@@ -151,16 +165,32 @@ export default function UserApplicationForm(props) {
           </div>
         </div>
         <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-          <div className={"w-[150px] p-2"}>
-            연락처 <span className={"text-sub"}>(필수)</span>
-          </div>
+          <div className={"w-[150px] p-2"}>연락처</div>
           <div className={"w-[150px] p-2"}>
             <input
               type="checkbox"
-              checked
-              disabled
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-              value={true}
+              checked={phoneNumberChecked}
+              onChange={(e) => {
+                let copy = [...phoneNumber];
+                copy[0] = !phoneNumberChecked;
+                setPhoneNumber(copy);
+                setPhoneNumberChecked(!phoneNumberChecked);
+              }}
+            />
+          </div>
+          <div className={"w-[150px] p-2"}>필수 여부</div>
+          <div className={"w-[150px] p-2"}>
+            <input
+              type="checkbox"
+              className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+              checked={phoneNumberRequiredChecked}
+              onChange={(e) => {
+                let copy = [...phoneNumber];
+                copy[1] = !phoneNumberRequiredChecked;
+                setPhoneNumber(copy);
+                setPhoneNumberRequiredChecked(!phoneNumberRequiredChecked);
+              }}
             />
           </div>
         </div>
@@ -200,6 +230,13 @@ export default function UserApplicationForm(props) {
             <input
               type="checkbox"
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+              checked={emailChecked}
+              onChange={(e) => {
+                let copy = [...email];
+                copy[0] = !emailChecked;
+                setEmail(copy);
+                setEmailChecked(!emailChecked);
+              }}
             />
           </div>
           <div className={"w-[150px] p-2"}>필수 여부</div>
@@ -207,6 +244,13 @@ export default function UserApplicationForm(props) {
             <input
               type="checkbox"
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+              checked={emailRequiredChecked}
+              onChange={(e) => {
+                let copy = [...email];
+                copy[1] = !emailRequiredChecked;
+                setEmail(copy);
+                setEmailRequiredChecked(!emailRequiredChecked);
+              }}
             />
           </div>
         </div>
@@ -216,6 +260,13 @@ export default function UserApplicationForm(props) {
             <input
               type="checkbox"
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+              checked={addressChecked}
+              onChange={(e) => {
+                let copy = [...address];
+                copy[0] = !addressChecked;
+                setAddress(copy);
+                setAddressChecked(!addressChecked);
+              }}
             />
           </div>
           <div className={"w-[150px] p-2"}>필수 여부</div>
@@ -223,6 +274,13 @@ export default function UserApplicationForm(props) {
             <input
               type="checkbox"
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
+              checked={addressRequiredChecked}
+              onChange={(e) => {
+                let copy = [...address];
+                copy[1] = !addressRequiredChecked;
+                setAddress(copy);
+                setAddressRequiredChecked(!addressRequiredChecked);
+              }}
             />
           </div>
         </div>
@@ -234,19 +292,20 @@ export default function UserApplicationForm(props) {
               className="bg-gray2 h-7 w-7 rounded-full flex items-center justify-center text-black ml-[10px] mt-[3px]"
               onClick={() => {
                 let copy = [...forms];
-                copy.unshift({
+                copy.push({
                   type: 0,
-                  required: true,
-                  question: "m",
+                  required: false,
+                  question: "제목을 입력해주세요.",
                 });
                 setForms(copy);
+        
               }}
             >
               +
             </button>
           </div>
         </div>
-        {forms.map((form) => {
+        {forms.map((form, index) => {
           return (
             <div className="">
               <div
@@ -266,10 +325,9 @@ export default function UserApplicationForm(props) {
                         href="#"
                         className="block rounded-lg  py-2 px-4 text-h5 hover:bg-gray"
                         onClick={() => {
-                          let copy = type;
-                          copy = 0;
-                          setType(copy);
-                          form.type = type;
+                          let copy = [...forms]
+                          copy[index].type = 0
+                          setForms(copy)
                         }}
                       >
                         주관식
@@ -278,10 +336,9 @@ export default function UserApplicationForm(props) {
                         href="#"
                         className="block rounded-lg  py-2 px-4 text-h5 hover:bg-gray"
                         onClick={() => {
-                          let copy = type;
-                          copy = 1;
-                          setType(copy);
-                          form.type = type;
+                            let copy = [...forms]
+                            copy[index].type = 1
+                            setForms(copy)
                         }}
                       >
                         첨부파일
@@ -296,6 +353,12 @@ export default function UserApplicationForm(props) {
                   <input
                     type="checkbox"
                     className="form-checkbox h-5 w-5 text-black rounded-sm border"
+                    checked={forms[index].required}
+                    onChange={(e) => {
+                        let copy = [...forms]
+                        copy[index].required = !forms[index].required
+                        setForms(copy)
+                      }}
                   />
                 </div>
               </div>
@@ -307,6 +370,12 @@ export default function UserApplicationForm(props) {
                     "bg-gray3 h-[48px] w-[1000px] rounded-xl text-h5 p-3"
                   }
                   placeholder={"제목을 입력해주세요."}
+                  value={form.question}
+                  onChange={(e)=>{
+                    let copy = [...forms]
+                    copy[index].question = e.target.value
+                    setForms(copy)
+                  }}
                 ></input>
               </div>
             </div>
@@ -327,7 +396,7 @@ export default function UserApplicationForm(props) {
             미리보기
           </button>
           <button
-            type={"submit"}
+            type={"button"}
             className={"w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"}
             onClick={() => {
               createApplicationForm();

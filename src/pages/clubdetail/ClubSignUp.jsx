@@ -31,13 +31,13 @@ export default function ClubSignUp() {
   //가입 신청 양식 설정한 것을 데이터 가져오는 함수
   function getClubApplicationForm() {
     //주요활동내역 가져옴
-    axios.get(`api/club_application_form/${id}`).then((res) => {
+    axios.get(`api/club_application_form/club_objid/${id}`).then((res) => {
       setFormData(res.data[0]);
     });
   }
   //관리자 입장에서 가입 신청 양식 설정
   function getClubApplicationLists() {
-    axios.get(`api/club_application_lists/${id}`).then((res) => {
+    axios.get(`api/club_application_lists/club_objid/${id}`).then((res) => {
       setListData(res.data[0]);
     });
   }
