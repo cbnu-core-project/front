@@ -39,12 +39,12 @@ export const tokenState = atom({
 
 export const schedulesState = atom({
   key: "schedulesState",
-  default: [],
+  default: [{ start_datetime: new Date(), end_datetime: new Date() }],
 });
 
 export const selectedDateState = atom({
   key: "selectedDateState",
-  default: [],
+  default: new Date(),
 });
 
 export const addingImgState = atom({

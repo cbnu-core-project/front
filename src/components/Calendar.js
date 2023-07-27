@@ -13,11 +13,13 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState); // [year, month, day] 리스트로 만듬
   const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [selectedStatus, setSelectedStatus] = useState(true);
 
+  // 날짜를 클릭할 때 마다 새로운 스케줄 데이터를 불러옴?
+  // 이거는 한 번 불러온거로 계속 쓸 건 지, 매번 계속 불러올 건지 선택해야한다.
   useEffect(() => {
     axios.get("/api/user/schedule").then((res) => {
       setSchedule(res.data);
-      // console.log(res.data);
     });
   }, [selectedDate]);
 
@@ -27,7 +29,7 @@ const Calendar = () => {
   }, [selectedDate]);
 
   // 달력을 구성하는 날짜 배열 생성
-  const getCalendarDays = () => {
+  const getCalendarDayts = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth(); // month ( 0 ~ 11 범위인 것 주의!! )
     const firstDay = new Date(year, month, 1).getDay(); // 요일도 0 ~ 6 범위 주의
@@ -99,37 +101,43 @@ const Calendar = () => {
             {day}
           </div>
         ))}
-        {getCalendarDays().map((day, index) =>
-          day ? (
+        {getCalendarDayts().map((date, index) =>
+          date ? (
             <div className={"relative"}>
               <div
                 key={index}
                 className={`text-center text-black font-bold ${
-                  day
+                  date
                     ? "cursor-pointer rounded-xl hover:border hover:border-main_mid hover:border-2"
                     : ""
                 } rounded p-2 ${
-                  currentDate.getFullYear() == selectedDate[0] &&
-                  currentDate.getMonth() == selectedDate[1] &&
-                  day == selectedDate[2]
+                  currentDate.getFullYear() == selectedDate.getFullYear() &&
+                  currentDate.getMonth() == selectedDate.getMonth() &&
+                  date == selectedDate.getDate()
                     ? "border border-main_mid border-2"
                     : ""
                 }`}
-                onClick={() =>
-                  setSelectedDate([
-                    currentDate.getFullYear(),
-                    currentDate.getMonth(),
-                    day,
-                  ])
-                }
+                onClick={() => {
+                  setSelectedStatus(true);
+                  setSelectedDate(
+                    new Date(
+                      currentDate.getFullYear(),
+                      currentDate.getMonth(),
+                      date
+                    )
+                  );
+                }}
               >
-                {day}
+                {date}
               </div>
               {schedules.map((schedule, i) => {
+                const startDateTime = new Date(schedule.start_datetime);
+                const endDateTime = new Date(schedule.end_datetime);
+
                 if (
-                  currentDate.getFullYear() == schedule.year &&
-                  currentDate.getMonth() == schedule.month - 1 &&
-                  day == schedule.date
+                  currentDate.getFullYear() === startDateTime.getFullYear() &&
+                  currentDate.getMonth() === startDateTime.getMonth() &&
+                  date === startDateTime.getDate()
                 ) {
                   // console.log("일정있는 날 선택");
                   return (
@@ -146,14 +154,14 @@ const Calendar = () => {
         )}
       </div>
       <div className="mt-4">
-        {selectedDate[2]
-          ? `${selectedDate[0]}년 ${selectedDate[1] + 1}월 ${
-              selectedDate[2]
-            }일의 일정`
+        {selectedStatus
+          ? `${selectedDate.getFullYear()}년 ${
+              selectedDate.getMonth() + 1
+            }월 ${selectedDate.getDate()}일의 일정`
           : "None"}
       </div>
       <div className={"mt-[40px]"} />
-      <SelectedDateSchedule />
+      {selectedStatus ? <SelectedDateSchedule /> : null}
     </div>
   );
 };
@@ -169,20 +177,19 @@ const SelectedDateSchedule = () => {
     <>
       <div>
         {schedules.map((schedule, i) => {
-          if (
-            schedule.year == selectedDate[0] &&
-            schedule.month == selectedDate[1] + 1 &&
-            schedule.date == selectedDate[2]
-          ) {
+          const startDateTime = new Date(schedule.start_datetime);
+          const endDateTime = new Date(schedule.end_datetime);
+
+          if (startDateTime.toDateString() === selectedDate.toDateString()) {
             return (
               <div>
                 <div className="flex mt-[10px] gap-[5px]">
                   <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
                     <div className="text-[10px] font-[200] text-white">
-                      {day_list[schedule.day]}
+                      {day_list[startDateTime.getDay()]}
                     </div>
                     <div className="text-h6 font-[600]  text-white">
-                      {schedule.date}
+                      {startDateTime.getDate()}
                     </div>
                   </div>
                   <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
@@ -190,8 +197,8 @@ const SelectedDateSchedule = () => {
                       {schedule.club_name} - {schedule.title}
                     </div>
                     <div className="text-gray text-h7 font-[300]">
-                      {schedule.start_hour}:{schedule.start_minute}~
-                      {schedule.end_hour}:{schedule.end_minute}
+                      {startDateTime.getHours()}:{startDateTime.getMinutes()}~
+                      {endDateTime.getHours()}:{endDateTime.getMinutes()}
                     </div>
                     <div className="text-gray text-h7 font-[300]">
                       {schedule.place}

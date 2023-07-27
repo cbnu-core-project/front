@@ -297,45 +297,52 @@ function WeekSchedule() {
   let this_week_monday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate() - today.getDay() + 1
+    today.getDate() - today.getDay() + 1,
+    0,
+    0,
+    0
   );
   let this_week_sunday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate() - today.getDay() + 1 + 6
+    today.getDate() - today.getDay() + 1 + 6,
+    24,
+    0,
+    0
   );
 
   // return 여기 빠트려서 오래 헤맸음.. 기억해두자.
   return schedules.map((schedule) => {
-    let schedule_time = new Date(
-      schedule.year,
-      schedule.month - 1,
-      schedule.date
-    );
-    console.log(this_week_monday.getTime());
-    console.log(schedule_time.getTime());
-    console.log(this_week_sunday.getTime());
+    const startDateTime = new Date(schedule.start_datetime);
+    const endDateTime = new Date(schedule.end_datetime);
+
+    // console.log(this_week_monday.getTime());
+    // console.log(startDateTime.getTime());
+    // console.log(this_week_sunday.getTime());
+    // console.log(this_week_sunday);
     if (
-      this_week_monday.getTime() <= schedule_time.getTime() &&
-      schedule_time.getTime() <= this_week_sunday.getTime()
+      this_week_monday.getTime() <= startDateTime.getTime() &&
+      startDateTime.getTime() <= this_week_sunday.getTime()
     ) {
-      console.log(schedule_time);
       return (
         <div className="flex mt-[10px] gap-[5px]">
           <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
             <div className="text-[10px] font-[200] text-white">
-              {day_list[schedule_time.getDay()]}
+              {day_list[startDateTime.getDay()]}
             </div>
             <div className="text-h6 font-[600]  text-white">
-              {schedule_time.getDate()}
+              {startDateTime.getDate()}
             </div>
           </div>
           <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
             <div className="text-black text-h7 font-[300]">
-              코어 동아리 회의
+              {schedule.club_name} - {schedule.title}
             </div>
-            <div className="text-gray text-h7 font-[300]">18:00~22:00</div>
-            <div className="text-gray text-h7 font-[300]">NH관 202호</div>
+            <div className="text-gray text-h7 font-[300]">
+              {startDateTime.getHours()}:{startDateTime.getMinutes()}~
+              {endDateTime.getHours()}:{endDateTime.getMinutes()}
+            </div>
+            <div className="text-gray text-h7 font-[300]">{schedule.place}</div>
           </div>
         </div>
       );
