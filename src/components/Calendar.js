@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { selectedDateState, schedulesState } from "../store";
+import { selectedUserScheduleDateState, schedulesState } from "../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>;
-//구글아이콘 링크
-
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState); // [year, month, day] 리스트로 만듬
+  const [selectedDate, setSelectedDate] = useRecoilState(
+    selectedUserScheduleDateState
+  ); // [year, month, day] 리스트로 만듬
   const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
   const [selectedStatus, setSelectedStatus] = useState(true);
 
@@ -74,7 +70,7 @@ const Calendar = () => {
     <div className="w-max-md mx-auto p-4 bg-white mt-[10px] rounded-3xl">
       <div className="flex items-center justify-between mb-4">
         <span
-          className="material-symbols-outlined text-midgray hover:text-darkgray"
+          className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
           onClick={goToPrevMonth}
         >
           chevron_left
@@ -89,7 +85,7 @@ const Calendar = () => {
           ).padStart(2, "0")}`}
         </h2>
         <span
-          className="material-symbols-outlined text-midgray hover:text-darkgray"
+          className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
           onClick={goToNextMonth}
         >
           chevron_right
@@ -153,7 +149,7 @@ const Calendar = () => {
           )
         )}
       </div>
-      <div className="mt-4">
+      <div className="mt-4 text-center font-bold text-h2 text-black">
         {selectedStatus
           ? `${selectedDate.getFullYear()}년 ${
               selectedDate.getMonth() + 1
@@ -167,7 +163,9 @@ const Calendar = () => {
 };
 
 const SelectedDateSchedule = () => {
-  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState); // [year, month, day] 리스트로 만듬
+  const [selectedDate, setSelectedDate] = useRecoilState(
+    selectedUserScheduleDateState
+  ); // [year, month, day] 리스트로 만듬
   const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
 
   // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
