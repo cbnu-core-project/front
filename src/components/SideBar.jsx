@@ -10,7 +10,7 @@ import {
   setRefreshToken,
 } from "../utils/token";
 import { useRecoilState } from "recoil";
-import { tokenState } from "../store";
+import { schedulesState, tokenState } from "../store";
 import { readAllClubs } from "../api/club";
 
 axios.defaults.baseURL = baseUrl;
@@ -253,7 +253,8 @@ function MyClub() {
                   className="cursor-pointer"
                   onClick={() => {
                     navigate("/clubdetail/" + userInfo[i] + "/clubintroduce");
-                    window.location.reload();
+                    // window.location.reload();
+                    // navigate로 부드럽게 이동하도록 수정. id를 deps에 줌.
                   }}
                 >
                   {/* 사각 아이콘 안에 첫글자만 보여줌 */}
@@ -291,19 +292,63 @@ function Register() {
 
 function WeekSchedule() {
   //'이번주 일정'정보
-  return (
-    <div className="flex mt-[10px] gap-[5px]">
-      <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
-        <div className="text-[10px] font-[200] text-white">Sun</div>
-        <div className="text-h6 font-[600]  text-white">15</div>
-      </div>
-      <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
-        <div className="text-black text-h7 font-[300]">코어 동아리 회의</div>
-        <div className="text-gray text-h7 font-[300]">18:00~22:00</div>
-        <div className="text-gray text-h7 font-[300]">NH관 202호</div>
-      </div>
-    </div>
+  const [schedules, setSchedule] = useRecoilState(schedulesState);
+  const day_list = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
+  let today = new Date();
+  let this_week_monday = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() - today.getDay() + 1,
+    0,
+    0,
+    0
   );
+  let this_week_sunday = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() - today.getDay() + 1 + 6,
+    24,
+    0,
+    0
+  );
+
+  // return 여기 빠트려서 오래 헤맸음.. 기억해두자.
+  return schedules.map((schedule) => {
+    const startDateTime = new Date(schedule.start_datetime);
+    const endDateTime = new Date(schedule.end_datetime);
+
+    // console.log(this_week_monday.getTime());
+    // console.log(startDateTime.getTime());
+    // console.log(this_week_sunday.getTime());
+    // console.log(this_week_sunday);
+    if (
+      this_week_monday.getTime() <= startDateTime.getTime() &&
+      startDateTime.getTime() <= this_week_sunday.getTime()
+    ) {
+      return (
+        <div className="flex mt-[10px] gap-[5px]">
+          <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
+            <div className="text-[10px] font-[200] text-white">
+              {day_list[startDateTime.getDay()]}
+            </div>
+            <div className="text-h6 font-[600]  text-white">
+              {startDateTime.getDate()}
+            </div>
+          </div>
+          <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
+            <div className="text-black text-h7 font-[300]">
+              {schedule.club_name} - {schedule.title}
+            </div>
+            <div className="text-gray text-h7 font-[300]">
+              {startDateTime.getHours()}:{startDateTime.getMinutes()}~
+              {endDateTime.getHours()}:{endDateTime.getMinutes()}
+            </div>
+            <div className="text-gray text-h7 font-[300]">{schedule.place}</div>
+          </div>
+        </div>
+      );
+    }
+  });
 }
 
 function Interesting() {

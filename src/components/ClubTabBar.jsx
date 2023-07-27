@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function ClubTabBar() {
   let [clubtab, setClubTab] = useState(0);
   let navigate = useNavigate();
+  let {id} = useParams();
 
   // 처음 실행 될 때 동아리소개 페이지로 이동
   useEffect(()=>{
@@ -44,7 +45,7 @@ export default function ClubTabBar() {
           className={clubtab === 3 ? "btn-home-tab-focused" : "btn-home-tab"}
           onClick={() => {
             setClubTab(3);
-            navigate("./clubsignup");
+            navigate(`./clubsignup`);
           }}
         >
           가입신청

@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { selectedDateState, schedulesState } from "../store";
+import { selectedUserScheduleDateState, schedulesState } from "../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-//구글아이콘 링크
-
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState); // [year, month, day] 리스트로 만듬
+  const [selectedDate, setSelectedDate] = useRecoilState(
+    selectedUserScheduleDateState
+  ); // [year, month, day] 리스트로 만듬
   const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [selectedStatus, setSelectedStatus] = useState(true);
 
+  // 날짜를 클릭할 때 마다 새로운 스케줄 데이터를 불러옴?
+  // 이거는 한 번 불러온거로 계속 쓸 건 지, 매번 계속 불러올 건지 선택해야한다.
   useEffect(() => {
     axios.get("/api/user/schedule").then((res) => {
       setSchedule(res.data);
-      // console.log(res.data);
     });
   }, [selectedDate]);
 
@@ -24,7 +25,7 @@ const Calendar = () => {
   }, [selectedDate]);
 
   // 달력을 구성하는 날짜 배열 생성
-  const getCalendarDays = () => {
+  const getCalendarDayts = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth(); // month ( 0 ~ 11 범위인 것 주의!! )
     const firstDay = new Date(year, month, 1).getDay(); // 요일도 0 ~ 6 범위 주의
@@ -68,7 +69,8 @@ const Calendar = () => {
   return (
     <div className="w-max-md mx-auto p-4 bg-white mt-[10px] rounded-3xl">
       <div className="flex items-center justify-between mb-4">
-        <span className="material-symbols-outlined text-midgray hover:text-darkgray"
+        <span
+          className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
           onClick={goToPrevMonth}
         >
           chevron_left
@@ -78,13 +80,16 @@ const Calendar = () => {
             month: "long",
             year: "numeric",
           })} */}
-          {`${currentDate.getFullYear()}.${String(currentDate.getMonth() + 1).padStart(2, "0")}`}
+          {`${currentDate.getFullYear()}.${String(
+            currentDate.getMonth() + 1
+          ).padStart(2, "0")}`}
         </h2>
-        <span className="material-symbols-outlined text-midgray hover:text-darkgray"
+        <span
+          className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
           onClick={goToNextMonth}
         >
           chevron_right
-        </span>      
+        </span>
       </div>
       <div className="grid grid-cols-7 gap-2">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
@@ -92,37 +97,43 @@ const Calendar = () => {
             {day}
           </div>
         ))}
-        {getCalendarDays().map((day, index) =>
-          day ? (
+        {getCalendarDayts().map((date, index) =>
+          date ? (
             <div className={"relative"}>
               <div
                 key={index}
                 className={`text-center text-black font-bold ${
-                  day
+                  date
                     ? "cursor-pointer rounded-xl hover:border hover:border-main_mid hover:border-2"
                     : ""
                 } rounded p-2 ${
-                  currentDate.getFullYear() == selectedDate[0] &&
-                  currentDate.getMonth() == selectedDate[1] &&
-                  day == selectedDate[2]
+                  currentDate.getFullYear() == selectedDate.getFullYear() &&
+                  currentDate.getMonth() == selectedDate.getMonth() &&
+                  date == selectedDate.getDate()
                     ? "border border-main_mid border-2"
                     : ""
                 }`}
-                onClick={() =>
-                  setSelectedDate([
-                    currentDate.getFullYear(),
-                    currentDate.getMonth(),
-                    day,
-                  ])
-                }
+                onClick={() => {
+                  setSelectedStatus(true);
+                  setSelectedDate(
+                    new Date(
+                      currentDate.getFullYear(),
+                      currentDate.getMonth(),
+                      date
+                    )
+                  );
+                }}
               >
-                {day}
+                {date}
               </div>
               {schedules.map((schedule, i) => {
+                const startDateTime = new Date(schedule.start_datetime);
+                const endDateTime = new Date(schedule.end_datetime);
+
                 if (
-                  currentDate.getFullYear() == schedule.year &&
-                  currentDate.getMonth() == schedule.month - 1 &&
-                  day == schedule.date
+                  currentDate.getFullYear() === startDateTime.getFullYear() &&
+                  currentDate.getMonth() === startDateTime.getMonth() &&
+                  date === startDateTime.getDate()
                 ) {
                   // console.log("일정있는 날 선택");
                   return (
@@ -138,37 +149,60 @@ const Calendar = () => {
           )
         )}
       </div>
-      <div className="mt-4">
-        Selected Date:{" "}
-        {selectedDate[2]
-          ? `${selectedDate[0]}-${selectedDate[1] + 1}-${selectedDate[2]}`
+      <div className="mt-4 text-center font-bold text-h2 text-black">
+        {selectedStatus
+          ? `${selectedDate.getFullYear()}년 ${
+              selectedDate.getMonth() + 1
+            }월 ${selectedDate.getDate()}일의 일정`
           : "None"}
       </div>
       <div className={"mt-[40px]"} />
-      <SelectedDateSchedule />
+      {selectedStatus ? <SelectedDateSchedule /> : null}
     </div>
   );
 };
 
 const SelectedDateSchedule = () => {
-  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState); // [year, month, day] 리스트로 만듬
+  const [selectedDate, setSelectedDate] = useRecoilState(
+    selectedUserScheduleDateState
+  ); // [year, month, day] 리스트로 만듬
   const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
+
+  // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
+  const day_list = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
     <>
       <div>
         {schedules.map((schedule, i) => {
-          if (
-            schedule.year == selectedDate[0] &&
-            schedule.month == selectedDate[1] + 1 &&
-            schedule.date == selectedDate[2]
-          ) {
+          const startDateTime = new Date(schedule.start_datetime);
+          const endDateTime = new Date(schedule.end_datetime);
+
+          if (startDateTime.toDateString() === selectedDate.toDateString()) {
             return (
               <div>
-                <p>{schedule.club_name}</p>
-                <p>{schedule.title}</p>
-                <p>{schedule.content}</p>
-                <p>{schedule.place}</p>
+                <div className="flex mt-[10px] gap-[5px]">
+                  <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
+                    <div className="text-[10px] font-[200] text-white">
+                      {day_list[startDateTime.getDay()]}
+                    </div>
+                    <div className="text-h6 font-[600]  text-white">
+                      {startDateTime.getDate()}
+                    </div>
+                  </div>
+                  <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
+                    <div className="text-black text-h7 font-[300]">
+                      {schedule.club_name} - {schedule.title}
+                    </div>
+                    <div className="text-gray text-h7 font-[300]">
+                      {startDateTime.getHours()}:{startDateTime.getMinutes()}~
+                      {endDateTime.getHours()}:{endDateTime.getMinutes()}
+                    </div>
+                    <div className="text-gray text-h7 font-[300]">
+                      {schedule.place}
+                    </div>
+                  </div>
+                </div>
               </div>
             );
           }
