@@ -18,6 +18,12 @@ export default function ClubIntroduce() {
   const [activity, setActivity] = useState([]); //동아리 주요활동 내역
   const [programs, setPrograms] = useState([]); //동아리 활동 프로그램 내역
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
+  const [tagModfy, setTagModfy] = useState(true); //태그 수정버튼 클릭에 따른 ui변화
+  const [addTag, setAddTag]= useState(false);//태그 활동추가 버튼 관련 기능
+  const [tagInput, setTagInput] = useState("");//태그 인풋 내용
+  const [clubProgramModfy, setClubProgramModfy] = useState(true); //동아리 프로그램 수정버튼 클릭에 따른 ui변화
+  const [clubHistoryModfy, setClubHistoryModfy] = useState(true); //동아리 활동내역 수정버튼 클릭에 따른 ui변화
+
   let prev_length = 0; //주요활동내역의 년도 시각화에 필요한 변수1
   let list = []; //2
   let after_length = 0; //3
@@ -140,9 +146,14 @@ export default function ClubIntroduce() {
                   {posts.tag3}
                 </div>
               </div>
-              <button className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
+              <button
+                className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                onClick={() => {
+                  setTagModfy(!tagModfy);
+                }}
+              >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+                <div>{tagModfy ? "수정하기" : "완료하기"}</div>
               </button>
             </div>
             <p className={"text-h3 ml-8"}>{posts.sub_content}</p>
@@ -166,20 +177,58 @@ export default function ClubIntroduce() {
                 </div>
                 <div
                   className={
-                    "grid grid-cols-4 gap-[10px] text-center mt-[16px]"
+                    "flex flex-wrap gap-[10px] gap-y-0 text-center max-h-[180px]"
                   }
                 >
                   {posts.activity_tags.map((tags) => {
                     return (
-                      <div
-                        className={
-                          "border border-sub text-sub rounded-lg h-[30px] font-bold px-[5px]"
-                        }
-                      >
-                        {tags}
+                      <div className="h-[40px]">
+                        {tagModfy ? null : (
+                          <>
+                            <div className="relative ml-[90px]">
+                              <div className="absolute text-center flex flex-col justify-center rounded-full bg-[#FF0303] w-[20px] h-[20px] cursor-pointer">
+                                <span class="material-symbols-outlined text-white text-[10px] font-thin">
+                                  close
+                                </span>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        <div
+                          className={
+                            "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px] mt-[10px]"
+                          }
+                        >
+                          {tags}
+                        </div>                 
                       </div>
                     );
                   })}
+                  {addTag ? //활동추가 시 태그 추가 칸 생성됨
+                        <input
+                          className={ //http://vnthf.logdown.com/posts/2016/05/18/front-input-box
+                            "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px] mt-[10px] outline-none"
+                          }
+                          //value={tagInput} //나중에 이거랑도 연결
+                          onChange={(e)=>{
+                          console.log(e); //나중에 백엔드 post로 연결
+                         }}>
+                          
+                        </input>
+                        : null}
+                  {tagModfy ? null : (
+                    <div className="h-[40px]">
+                      <button
+                        className=" bg-sub text-white rounded-lg h-[30px] font-[600] px-[10px] mt-[10px]"
+                        onClick={() => {
+                          // 태그 추가되도록 설정
+                          setAddTag(!addTag)
+                        }}
+                      >
+                        + 활동 추가
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -197,29 +246,67 @@ export default function ClubIntroduce() {
             {/* <div className="bg-main from-white absolute top-0"></div> */}
             <div className="flex w-full gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>동아리 프로그램</div>
-              <button className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
+              <button
+                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                onClick={() => {
+                  setClubProgramModfy(!clubProgramModfy);
+                }}
+              >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+                <div>{clubProgramModfy ? "수정하기" : "완료하기"}</div>
               </button>
             </div>
             <div
               className={
-                "w-[294px] h-[430px] border-t border-gray2 overflow-y-scroll"
+                "w-full h-[430px] border-t border-gray2 overflow-y-scroll"
               }
             >
+              <div className={"w-full p-[10px]"}></div>
               {/* 동아리 프로그램 세부내용 */}
+
               {programs.map((program) => {
+                //수정중일 때와 아닐때를 3항 연산자로 구분
                 return (
-                  <div className={"my-6"}>
-                    <div className={"h-[50px] my-6 flex gap-2"}>
-                      <div>
-                        <p className={"text-h4 text-black"}>{program.title}</p>
+                  <>
+                    {clubProgramModfy ? (
+                      <div className={"h-[60px]"}>
+                        <p className={"text-h4 text-black mt-[10px]"}>
+                          {program.title}
+                        </p>
                         <p className={"text-h7 text-darkgray"}>
                           {program.content}
                         </p>
                       </div>
-                    </div>
-                  </div>
+                    ) : (
+                      <div className={"h-[100px]"}>
+                        <p className={"text-h4 text-black mt-[10px]"}>
+                          {program.title}
+                        </p>
+                        <p className={"text-h7 text-darkgray"}>
+                          {program.content}
+                        </p>
+                        <div className="flex justify-end ">
+                          {/* 삭제버튼 클릭시 해당 내용 삭제 */}
+                          <button
+                            className="w-[47px] h-[32px] bg-gray rounded-md text-white font-[400] text-[12px] mt-[15px]"
+                            onClick={() => {
+                              axios
+                                .delete("/api/club_programs/" + program._id)
+                                .then((res) => {
+                                  axios
+                                    .get("/api/club_programs/" + id)
+                                    .then((response) => {
+                                      setPrograms(response.data);
+                                    });
+                                });
+                            }}
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 );
               })}
             </div>
@@ -233,14 +320,19 @@ export default function ClubIntroduce() {
             {/* 활동내역 소제목 */}
             <div className="flex w-full">
               <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
-              <button className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md">
+              <button
+                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                onClick={() => {
+                  setClubHistoryModfy(!clubHistoryModfy);
+                }}
+              >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+                <div>{clubHistoryModfy ? "수정하기" : "완료하기"}</div>
               </button>
             </div>
             <div
               className={
-                "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll"
+                "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll pt-2"
               }
             >
               {activity.map((acti) => {
@@ -254,46 +346,114 @@ export default function ClubIntroduce() {
 
                 return (
                   <>
-                    <div className={"mt-6 flex"}>
-                      {
-                        prev_length != after_length ? ( //추가전 리스트 길이와 추가 후 리스트 길이가 다를 때만 연도 출력
-                          <div
-                            className={"w-[70px] h-auto text-[30px] font-light"}
-                          >
-                            {acti.year}
-                          </div>
-                        ) : (
-                          <div
+                    {clubHistoryModfy ? ( //3항연산자 써서 수정 버튼 눌렀을 때 ui바꿔줌
+                      <div className={"mt-4 flex"}>
+                        {
+                          prev_length != after_length ? ( //추가전 리스트 길이와 추가 후 리스트 길이가 다를 때만 연도 출력
+                            <div
+                              className={
+                                "w-[70px] h-auto text-[30px] font-light"
+                              }
+                            >
+                              {acti.year}
+                            </div>
+                          ) : (
+                            <div
+                              className={
+                                "w-[70px] h-auto text-[30px] font-light text-white"
+                              }
+                            >
+                              {acti.year}
+                            </div>
+                          )
+                          //길이 같을 때는 너비 맞춰주기 위해 흰색으로 출력
+                        }
+                        <div className={"w-[320px] h-auto"}>
+                          {/* 세부적인 데이터들 출력(월, 타이틀) */}
+
+                          <ul
                             className={
-                              "w-[70px] h-auto text-[30px] font-light text-white"
+                              "marker:text-main_default list-disc list-inside ml-5"
                             }
                           >
-                            {acti.year}
-                          </div>
-                        )
-                        //길이 같을 때는 너비 맞춰주기 위해 흰색으로 출력
-                      }
-                      <div className={"w-[320px] h-auto"}>
-                        {/* 세부적인 데이터들 출력(월, 타이틀) */}
-
-                        <ul
-                          className={
-                            "marker:text-main_default list-disc list-inside ml-5"
-                          }
-                        >
-                          <div className="relative">
-                            {/* list dot 주변에 길게 늘어진 선 ui */}
-                            <div className="absolute ml-[2px] mt-[13px] w-[1px] h-[70px] bg-gray2 z-[-1]"></div>
-                          </div>
-                          <li className={"text-h4 mt-[5px]"}>
-                            <span className={"text-h3 mr-6 text-gray"}>
-                              {String(acti.month).padStart(2, "0")}
-                            </span>
-                            {acti.title}
-                          </li>
-                        </ul>
+                            <div className="relative">
+                              {/* list dot 주변에 길게 늘어진 선 ui */}
+                              <div className="absolute ml-[2px] mt-[13px] w-[1px] h-[70px] bg-gray2 z-[-1]"></div>
+                            </div>
+                            <li className={"text-h4 mt-[5px]"}>
+                              <span className={"text-h3 mr-6 text-gray"}>
+                                {String(acti.month).padStart(2, "0")}
+                              </span>
+                              {acti.title}
+                            </li>               
+                          </ul>
+                        </div>
                       </div>
-                    </div>
+                    ) 
+                    : 
+                    (
+                      <div className={"mt-4 flex"}>
+                        {
+                          prev_length != after_length ? ( //추가전 리스트 길이와 추가 후 리스트 길이가 다를 때만 연도 출력
+                            <div
+                              className={
+                                "w-[70px] h-auto text-[30px] font-light"
+                              }
+                            >
+                              {acti.year}
+                            </div>
+                          ) : (
+                            <div
+                              className={
+                                "w-[70px] h-auto text-[30px] font-light text-white"
+                              }
+                            >
+                              {acti.year}
+                            </div>
+                          )
+                          //길이 같을 때는 너비 맞춰주기 위해 흰색으로 출력
+                        }
+                        <div className={"w-[320px] h-auto"}>
+                          {/* 세부적인 데이터들 출력(월, 타이틀) */}
+
+                          <ul
+                            className={
+                              "marker:text-main_default list-disc list-inside ml-5"
+                            }
+                          >
+                            <div className="relative">
+                              {/* list dot 주변에 길게 늘어진 선 ui */}
+                              <div className="absolute ml-[2px] mt-[13px] w-[1px] h-[110px] bg-gray2 z-[-1]"></div>
+                            </div>
+                            <li className={"text-h4 mt-[5px] "}>
+                              <span className={"text-h3 mr-6 text-gray"}>
+                                {String(acti.month).padStart(2, "0")}
+                              </span>
+                              {acti.title}
+                            </li>
+                            <div className="flex justify-end ">
+                              {/* 삭제버튼 클릭시 해당 내용 삭제 */}
+                              <button
+                                className="w-[47px] h-[32px] bg-gray rounded-md text-white font-[400] text-[12px] mt-[5px]"
+                                onClick={() => {
+                                  axios
+                                    .delete("/api/club_activity_history/" + acti._id)
+                                    .then((res) => {
+                                      axios
+                                        .get("/api/club_activity_history/" + id)
+                                        .then((response) => {
+                                          setActivity(response.data);
+                                        });
+                                    });
+                                }}
+                              >
+                                삭제
+                              </button>
+                            </div>
+                          </ul>
+                        </div>
+                      </div>
+                    )}
                   </>
                 );
               })}
