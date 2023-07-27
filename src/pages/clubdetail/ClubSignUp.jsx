@@ -1,4 +1,4 @@
-import UserApplicationForm from "../../components/clubsignup/UserApplicationForm"
+import UserApplicationForm from "../../components/clubsignup/UserApplicationForm";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -45,6 +45,7 @@ export default function ClubSignUp() {
   useEffect(() => {
     getClubApplicationForm();
   }, []);
+
   return (
     <>
       <UserSignUp formData={formData} id={id} listData={listData} />
