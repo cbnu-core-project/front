@@ -49,7 +49,12 @@ export default function ClubSignUp() {
   return (
     <>
       <UserSignUp formData={formData} id={id} listData={listData} />
-      <UserApplicationForm formData={formData} listData={listData} id={id} objid={objid}/>
+      <UserApplicationForm
+        formData={formData}
+        listData={listData}
+        id={id}
+        objid={objid}
+      />
       <ManagerSignUp />
     </>
   );
@@ -154,7 +159,6 @@ function UserSignUp(props) {
               onChange={(e) => {
                 if (e.target.value.length <= 12) {
                   setRealName(e.target.value);
-                  console.log(realname);
                 }
               }}
             ></input>
@@ -196,7 +200,6 @@ function UserSignUp(props) {
               onChange={(e) => {
                 if (e.target.value.length <= 10) {
                   setSchoolNumber(e.target.value);
-                  console.log(realname);
                 }
               }}
             ></input>
@@ -257,7 +260,6 @@ function UserSignUp(props) {
               onChange={(e) => {
                 if (e.target.value.length <= 13) {
                   setPhoneNumber(e.target.value);
-                  console.log(phoneNumber);
                 }
               }}
             ></input>
@@ -279,7 +281,6 @@ function UserSignUp(props) {
               onChange={(e) => {
                 if (e.target.value.length <= 30) {
                   setEmail(e.target.value);
-                  console.log(email);
                 }
               }}
             ></input>
@@ -302,7 +303,6 @@ function UserSignUp(props) {
               onChange={(e) => {
                 if (e.target.value.length <= 40) {
                   setAddress(e.target.value);
-                  console.log(address);
                 }
               }}
             ></input>
