@@ -47,9 +47,9 @@ export default function ClubSignUp() {
   }, []);
   return (
     <>
-      {/* <UserSignUp formData={formData} id={id} listData={listData} /> */}
+      <UserSignUp formData={formData} id={id} listData={listData} />
       <UserApplicationForm formData={formData} listData={listData} id={id} objid={objid}/>
-      {/* <ManagerSignUp /> */}
+      <ManagerSignUp />
     </>
   );
 }
