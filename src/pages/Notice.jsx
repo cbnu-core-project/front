@@ -71,18 +71,21 @@ const Notice = () => {
             🔍︎
           </button>
         </form>
-        <div className={"w-[1306px] h-[576px] rounded-2xl bg-background ml-16 mt-8"}>
-          {posts.map((post) => {
+        <div className={"w-[1306px] rounded-2xl bg-background ml-16 mt-8"}>
+          {posts.map((post, index) => {
             return (
-              <div className={'font-[Pv] h-[22px] p-[30px] flex justify-between'}>
-                <button 
+              <div className={'font-[Pv] px-[30px] py-[22px] flex justify-between ' + (index < 8 ? ' border-b border-gray2' : '')}>
+                
+                <button
                   onClick={() => {
                     alert("아직 개발 안됐어요")
                   }}>
-                  {post.title}
+                  {post.title.length > 70
+                    ? post.title.slice(0, 70) + "..."
+                    : post.title}
                 </button>
                 <div>
-                    {DateFromObject(post._id).toISOString().substring(0, 10)}
+                  {DateFromObject(post._id).toISOString().substring(0, 10)}
                 </div>
               </div>
             )

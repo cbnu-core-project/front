@@ -34,8 +34,11 @@ export default function HomeNoticeList() {
                       : "px-[24px] py-[21px] flex justify-between border-b-[0.5px] border-gray2 hover:bg-gray3"
                   }
                 >
-                  <div className={"text-black"}>{notice.title}</div>
-                  <div className={"text-midgray flex-end"}>2022.04.20</div>
+                  <div className={"text-black"}>
+                    {notice.title.length > 50
+                    ? notice.title.slice(0, 50) + "..."
+                    : notice.title}</div>
+                  <div className={"text-midgray flex-end"}>{DateFromObject(notice._id).toISOString().substring(0, 10)}</div>
                 </li>
               );
             })}
@@ -57,4 +60,8 @@ export default function HomeNoticeList() {
       </div>
     </>
   );
+}
+
+function DateFromObject(objid) { //오브젝트 아이디로부터 시간 받아오는 함수
+  return new Date(parseInt(objid.substring(0, 8), 16) * 1000);
 }
