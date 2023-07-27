@@ -7,10 +7,11 @@ import { baseUrl } from "../../common/global";
 export default function UserApplicationForm(props) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [gender, setGender] = useState([]);
+  const [gender, setGender] = useState([false]);
   const [forms, setForms] = useState([]);
   const [type, setType] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  
 
   const handleMenuClick = (props) => {
     setIsOpen(!isOpen);
@@ -176,11 +177,11 @@ export default function UserApplicationForm(props) {
               type="checkbox"
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
               value={true}
-              onChange={async (e) => {
+              onChange={(e) => {
                 let copy = [gender];
                 console.log(copy);
                 copy.push(e.target.value)
-                await setGender(copy);
+                setGender(copy);
                 console.log(gender);
               }}
             />
