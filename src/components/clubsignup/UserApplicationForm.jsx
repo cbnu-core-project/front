@@ -7,11 +7,13 @@ import { baseUrl } from "../../common/global";
 export default function UserApplicationForm(props) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [gender, setGender] = useState([false]);
+  const [gender, setGender] = useState([false, false]);
   const [forms, setForms] = useState([]);
   const [type, setType] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  
+  //////////////////////////
+  const [genderChecked, setGenderChecked] = useState(false);
+  const [genderRequiredChecked, setGenderRequiredChecked] = useState(false);
 
   const handleMenuClick = (props) => {
     setIsOpen(!isOpen);
@@ -60,8 +62,11 @@ export default function UserApplicationForm(props) {
 
   useEffect(() => {
     getClubApplicationForm();
-
   }, []);
+
+  // useEffect(() => {
+  //   console.log(gender);
+  // }, [genderChecked, genderRequiredChecked]);
 
   return (
     <div className={"text-h1 font-bold"}>
@@ -165,9 +170,12 @@ export default function UserApplicationForm(props) {
             <input
               type="checkbox"
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-              value={true}
+              checked={genderChecked}
               onChange={(e) => {
-                setGender(e.target.value);
+                let copy = [...gender];
+                copy[0] = !genderChecked;
+                setGender(copy);
+                setGenderChecked(!genderChecked);
               }}
             />
           </div>
@@ -176,13 +184,12 @@ export default function UserApplicationForm(props) {
             <input
               type="checkbox"
               className="form-checkbox h-5 w-5 text-black rounded-sm border-black border mr-2 mt-[5px]"
-              value={true}
+              checked={genderRequiredChecked}
               onChange={(e) => {
-                let copy = [gender];
-                console.log(copy);
-                copy.push(e.target.value)
+                let copy = [...gender];
+                copy[1] = !genderRequiredChecked;
                 setGender(copy);
-                console.log(gender);
+                setGenderRequiredChecked(!genderRequiredChecked);
               }}
             />
           </div>
@@ -239,7 +246,6 @@ export default function UserApplicationForm(props) {
             </button>
           </div>
         </div>
-        {console.log(forms)}
         {forms.map((form) => {
           return (
             <div className="">
@@ -263,9 +269,8 @@ export default function UserApplicationForm(props) {
                           let copy = type;
                           copy = 0;
                           setType(copy);
-                          form.type = type
+                          form.type = type;
                         }}
-                        
                       >
                         주관식
                       </a>
@@ -276,8 +281,7 @@ export default function UserApplicationForm(props) {
                           let copy = type;
                           copy = 1;
                           setType(copy);
-                          form.type = type
-
+                          form.type = type;
                         }}
                       >
                         첨부파일
