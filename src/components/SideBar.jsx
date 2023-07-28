@@ -77,7 +77,10 @@ export default function SideBar() {
             </div>
           </div>
 
-          <span class="cursor-pointer ml-outo material-symbols-outlined">
+          <span class="cursor-pointer ml-outo material-symbols-outlined" 
+          onClick={() => {
+                  alert("서비스 준비중입니다");
+                }}>
             notifications
           </span>
           {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
@@ -123,7 +126,7 @@ export default function SideBar() {
         </div>
         {schedule == true ? <WeekSchedule /> : null}
         {/* 참일 때 '이번주 일정' 정보 열림*/}
-        <div className="flex mt-[20px] w-full">
+        {/* <div className="flex mt-[20px] w-full">
           <div className="side_title">동아리 신청 내역</div>
           <button
             className="ml-auto material-symbols-outlined"
@@ -134,7 +137,7 @@ export default function SideBar() {
             expand_more
           </button>
         </div>
-        {register == true ? <Register /> : null}
+        {register == true ? <Register /> : null} */}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
           <div className="side_title w-full ">관심 동아리</div>
@@ -149,7 +152,7 @@ export default function SideBar() {
         </div>
         {interesting == true ? <Interesting /> : null}
         {/* 참일 때 '관심동아리' 정보 열림*/}
-        <div className="flex mt-[20px] w-full">
+        {/* <div className="flex mt-[20px] w-full">
           <div className="side_title">내가 작성한 글</div>
           <button
             class="ml-auto material-symbols-outlined"
@@ -160,7 +163,7 @@ export default function SideBar() {
             expand_more
           </button>
         </div>
-        {mytext == true ? <MyText /> : null}
+        {mytext == true ? <MyText /> : null} */}
         {/* 참일 때 '내가 작성한 글' 정보 열림*/}
         <div className={"mt-[32px]"} />
       </div>
