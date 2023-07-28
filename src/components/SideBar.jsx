@@ -10,8 +10,9 @@ import {
   setRefreshToken,
 } from "../utils/token";
 import { useRecoilState } from "recoil";
-import { schedulesState, tokenState } from "../store";
+import { userSchedulesState, tokenState } from "../store";
 import { readAllClubs } from "../api/club";
+import ScheduleDetaile from "./ScheduleDetail";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -294,8 +295,10 @@ function Register() {
 
 function WeekSchedule() {
   //'이번주 일정'정보
-  const [schedules, setSchedule] = useRecoilState(schedulesState);
+  const [schedules, setSchedule] = useRecoilState(userSchedulesState);
   const day_list = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
+  const [count, setCount] = useState(-1);
+
   let today = new Date();
   let this_week_monday = new Date(
     today.getFullYear(),
@@ -315,7 +318,7 @@ function WeekSchedule() {
   );
 
   // return 여기 빠트려서 오래 헤맸음.. 기억해두자.
-  return schedules.map((schedule) => {
+  return schedules.map((schedule, i) => {
     const startDateTime = new Date(schedule.start_datetime);
     const endDateTime = new Date(schedule.end_datetime);
 
@@ -328,25 +331,41 @@ function WeekSchedule() {
       startDateTime.getTime() <= this_week_sunday.getTime()
     ) {
       return (
-        <div className="flex mt-[10px] gap-[5px]">
-          <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
-            <div className="text-[10px] font-[200] text-white">
-              {day_list[startDateTime.getDay()]}
+        <div>
+          <div
+            className="flex mt-[10px] gap-[5px]"
+            onClick={() => {
+              if (count >= 0 && i === count) {
+                setCount(-1);
+              } else {
+                setCount(i);
+              }
+            }}
+          >
+            <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
+              <div className="text-[10px] font-[200] text-white">
+                {day_list[startDateTime.getDay()]}
+              </div>
+              <div className="text-h6 font-[600]  text-white">
+                {startDateTime.getDate()}
+              </div>
             </div>
-            <div className="text-h6 font-[600]  text-white">
-              {startDateTime.getDate()}
+            <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px] rounded-2xl">
+              <div className="text-black text-h7 font-[300]">
+                [{schedule.club_name}] {schedule.title}
+              </div>
+              <div className="text-gray text-h7 font-[300]">
+                {startDateTime.getHours()}:{startDateTime.getMinutes()}~
+                {endDateTime.getHours()}:{endDateTime.getMinutes()}
+              </div>
+              <div className="text-gray text-h7 font-[300]">
+                {schedule.place}
+              </div>
             </div>
           </div>
-          <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
-            <div className="text-black text-h7 font-[300]">
-              {schedule.club_name} - {schedule.title}
-            </div>
-            <div className="text-gray text-h7 font-[300]">
-              {startDateTime.getHours()}:{startDateTime.getMinutes()}~
-              {endDateTime.getHours()}:{endDateTime.getMinutes()}
-            </div>
-            <div className="text-gray text-h7 font-[300]">{schedule.place}</div>
-          </div>
+          {count === i ? (
+            <ScheduleDetaile schedule={schedule} setCount={setCount} />
+          ) : null}
         </div>
       );
     }

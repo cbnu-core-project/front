@@ -111,40 +111,13 @@ export default function Club() {
         </article>
       </div>
       <div className={"w-full p-16 flex justify-center"}>
-        {/*<div className={"flex-auto"}>*/}
-        {/*  <button*/}
-        {/*    className={*/}
-        {/*      "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded"*/}
-        {/*    }*/}
-        {/*    onClick={() => {*/}
-        {/*      pagination.previous();*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    {"< 이전"}*/}
-        {/*  </button>*/}
-        {/*</div>*/}
-
-        <div className={""}>
+        <div>
           <Pagination
             total={Math.ceil((count[0] + count[1]) / 16)}
             boundaries={1}
             onChange={onChange}
           />
-          {/*<button className={"font-bold "}>{page}</button>*/}
         </div>
-
-        {/*<div className={"flex-row-reverse"}>*/}
-        {/*  <button*/}
-        {/*    className={*/}
-        {/*      "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded "*/}
-        {/*    }*/}
-        {/*    onClick={() => {*/}
-        {/*      pagination.next();*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    {"다음 >"}*/}
-        {/*  </button>*/}
-        {/*</div>*/}
       </div>
     </div>
   );
