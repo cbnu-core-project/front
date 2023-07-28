@@ -83,9 +83,9 @@ export default function UserApplicationForm(props) {
 // }, [forms])
 
   return (
-    <div className={"text-h1 font-bold"}>
-      <p className={"text-sub text-center"}> 가입 신청서 양식 설정</p>
-      <div className={"w-[780px] rounded-xl shadow-lg mx-auto"}>
+    <div className={"text-h1 font-bold absolute z-10 left-1/4 right-1/4"}>
+      {/* <p className={"text-sub text-center"}> 가입 신청서 양식 설정</p> */}
+      <div className={"w-[780px] rounded-xl shadow-lg mx-auto bg-white"}>
         <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
           <div className={"w-[150px] p-2 mt-[32px]"}>제목</div>
           <input
