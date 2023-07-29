@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { selectedUserScheduleDateState, schedulesState } from "../store";
+import { selectedUserScheduleDateState, userSchedulesState } from "../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
+import ScheduleDetaile from "./ScheduleDetail";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useRecoilState(
     selectedUserScheduleDateState
   ); // [year, month, day] 리스트로 만듬
-  const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [schedules, setSchedule] = useRecoilState(userSchedulesState); // user에 맞는 정보 불러와 넣을 곳
   const [selectedStatus, setSelectedStatus] = useState(true);
 
   // 날짜를 클릭할 때 마다 새로운 스케줄 데이터를 불러옴?
@@ -138,7 +139,7 @@ const Calendar = () => {
                   // console.log("일정있는 날 선택");
                   return (
                     <div
-                      className={`absolute top-0 left-1/2 bg-main_mid rounded-full w-[5px] h-[5px]`}
+                      className={`absolute top-[5px] left-[20px] bg-main_mid rounded-full w-[5px] h-[5px]`}
                     />
                   );
                 }
@@ -166,7 +167,8 @@ const SelectedDateSchedule = () => {
   const [selectedDate, setSelectedDate] = useRecoilState(
     selectedUserScheduleDateState
   ); // [year, month, day] 리스트로 만듬
-  const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [schedules, setSchedule] = useRecoilState(userSchedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [count, setCount] = useState(0);
 
   // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
   const day_list = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -181,7 +183,16 @@ const SelectedDateSchedule = () => {
           if (startDateTime.toDateString() === selectedDate.toDateString()) {
             return (
               <div>
-                <div className="flex mt-[10px] gap-[5px]">
+                <div
+                  className="flex mt-[10px] gap-[5px]"
+                  onClick={() => {
+                    if (count >= 0 && i === count) {
+                      setCount(-1);
+                    } else {
+                      setCount(i);
+                    }
+                  }}
+                >
                   <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
                     <div className="text-[10px] font-[200] text-white">
                       {day_list[startDateTime.getDay()]}
@@ -190,9 +201,9 @@ const SelectedDateSchedule = () => {
                       {startDateTime.getDate()}
                     </div>
                   </div>
-                  <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px]">
+                  <div className="flex flex-col w-full h-[80px] bg-background pl-[10px] pt-[10px] rounded-2xl">
                     <div className="text-black text-h7 font-[300]">
-                      {schedule.club_name} - {schedule.title}
+                      [{schedule.club_name}] {schedule.title}
                     </div>
                     <div className="text-gray text-h7 font-[300]">
                       {startDateTime.getHours()}:{startDateTime.getMinutes()}~
@@ -203,6 +214,9 @@ const SelectedDateSchedule = () => {
                     </div>
                   </div>
                 </div>
+                {count === i ? (
+                  <ScheduleDetaile schedule={schedule} setCount={setCount} />
+                ) : null}
               </div>
             );
           }

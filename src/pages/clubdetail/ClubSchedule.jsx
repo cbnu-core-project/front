@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { selectedClubScheduleDateState, schedulesState } from "../../store";
+import { selectedClubScheduleDateState, clubSchedulesState } from "../../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
+import ScheduleDetaile from "../../components/ScheduleDetail";
+import { useParams } from "react-router-dom";
 
 export default function ClubSchedule() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useRecoilState(
     selectedClubScheduleDateState
-  ); // [year, month, day] 리스트로 만듬
-  const [schedules, setSchedule] = useRecoilState(schedulesState); // user에 맞는 정보 불러와 넣을 곳
+  );
+  const [schedules, setSchedule] = useRecoilState(clubSchedulesState); // user에 맞는 정보 불러와 넣을 곳
   const [selectedStatus, setSelectedStatus] = useState(true);
+  const [count, setCount] = useState(0);
+  const { id } = useParams();
 
   // 날짜를 클릭할 때 마다 새로운 스케줄 데이터를 불러옴.
   // 이거는 한 번 불러온거로 계속 쓸 건 지, 매번 계속 불러올 건지 선택해야한다.
   useEffect(() => {
-    axios.get("/api/user/schedule").then((res) => {
+    axios.get("/api/user/schedule/club_objid/" + id).then((res) => {
       setSchedule(res.data);
     });
   }, [selectedDate]);
@@ -87,9 +91,17 @@ export default function ClubSchedule() {
           chevron_right
         </span>
       </div>
-      <div className="grid grid-cols-7 gap-2 min-w-[1200px]">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-          <div key={day} className="text-center text-h7 text-midgray">
+      <div className="grid grid-cols-7 gap-2 min-w-[1300px]">
+        {[
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ].map((day) => (
+          <div key={day} className="text-center text-h5 text-midgray">
             {day}
           </div>
         ))}
@@ -100,7 +112,7 @@ export default function ClubSchedule() {
                 key={index}
                 className={`text-center text-black font-bold ${
                   date
-                    ? "cursor-pointer rounded-xl w-[150px] h-[150px] hover:border hover:border-main_mid hover:border-2"
+                    ? "rounded-xl w-[184px] h-[155px] hover:border hover:border-main_mid hover:border-2 overflow-y-scroll"
                     : ""
                 } rounded p-2 ${
                   currentDate.getFullYear() == selectedDate.getFullYear() &&
@@ -120,39 +132,50 @@ export default function ClubSchedule() {
                   );
                 }}
               >
-                {date}
-              </div>
-              {schedules.map((schedule, i) => {
-                const startDateTime = new Date(schedule.start_datetime);
-                const endDateTime = new Date(schedule.end_datetime);
+                <div>{date}</div>
+                {schedules.map((schedule, i) => {
+                  const startDateTime = new Date(schedule.start_datetime);
+                  const endDateTime = new Date(schedule.end_datetime);
 
-                if (
-                  currentDate.getFullYear() === startDateTime.getFullYear() &&
-                  currentDate.getMonth() === startDateTime.getMonth() &&
-                  date === startDateTime.getDate()
-                ) {
-                  // console.log("일정있는 날 선택");
-                  return (
-                    <div
-                      className={`absolute top-0 left-1/2 bg-main_mid rounded-full w-[5px] h-[5px]`}
-                    />
-                  );
-                }
-              })}
+                  if (
+                    currentDate.getFullYear() === startDateTime.getFullYear() &&
+                    currentDate.getMonth() === startDateTime.getMonth() &&
+                    date === startDateTime.getDate()
+                  ) {
+                    return (
+                      <div>
+                        <div
+                          className={
+                            "w-full text-h6 font-[400] mt-[4px] bg-gray3 h-[32px] rounded-xl text-center flex flex-col justify-center cursor-pointer"
+                          }
+                          onClick={() => {
+                            if (count >= 0 && i === count) {
+                              setCount(-1);
+                            } else {
+                              setCount(i);
+                            }
+                          }}
+                        >
+                          {schedule.title}
+                        </div>
+                        {count === i ? (
+                          <ScheduleDetaile
+                            schedule={schedule}
+                            setCount={setCount}
+                          />
+                        ) : null}
+                      </div>
+                    );
+                  }
+                })}
+              </div>
             </div>
           ) : (
             <div></div>
           )
         )}
       </div>
-      <div className="mt-4 text-center font-bold text-h2 text-black">
-        {selectedStatus
-          ? `${selectedDate.getFullYear()}년 ${
-              selectedDate.getMonth() + 1
-            }월 ${selectedDate.getDate()}일의 일정`
-          : "None"}
-      </div>
-      <div className={"mt-[40px]"} />
+      <div className={"h-[160px]"} />
       {/*{selectedStatus ? <SelectedDateSchedule /> : null}*/}
     </div>
   );
