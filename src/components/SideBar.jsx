@@ -297,9 +297,15 @@ function Register() {
 
 function WeekSchedule() {
   //'이번주 일정'정보
-  const [schedules, setSchedule] = useRecoilState(userSchedulesState);
+  const [schedules, setSchedules] = useRecoilState(userSchedulesState);
   const day_list = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
   const [count, setCount] = useState(-1);
+
+  const getUserSchedules = () => {
+    axios.get("/api/user/schedule").then((res) => {
+      setSchedules(res.data);
+    });
+  };
 
   let today = new Date();
   let this_week_monday = new Date(
@@ -369,7 +375,11 @@ function WeekSchedule() {
             </div>
           </div>
           {count === i ? (
-            <ScheduleDetaile schedule={schedule} setCount={setCount} />
+            <ScheduleDetaile
+              schedule={schedule}
+              setCount={setCount}
+              getSchedules={getUserSchedules}
+            />
           ) : null}
         </div>
       );

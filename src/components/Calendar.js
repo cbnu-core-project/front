@@ -9,20 +9,19 @@ const Calendar = () => {
   const [selectedDate, setSelectedDate] = useRecoilState(
     selectedUserScheduleDateState
   );
-  const [schedules, setSchedule] = useRecoilState(userSchedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [schedules, setSchedules] = useRecoilState(userSchedulesState); // user에 맞는 정보 불러와 넣을 곳
   const [selectedStatus, setSelectedStatus] = useState(true);
+
+  const getUserSchedules = () => {
+    axios.get("/api/user/schedule").then((res) => {
+      setSchedules(res.data);
+    });
+  };
 
   // 날짜를 클릭할 때 마다 새로운 스케줄 데이터를 불러옴?
   // 이거는 한 번 불러온거로 계속 쓸 건 지, 매번 계속 불러올 건지 선택해야한다.
   useEffect(() => {
-    axios.get("/api/user/schedule").then((res) => {
-      setSchedule(res.data);
-    });
-  }, [selectedDate]);
-
-  // 날짜를 선택 할 때 마다 실행 되는 훅
-  useEffect(() => {
-    // console.log(selectedDate);
+    getUserSchedules();
   }, [selectedDate]);
 
   // 달력을 구성하는 날짜 배열 생성
@@ -167,8 +166,14 @@ const SelectedDateSchedule = () => {
   const [selectedDate, setSelectedDate] = useRecoilState(
     selectedUserScheduleDateState
   ); // [year, month, day] 리스트로 만듬
-  const [schedules, setSchedule] = useRecoilState(userSchedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [schedules, setSchedules] = useRecoilState(userSchedulesState); // user에 맞는 정보 불러와 넣을 곳
   const [count, setCount] = useState(-1);
+
+  const getUserSchedules = () => {
+    axios.get("/api/user/schedule").then((res) => {
+      setSchedules(res.data);
+    });
+  };
 
   // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
   const day_list = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -215,7 +220,11 @@ const SelectedDateSchedule = () => {
                   </div>
                 </div>
                 {count === i ? (
-                  <ScheduleDetaile schedule={schedule} setCount={setCount} />
+                  <ScheduleDetaile
+                    schedule={schedule}
+                    setCount={setCount}
+                    getSchedules={getUserSchedules}
+                  />
                 ) : null}
               </div>
             );

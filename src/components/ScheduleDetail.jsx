@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  commonDeleteConfirmAlert,
+  commonErrorAlert,
+} from "../alerts/commonAlert";
 
 const ScheduleDetaile = (props) => {
   const [users, setUsers] = useState([]);
@@ -15,7 +19,20 @@ const ScheduleDetaile = (props) => {
       });
   }, []);
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    const deleteFunction = () =>
+      axios
+        .delete("/api/user/schedule/" + String(props.schedule._id))
+        .then((res) => {
+          props.getSchedules();
+          props.setCount(-1);
+        })
+        .catch((error) => {
+          commonErrorAlert(error, "삭제 실패 !");
+        });
+    // 삭제 확인 여부 alert
+    commonDeleteConfirmAlert(deleteFunction);
+  };
 
   const startDateTime = new Date(props.schedule.start_datetime);
   const endDateTime = new Date(props.schedule.end_datetime);

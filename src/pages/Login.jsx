@@ -5,7 +5,6 @@ import { setAccessToken, setRefreshToken } from "../utils/token";
 import { Location } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { tokenState } from "../store";
-import Swal from "sweetalert2";
 
 axios.defaults.baseURL = baseUrl;
 

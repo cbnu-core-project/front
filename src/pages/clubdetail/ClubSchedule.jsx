@@ -10,22 +10,21 @@ export default function ClubSchedule() {
   const [selectedDate, setSelectedDate] = useRecoilState(
     selectedClubScheduleDateState
   );
-  const [schedules, setSchedule] = useRecoilState(clubSchedulesState); // user에 맞는 정보 불러와 넣을 곳
+  const [schedules, setSchedules] = useRecoilState(clubSchedulesState); // user에 맞는 정보 불러와 넣을 곳
   const [selectedStatus, setSelectedStatus] = useState(true);
   const [count, setCount] = useState(-1);
   const { id } = useParams();
 
+  const getClubSchedules = () => {
+    axios.get("/api/user/schedule/club_objid/" + id).then((res) => {
+      setSchedules(res.data);
+    });
+  };
+
   // 날짜를 클릭할 때 마다 새로운 스케줄 데이터를 불러옴.
   // 이거는 한 번 불러온거로 계속 쓸 건 지, 매번 계속 불러올 건지 선택해야한다.
   useEffect(() => {
-    axios.get("/api/user/schedule/club_objid/" + id).then((res) => {
-      setSchedule(res.data);
-    });
-  }, [selectedDate]);
-
-  // 날짜를 선택 할 때 마다 실행 되는 훅
-  useEffect(() => {
-    // console.log(selectedDate);
+    getClubSchedules();
   }, [selectedDate]);
 
   // 달력을 구성하는 날짜 배열 생성
@@ -162,6 +161,7 @@ export default function ClubSchedule() {
                           <ScheduleDetaile
                             schedule={schedule}
                             setCount={setCount}
+                            getSchedules={getClubSchedules}
                           />
                         ) : null}
                       </div>
@@ -176,7 +176,6 @@ export default function ClubSchedule() {
         )}
       </div>
       <div className={"h-[160px]"} />
-      {/*{selectedStatus ? <SelectedDateSchedule /> : null}*/}
     </div>
   );
 }
