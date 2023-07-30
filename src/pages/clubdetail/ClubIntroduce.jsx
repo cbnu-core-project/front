@@ -240,7 +240,7 @@ export default function ClubIntroduce() {
           {/*동아리 프로그램*/}
           <div
             className={
-              "overflow-hidden 2xl:w-[358px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center relative"
+              "2xl:w-[358px] 2xl:h-[512px] rounded-xl shadow-xl grid place-content-center relative"
             }
           >
             {/* <div className="bg-main from-white absolute top-0"></div> */}
@@ -332,7 +332,7 @@ export default function ClubIntroduce() {
             </div>
             <div
               className={
-                "overflow-hidden border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll pt-2"
+                "border-t border-gray2 w-[390px] h-[430px] overflow-y-scroll"
               }
             >
               {activity.map((acti) => {

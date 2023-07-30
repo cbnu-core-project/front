@@ -138,7 +138,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className={"font-[Pv]"}>
       <Navigation />
       <div className={"mr-side mt-[80px]"}>
         <Routes>

@@ -37,8 +37,12 @@ export const tokenState = atom({
   default: "",
 });
 
-export const schedulesState = atom({
-  key: "schedulesState",
+export const userSchedulesState = atom({
+  key: "userSchedulesState",
+  default: [{ start_datetime: new Date(), end_datetime: new Date() }],
+});
+export const clubSchedulesState = atom({
+  key: "clubSchedulesState",
   default: [{ start_datetime: new Date(), end_datetime: new Date() }],
 });
 
