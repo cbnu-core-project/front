@@ -10,8 +10,9 @@ import {
   setRefreshToken,
 } from "../utils/token";
 import { useRecoilState } from "recoil";
-import { schedulesState, tokenState } from "../store";
+import { schedulesState, tokenState, sidebar_ui, userState } from "../store";
 import { readAllClubs } from "../api/club";
+import Mypage from "../pages/Mypage";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -32,8 +33,9 @@ export default function SideBar() {
   let [mytext, setMyText] = useState(true); //내가 작성한 글
   let [mystate, setMyState] = useState(false); //닉네임 옆 역삼각형 누를 때 생기는 창(모달)
 
-  let [user, setUser] = useState({}); //유저 정보
+  let [user, setUser] = useRecoilState(userState); //유저 정보
   let [token, setToken] = useRecoilState(tokenState); //토큰
+  let [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
 
   useEffect(() => {
     //유저 정보 받아옴
@@ -46,7 +48,7 @@ export default function SideBar() {
     //로그인 됐을 때만 보임
     return (
       <div
-        className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10"
+        className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0"
         onClick={() => {
           setMyState(false); //닉네임 옆 역삼각형 아이콘 외에 다른 구역을 클릭하면 모달창이 닫히도록 하기 위함
         }}
@@ -55,7 +57,7 @@ export default function SideBar() {
           <span
             class="text-[56px] text-4F4F4F material-symbols-outlined cursor-pointer"
             onClick={() => {
-              navigate("/mypage/"); //프로필 클릭 시 마이페이지로 이동
+              setSiderbarUI("mypage"); //프로필 클릭 시 마이페이지로 이동어떻게 구현????
             }}
           >
             account_circle
@@ -76,10 +78,12 @@ export default function SideBar() {
             </div>
           </div>
 
-          <span class="cursor-pointer ml-outo material-symbols-outlined" 
-          onClick={() => {
-                  alert("서비스 준비중입니다");
-                }}>
+          <span
+            class="cursor-pointer ml-outo material-symbols-outlined"
+            onClick={() => {
+              alert("서비스 준비중입니다");
+            }}
+          >
             notifications
           </span>
           {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
@@ -93,7 +97,7 @@ export default function SideBar() {
               setMyclub(!myclub);
             }} //버튼 클릭 시에 '나의 동아리' 정보 열림/닫힘
           >
-            expand_more
+            {myclub ? "expand_more" : "expand_less"}
           </button>
           {/* 참일 때 '나의 동아리' 정보 열림*/}
         </div>
@@ -107,7 +111,7 @@ export default function SideBar() {
               setCalender(!calender); //버튼 클릭 시에 '월간 일정' 정보 열림/닫힘
             }}
           >
-            expand_more
+            {calender ? "expand_more" : "expand_less"}
           </button>
         </div>
         {calender == true ? <Calendar /> : null}
@@ -120,7 +124,7 @@ export default function SideBar() {
               setSchedule(!schedule);
             }} //버튼 클릭 시에 '이번주 일정' 정보 열림/닫힘
           >
-            expand_more
+            {schedule ? "expand_more" : "expand_less"}
           </button>
         </div>
         {schedule == true ? <WeekSchedule /> : null}
@@ -146,7 +150,7 @@ export default function SideBar() {
               setInteresting(!interesting); //버튼 클릭 시에 '관심 동아리' 정보 열림/닫힘
             }}
           >
-            expand_more
+            {interesting ? "expand_more" : "expand_less"}
           </button>
         </div>
         {interesting == true ? <Interesting /> : null}
@@ -159,7 +163,7 @@ export default function SideBar() {
               setMyText(!mytext); //버튼 클릭 시에 '내가 작성한 글' 정보 열림/닫힘
             }}
           >
-            expand_more
+             {mytext? "expand_more" : "expand_less"}
           </button>
         </div>
         {mytext == true ? <MyText /> : null} */}
@@ -170,7 +174,7 @@ export default function SideBar() {
   } else {
     //로그아웃 시에 보임
     return (
-      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 z-10">
+      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0">
         <Login></Login>
       </div>
     );
@@ -242,37 +246,39 @@ function MyClub() {
     });
   }, [userInfo]);
 
-  return (
-    <>
-      <div className="grid grid-cols-5 gap-[18px] mt-[10px]">
-        {clubs.map((club) => {
-          for (let i = 0; i < userInfo.length; i++) {
-            if (club["_id"] == userInfo[i]) {
-              //모든 동아리 아이디 하나씩 유저 동아리와 동일한지 비교
-              return (
-                //일치하면 실행
-                <div
-                  className="cursor-pointer"
-                  onClick={() => {
-                    navigate("/clubdetail/" + userInfo[i] + "/clubintroduce");
-                    // window.location.reload();
-                    // navigate로 부드럽게 이동하도록 수정. id를 deps에 줌.
-                  }}
-                >
-                  {/* 사각 아이콘 안에 첫글자만 보여줌 */}
-                  <div className="grid justify-center">
-                    <div className="club_icon">{club.title.charAt(0)}</div>
+  if (userInfo == null) return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
+  else
+    return (
+      <>
+        <div className="grid grid-cols-5 gap-[18px] mt-[10px]">
+          {clubs.map((club) => {
+            for (let i = 0; i < userInfo.length; i++) {
+              if (club["_id"] == userInfo[i]) {
+                //모든 동아리 아이디 하나씩 유저 동아리와 동일한지 비교
+                return (
+                  //일치하면 실행
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      navigate("/clubdetail/" + userInfo[i] + "/clubintroduce");
+                      // window.location.reload();
+                      // navigate로 부드럽게 이동하도록 수정. id를 deps에 줌.
+                    }}
+                  >
+                    {/* 사각 아이콘 안에 첫글자만 보여줌 */}
+                    <div className="grid justify-center">
+                      <div className="club_icon">{club.title.charAt(0)}</div>
+                    </div>
+                    <div className="text-center ">{club.title}</div>
+                    {/* 동아리 이름 출력 */}
                   </div>
-                  <div className="text-center ">{club.title}</div>
-                  {/* 동아리 이름 출력 */}
-                </div>
-              );
+                );
+              }
             }
-          }
-        })}
-      </div>
-    </>
-  );
+          })}
+        </div>
+      </>
+    );
 }
 
 function Register() {
