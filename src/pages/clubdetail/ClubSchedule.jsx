@@ -12,7 +12,7 @@ export default function ClubSchedule() {
   );
   const [schedules, setSchedule] = useRecoilState(clubSchedulesState); // user에 맞는 정보 불러와 넣을 곳
   const [selectedStatus, setSelectedStatus] = useState(true);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(-1);
   const { id } = useParams();
 
   // 날짜를 클릭할 때 마다 새로운 스케줄 데이터를 불러옴.

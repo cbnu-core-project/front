@@ -85,7 +85,7 @@ export default function Club() {
         </div>
 
         <article className={""}>
-          <div className={"grid grid-cols-3 gap-10 2xl:grid-cols-4"}>
+          <div className={"grid grid-cols-4 gap-10"}>
             {posts.map((post) => {
               return (
                 <div

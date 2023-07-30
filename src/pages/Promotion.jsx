@@ -59,7 +59,7 @@ export default function Promotion() {
   }, [homeTab, page]);
 
   return (
-    <div className={"w-full 2xl:h-[2300px] min-w-home2"}>
+    <div className={"w-full min-w-[1300px]"}>
       <div className={""} />
       <div className={"w-full bg-main_mid text-white px-[64px] py-[56px]"}>
         <p className={"text-h1 font-light"}>
@@ -89,17 +89,13 @@ export default function Promotion() {
               return (
                 <div
                   className={
-                    "w-[200px] h-[360px] 2xl:w-[300px] 2xl:h-[528px] rounded-xl shadow-lg transition hover:scale-110"
+                    "w-[300px] h-[528px] rounded-xl shadow-lg transition hover:scale-110"
                   }
                   onClick={() => {
                     navigate("/promotiondetail/" + promotion._id);
                   }}
                 >
-                  <div
-                    className={
-                      "w-[200px] h-[290px] 2xl:w-[300px] 2xl:h-[440px] rounded-t-xl"
-                    }
-                  >
+                  <div className={"w-[300px] 2h-[440px] rounded-t-xl"}>
                     <Image promotion={promotion} />
                   </div>
                   <div

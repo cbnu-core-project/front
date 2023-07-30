@@ -77,10 +77,12 @@ export default function SideBar() {
             </div>
           </div>
 
-          <span class="cursor-pointer ml-outo material-symbols-outlined" 
-          onClick={() => {
-                  alert("서비스 준비중입니다");
-                }}>
+          <span
+            class="cursor-pointer ml-outo material-symbols-outlined"
+            onClick={() => {
+              alert("서비스 준비중입니다");
+            }}
+          >
             notifications
           </span>
           {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
@@ -136,8 +138,8 @@ export default function SideBar() {
           >
             expand_more
           </button>
-        </div>
-        {register == true ? <Register /> : null} */}
+        </div> */}
+        {/*{register == true ? <Register /> : null}*/}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
           <div className="side_title w-full ">관심 동아리</div>
@@ -303,7 +305,7 @@ function WeekSchedule() {
   let this_week_monday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate() - today.getDay() + 1,
+    today.getDate() - (today.getDay() === 0 ? 7 : today.getDay()) + 1, // 일요일이면 7로 바꿔줌
     0,
     0,
     0
@@ -311,7 +313,7 @@ function WeekSchedule() {
   let this_week_sunday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate() - today.getDay() + 1 + 6,
+    today.getDate() - (today.getDay() === 0 ? 7 : today.getDay()) + 1 + 6,
     24,
     0,
     0
@@ -323,9 +325,12 @@ function WeekSchedule() {
     const endDateTime = new Date(schedule.end_datetime);
 
     // console.log(this_week_monday.getTime());
+    // console.log(this_week_monday);
     // console.log(startDateTime.getTime());
     // console.log(this_week_sunday.getTime());
     // console.log(this_week_sunday);
+    // console.log(today.getDay());
+
     if (
       this_week_monday.getTime() <= startDateTime.getTime() &&
       startDateTime.getTime() <= this_week_sunday.getTime()
