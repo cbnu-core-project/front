@@ -83,7 +83,7 @@ export default function ClubSchedule() {
         .get("date");
 
       if (i % 7 !== 0) {
-        week.push({ year: year, month: month, date: date });
+        week.push({ year: year, month: month, date: date, scheduleCount: 0 });
         continue;
       }
 
@@ -94,6 +94,15 @@ export default function ClubSchedule() {
 
     return matrix;
   };
+  ////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////////////
+  // 기록할 변수
+  let dateMatrix = getCalendarDateMatrix();
+  let calendarCount = [];
+  for (let i = 0; i < 42; i++) {
+    calendarCount.push(0);
+  }
   ////////////////////////////////////////////////////////////////////////////
 
   // 이전 달로 이동
@@ -139,65 +148,74 @@ export default function ClubSchedule() {
             </div>
           ))}
         </div>
-        <table className={"text-gray2 border border-gray3"}>
-          <tbody>
-            {getCalendarDateMatrix().map((rows, index) => {
-              return (
-                <tr className={"w-[1326px] h-[156px]"}>
-                  {rows.map((row, j) => {
-                    return (
-                      <>
-                        <td
-                          className={`w-[180px] h-[30px] ${
-                            currentDate.get("year") === row.year &&
-                            currentDate.get("month") === row.month
-                              ? "text-black"
-                              : ""
-                          }
+        <div className={"text-gray2 border border-gray3"}>
+          {dateMatrix.map((week, i) => {
+            return (
+              // week 박스
+              <div
+                className={
+                  "h-[180px] grid grid-flow-row-dense grid-cols-7 grid-rows-5"
+                }
+                id={"week"}
+              >
+                {week.map((day, j) => {
+                  return (
+                    <>
+                      {/*date 표시 박스*/}
+                      <div
+                        className={`w-[180px] h-[36px] row-start-1 col-start-${
+                          j + 1
+                        } ${
+                          currentDate.get("year") === day.year &&
+                          currentDate.get("month") === day.month
+                            ? "text-black"
+                            : ""
+                        }
                         `}
-                        >
-                          {row.date}
-                        </td>
-                      </>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                      >
+                        {day.date}
+                      </div>
+                      {/*일정 그려주기*/}
+                      {schedules.map((schedule, index) => {
+                        const startDateTime = dayjs(
+                          schedule.calendar_start_datetime
+                        );
+                        const endDateTime = dayjs(schedule.end_datetime);
+                        const scheduleLength = schedule.schedule_length;
+
+                        if (
+                          day.year === startDateTime.get("year") &&
+                          day.month === startDateTime.get("month") &&
+                          day.date === startDateTime.get("date")
+                        ) {
+                          for (let k = 0; k < scheduleLength; k++) {
+                            calendarCount[
+                              startDateTime.get("date") - 1 + k
+                            ] += 1;
+                          }
+
+                          console.log(calendarCount);
+
+                          return (
+                            <div
+                              className={`h-[36px] bg-gray col-start-${
+                                startDateTime.get("day") + 1
+                              } col-span-${scheduleLength}`}
+                            >
+                              {schedule.title}
+                            </div>
+                          );
+                        }
+                      })}
+                    </>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>column</th>
-            <th>column</th>
-            <th>column</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <tr>
-              <td colSpan={2}>name</td>
-              <td>email</td>
-            </tr>
-            <tr>
-              <td colSpan={2}>name</td>
-              <td>email</td>
-            </tr>
-          </tr>
-          <tr>
-            <tr>
-              <td colSpan={2}>name</td>
-              <td>email</td>
-            </tr>
-            <tr>
-              <td colSpan={2}>name</td>
-              <td>email</td>
-            </tr>
-          </tr>
-        </tbody>
-      </table>
+      <div className={"h-[160px]"} />
     </>
   );
 }
