@@ -10,10 +10,9 @@ import {
   setRefreshToken,
 } from "../utils/token";
 import { useRecoilState } from "recoil";
-import { userSchedulesState, tokenState, sidebar_ui, userState } from "../store";
+import { userSchedulesState, tokenState, sidebar_ui, userState} from "../store";
 import { readAllClubs } from "../api/club";
 import ScheduleDetaile from "./ScheduleDetail";
-import Mypage from "../pages/Mypage";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -56,7 +55,7 @@ export default function SideBar() {
       >
         <div className="w-full flex items-center mt-[15px]">
           <span
-            class="text-[56px] text-4F4F4F material-symbols-outlined cursor-pointer"
+            class="text-[56px] material-symbols-outlined cursor-pointer text-darkgray"
             onClick={() => {
               setSiderbarUI("mypage"); //프로필 클릭 시 마이페이지로 이동어떻게 구현????
             }}
@@ -80,7 +79,7 @@ export default function SideBar() {
           </div>
 
           <span
-            class="cursor-pointer ml-outo material-symbols-outlined"
+            class="cursor-pointer ml-outo material-symbols-outlined mt-auto mb-auto text-[#1C1B1F] text-[30px]"
             onClick={() => {
               alert("서비스 준비중입니다");
             }}
@@ -185,6 +184,7 @@ export default function SideBar() {
 function Modal() {
   //최상단 닉네임 옆 역삼각형 누르면 뜨는 창
   const [token, setToken] = useRecoilState(tokenState);
+  const [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
 
   return (
     <>
@@ -194,7 +194,9 @@ function Modal() {
             "grid grid-rows-2 pt-[15px] pl-[15px] absolute w-[150px] h-[100px] ml-[50px] bg-white rounded-xl shadow-md z-1"
           }
         >
-          <div className="flex gap-2">
+          <div className="flex gap-2 cursor-pointer" onClick={()=>{
+            setSiderbarUI("myinfo");
+          }}>
             <span class="material-symbols-outlined">account_circle</span>
             <div>프로필 사용</div>
           </div>
@@ -378,20 +380,62 @@ function WeekSchedule() {
   });
 }
 
+
 function Interesting() {
-  //'관심동아리'정보
-  return (
-    <div className="flex gap-[18px] mt-[10px]">
-      <div flex flex-row>
-        <div className="club_icon"></div>
-        <div className="club_text">코어</div>
-      </div>
-      <div flex flex-row>
-        <div className="club_icon">물</div>
-        <div className="club_text">물밑세상</div>
-      </div>
-    </div>
-  );
+  //'내 동아리'정보
+  let [userInterest, setUserInterest] = useState([]); //유저 관심 동아리 정보
+  let [token, setToken] = useRecoilState(tokenState);
+  let [clubs, setClubs] = useState([]); //모든 동아리 이름 정보
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    //유저 동아리 정보 불러옴
+    axios.get("/api/user/interests").then((response) => {
+      setUserInterest(response.data);
+    });
+  }, [token]);
+
+  useEffect(() => {
+    //모든 동아리 정보 불러옴
+    readAllClubs(0).then((res) => {
+      setClubs(res.data);
+    });
+  }, [userInterest]);
+
+  if (userInterest == null) return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
+  else
+    return (
+      <>
+        <div className="grid grid-cols-5 gap-[18px] mt-[10px]">
+          {clubs.map((club) => {
+            for (let i = 0; i < userInterest.length; i++) {
+              if (club["_id"] == userInterest[i]) {
+                //모든 동아리 아이디 하나씩 유저 동아리와 동일한지 비교
+                return (
+                  //일치하면 실행
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      navigate("/clubdetail/" + userInterest[i] + "/clubintroduce");
+                      // window.location.reload();
+                      // navigate로 부드럽게 이동하도록 수정. id를 deps에 줌.
+                    }}
+                  >
+                    {/* 사각 아이콘 안에 첫글자만 보여줌 */}
+                    <div className="grid justify-center">
+                      <div className="club_icon">{club.title.charAt(0)}</div>
+                    </div>
+                    <div className="text-center ">{club.title}</div>
+                    {/* 동아리 이름 출력 */}
+                  </div>
+                );
+              }
+            }
+          })}
+        </div>
+      </>
+    );
 }
 
 function MyText() {
