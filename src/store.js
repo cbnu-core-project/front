@@ -65,3 +65,14 @@ export const userInfoState = atom({
   key: "userInfoState",
   default: {},
 });
+
+export const sidebar_ui =atom({
+  key: "sidebar_ui",
+  default: "standard",//로그인할 때 뜨는 사이드바 ui
+});
+
+export const userState =atom({
+  key: "userState",
+  default: [],//유저 정보
+});
+
