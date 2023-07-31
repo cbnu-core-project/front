@@ -19,8 +19,8 @@ export default function ClubIntroduce() {
   const [programs, setPrograms] = useState([]); //동아리 활동 프로그램 내역
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
   const [tagModfy, setTagModfy] = useState(true); //태그 수정버튼 클릭에 따른 ui변화
-  const [addTag, setAddTag]= useState(false);//태그 활동추가 버튼 관련 기능
-  const [tagInput, setTagInput] = useState("");//태그 인풋 내용
+  const [addTag, setAddTag] = useState(false); //태그 활동추가 버튼 관련 기능
+  const [tagInput, setTagInput] = useState(""); //태그 인풋 내용
   const [clubProgramModfy, setClubProgramModfy] = useState(true); //동아리 프로그램 수정버튼 클릭에 따른 ui변화
   const [clubHistoryModfy, setClubHistoryModfy] = useState(true); //동아리 활동내역 수정버튼 클릭에 따른 ui변화
 
@@ -177,16 +177,32 @@ export default function ClubIntroduce() {
                 </div>
                 <div
                   className={
-                    "flex flex-wrap gap-[10px] gap-y-0 text-center max-h-[180px]"
+                    "flex flex-wrap gap-y-0 text-center max-h-[180px]"
                   }
                 >
-                  {posts.activity_tags.map((tags) => {
+                  {posts.activity_tags.map((tags, i) => {
                     return (
                       <div className="h-[40px]">
                         {tagModfy ? null : (
                           <>
-                            <div className="relative ml-[90px]">
-                              <div className="absolute text-center flex flex-col justify-center rounded-full bg-[#FF0303] w-[20px] h-[20px] cursor-pointer">
+                            <div className="relative flex justify-end">
+                              <div
+                                className="absolute text-center flex flex-col justify-center rounded-full bg-[#FF0303] w-[20px] h-[20px] cursor-pointer"
+                                onClick={() => {
+                                  axios
+                                    .delete(
+                                      "/api/club/activity_tag/index?objid=" +
+                                        id +
+                                        "&index=" +
+                                        i
+                                    )
+                                    .then((res) => {
+                                      readOneClub(id).then((res) =>
+                                        setPosts(res.data[0])
+                                      );
+                                    });
+                                }}
+                              >
                                 <span class="material-symbols-outlined text-white text-[10px] font-thin">
                                   close
                                 </span>
@@ -196,33 +212,43 @@ export default function ClubIntroduce() {
                         )}
                         <div
                           className={
-                            "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px] mt-[10px]"
+                            "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px] mt-[10px] mr-[10px]"
                           }
                         >
                           {tags}
-                        </div>                 
+                        </div>
                       </div>
                     );
                   })}
-                  {addTag ? //활동추가 시 태그 추가 칸 생성됨
-                        <input
-                          className={ //http://vnthf.logdown.com/posts/2016/05/18/front-input-box
-                            "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px] mt-[10px] outline-none"
-                          }
-                          //value={tagInput} //나중에 이거랑도 연결
-                          onChange={(e)=>{
-                          console.log(e); //나중에 백엔드 post로 연결
-                         }}>
-                          
-                        </input>
-                        : null}
+                  {addTag ? ( //활동추가 시 태그 추가 칸 생성됨
+                    <input
+                      className={
+                        //http://vnthf.logdown.com/posts/2016/05/18/front-input-box
+                        "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px] mt-[10px] outline-none w-[120px] mr-[10px]"
+                      }
+                      onChange={(e) => {
+                        setTagInput(e.target.value);
+                      }}
+                    ></input>
+                  ) : null}
                   {tagModfy ? null : (
                     <div className="h-[40px]">
                       <button
                         className=" bg-sub text-white rounded-lg h-[30px] font-[600] px-[10px] mt-[10px]"
                         onClick={() => {
                           // 태그 추가되도록 설정
-                          setAddTag(!addTag)
+                          setAddTag(!addTag);
+                          if (tagInput != null)
+                            axios
+                              .post(
+                                `/api/club/activity_tag/push?objid=${id}&activity_tag=${tagInput}`
+                              )
+                              .then((res) => {
+                                readOneClub(id).then((res) =>
+                                  setPosts(res.data[0])
+                                );
+                              });
+                            setTagInput(null);
                         }}
                       >
                         + 활동 추가
@@ -385,13 +411,11 @@ export default function ClubIntroduce() {
                                 {String(acti.month).padStart(2, "0")}
                               </span>
                               {acti.title}
-                            </li>               
+                            </li>
                           </ul>
                         </div>
                       </div>
-                    ) 
-                    : 
-                    (
+                    ) : (
                       <div className={"mt-4 flex"}>
                         {
                           prev_length != after_length ? ( //추가전 리스트 길이와 추가 후 리스트 길이가 다를 때만 연도 출력
@@ -437,7 +461,9 @@ export default function ClubIntroduce() {
                                 className="w-[47px] h-[32px] bg-gray rounded-md text-white font-[400] text-[12px] mt-[5px]"
                                 onClick={() => {
                                   axios
-                                    .delete("/api/club_activity_history/" + acti._id)
+                                    .delete(
+                                      "/api/club_activity_history/" + acti._id
+                                    )
                                     .then((res) => {
                                       axios
                                         .get("/api/club_activity_history/" + id)
