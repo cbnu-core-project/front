@@ -26,7 +26,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "./utils/token";
-import { tokenState,sidebar_ui } from "./store";
+import { tokenState, userInfoState } from "./store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import { baseUrl } from "./common/global";
@@ -43,6 +43,7 @@ function App() {
   const CODE = PARAMS.get("code");
   const STATE = PARAMS.get("state");
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   function postAccessToken() {
     if (getRefreshToken()) {
@@ -62,10 +63,14 @@ function App() {
          */
           setAccessToken(res.data.access_token);
           setToken(res.data.access_token);
+          axios.get("/api/user/info").then((res2) => {
+            setUserInfo(res2.data);
+          });
         })
         .catch((err) => {
           console.log(err);
           setRefreshToken();
+          setUserInfo({});
         });
     }
   }
@@ -79,6 +84,7 @@ function App() {
     onError: () => {
       alert("다시 로그인이 필요합니다.");
       setToken("");
+      setUserInfo({});
     },
   });
 
@@ -91,6 +97,9 @@ function App() {
         setRefreshToken(refresh_token);
         navigate("/");
         setToken(access_token);
+        axios.get("/api/user/info").then((res2) => {
+          setUserInfo(res2.data);
+        });
       })
       .catch((err) => {
         console.log("에러남");
@@ -107,6 +116,9 @@ function App() {
         setRefreshToken(refresh_token);
         navigate("/");
         setToken(access_token);
+        axios.get("/api/user/info").then((res2) => {
+          setUserInfo(res2.data);
+        });
       })
       .catch((err) => {
         console.log("에러남");

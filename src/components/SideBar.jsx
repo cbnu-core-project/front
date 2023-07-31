@@ -79,7 +79,9 @@ export default function SideBar() {
           </div>
 
           <span
+
             class="cursor-pointer ml-outo material-symbols-outlined mt-auto mb-auto text-[#1C1B1F] text-[30px]"
+
             onClick={() => {
               alert("서비스 준비중입니다");
             }}
@@ -139,8 +141,8 @@ export default function SideBar() {
           >
             expand_more
           </button>
-        </div>
-        {register == true ? <Register /> : null} */}
+        </div> */}
+        {/*{register == true ? <Register /> : null}*/}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
           <div className="side_title w-full ">관심 동아리</div>
@@ -303,15 +305,21 @@ function Register() {
 
 function WeekSchedule() {
   //'이번주 일정'정보
-  const [schedules, setSchedule] = useRecoilState(userSchedulesState);
+  const [schedules, setSchedules] = useRecoilState(userSchedulesState);
   const day_list = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // 0 ~ 6 ( 일 ~ 토 ) 임을 주의하자.
   const [count, setCount] = useState(-1);
+
+  const getUserSchedules = () => {
+    axios.get("/api/user/schedule").then((res) => {
+      setSchedules(res.data);
+    });
+  };
 
   let today = new Date();
   let this_week_monday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate() - today.getDay() + 1,
+    today.getDate() - (today.getDay() === 0 ? 7 : today.getDay()) + 1, // 일요일이면 7로 바꿔줌
     0,
     0,
     0
@@ -319,7 +327,7 @@ function WeekSchedule() {
   let this_week_sunday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate() - today.getDay() + 1 + 6,
+    today.getDate() - (today.getDay() === 0 ? 7 : today.getDay()) + 1 + 6,
     24,
     0,
     0
@@ -331,9 +339,12 @@ function WeekSchedule() {
     const endDateTime = new Date(schedule.end_datetime);
 
     // console.log(this_week_monday.getTime());
+    // console.log(this_week_monday);
     // console.log(startDateTime.getTime());
     // console.log(this_week_sunday.getTime());
     // console.log(this_week_sunday);
+    // console.log(today.getDay());
+
     if (
       this_week_monday.getTime() <= startDateTime.getTime() &&
       startDateTime.getTime() <= this_week_sunday.getTime()
@@ -372,7 +383,11 @@ function WeekSchedule() {
             </div>
           </div>
           {count === i ? (
-            <ScheduleDetaile schedule={schedule} setCount={setCount} />
+            <ScheduleDetaile
+              schedule={schedule}
+              setCount={setCount}
+              getSchedules={getUserSchedules}
+            />
           ) : null}
         </div>
       );

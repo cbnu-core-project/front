@@ -46,25 +46,22 @@ export default function HomePromotionList() {
 
   return (
     <>
-      <div className={"px-8 2xl:px-16"}>
+      <div className={"px-8 2xl:px-16 min-w-[1300px]"}>
         <HomePromotionTab pagination={pagination} page={page} />
         <div className={"grid grid-cols-4"}>
           {promotions.map((promotion) => {
             return (
               <div className="relative">
                 <img
-                    className={
-                      "w-[200px] h-[300px] 2xl:w-[303px] 2xl:h-[440px] overflow-y-scroll"
-                    }
-                    src={`${baseUrl}/${promotion.image_url}`}
-                    alt={"marketing"}
-                  />
+                  className={"w-[300px] h-[440px] overflow-y-scroll"}
+                  src={`${baseUrl}/${promotion.image_url}`}
+                  alt={"marketing"}
+                />
                 <div
                   className={
-                    "w-[200px] h-[300px] 2xl:w-[300px] 2xl:h-[440px] rounded-xl transition hover:scale-110 bg-gradient-to-b from-white to-black opacity-20 absolute top-0 z-10"
+                    "w-[300px] h-[440px] rounded-xl transition hover:scale-110 bg-gradient-to-b from-white to-black opacity-20 absolute top-0 z-10"
                   }
                 >
-                  
                   <div className={""}>
                     <div className={"text-h3 text-white font-bold"}>
                       {promotion.title}
