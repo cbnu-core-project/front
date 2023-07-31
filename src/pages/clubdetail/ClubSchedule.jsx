@@ -25,6 +25,25 @@ export default function ClubSchedule() {
     "Friday",
     "Saturday",
   ];
+  // tailwindcss 사전 빌드 작업을 위해 필요한 class 리스트 (사용x)
+  const col_span = [
+    "col-span-1",
+    "col-span-2",
+    "col-span-3",
+    "col-span-4",
+    "col-span-5",
+    "col-span-6",
+    "col-span-7",
+  ];
+  const col_start = [
+    "col-start-1",
+    "col-start-2",
+    "col-start-3",
+    "col-start-4",
+    "col-start-5",
+    "col-start-6",
+    "col-start-7",
+  ];
 
   ////////////////////////////////////////////////////////////////////////////
   const getClubSchedules = () => {
@@ -193,8 +212,6 @@ export default function ClubSchedule() {
                               startDateTime.get("date") - 1 + k
                             ] += 1;
                           }
-
-                          console.log(calendarCount);
 
                           return (
                             <div

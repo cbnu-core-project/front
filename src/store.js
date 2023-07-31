@@ -61,7 +61,7 @@ export const addingImgState = atom({
   default: false,
 });
 
-export const club_application_form = atom({
-  key: "club_application_form",
-  default: [],
+export const userInfoState = atom({
+  key: "userInfoState",
+  default: {},
 });
