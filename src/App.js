@@ -26,7 +26,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "./utils/token";
-import { tokenState, userInfoState } from "./store";
+import { tokenState, userInfoState, sidebar_ui } from "./store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import { baseUrl } from "./common/global";
@@ -43,6 +43,8 @@ function App() {
   const CODE = PARAMS.get("code");
   const STATE = PARAMS.get("state");
   const navigate = useNavigate();
+
+  // 유저정보를 불러와 state에 리코일 저장하기.
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   function postAccessToken() {

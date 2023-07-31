@@ -52,8 +52,8 @@ export default function ClubSchedule() {
       let copy_schedules1 = [];
       let copy_schedules2 = [];
 
-      console.log(currentDate);
-      console.log(currentDate.startOf("month").startOf("week"));
+      // console.log(currentDate);
+      // console.log(currentDate.startOf("month").startOf("week"));
 
       // 일정이 2일이상이면 맨 앞으로 정렬
       for (let i in schedules) {
