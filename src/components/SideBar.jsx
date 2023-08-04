@@ -60,7 +60,7 @@ export default function SideBar() {
           >
             account_circle
           </span>
-          <div className="pl-[8px] leading-[20px] w-full">
+          <div className="pl-[8px] text-[18px] leading-[20px] w-full">
             <div>안녕하세요,</div>
             {/* 유저 닉네임 들어감 */}
             <div>
@@ -87,10 +87,10 @@ export default function SideBar() {
           {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
         </div>
         {mystate == true ? <Modal /> : null}
-        <div className="flex mt-[40px] ">
-          <div className="side_title ">나의 동아리</div>
+        <div className="flex mt-[40px]">
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">나의 동아리</div>
           <button
-            class="ml-auto material-symbols-outlined "
+            class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setMyclub(!myclub);
             }} //버튼 클릭 시에 '나의 동아리' 정보 열림/닫힘
@@ -102,9 +102,9 @@ export default function SideBar() {
         {myclub == true ? <MyClub /> : null}
 
         <div className="flex mt-[20px] w-full">
-          <div className="side_title ">월간 일정</div>
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">월간 일정</div>
           <button
-            class="ml-auto material-symbols-outlined"
+            class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setCalender(!calender); //버튼 클릭 시에 '월간 일정' 정보 열림/닫힘
             }}
@@ -115,9 +115,9 @@ export default function SideBar() {
         {calender == true ? <Calendar /> : null}
         {/* 참일 때 '이번주 일정' 정보 열림*/}
         <div className="flex mt-[25px] w-full">
-          <div className="side_title">이번주 일정</div>
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">이번주 일정</div>
           <button
-            class="ml-auto material-symbols-outlined"
+            class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setSchedule(!schedule);
             }} //버튼 클릭 시에 '이번주 일정' 정보 열림/닫힘
@@ -141,9 +141,9 @@ export default function SideBar() {
         {/*{register == true ? <Register /> : null}*/}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
-          <div className="side_title w-full ">관심 동아리</div>
+          <div className="side_title w-full text-[22px] font-[700] text-darkgray self-center">관심 동아리</div>
           <button
-            class="ml-outo material-symbols-outlined"
+            class="ml-outo material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setInteresting(!interesting); //버튼 클릭 시에 '관심 동아리' 정보 열림/닫힘
             }}
@@ -272,7 +272,7 @@ function MyClub() {
                   >
                     {/* 사각 아이콘 안에 첫글자만 보여줌 */}
                     <div className="grid justify-center">
-                      <div className="club_icon">{club.title.charAt(0)}</div>
+                      <div className="grid club_icon content-center">{club.title.charAt(0)}</div>
                     </div>
                     <div className="text-center ">{club.title}</div>
                     {/* 동아리 이름 출력 */}
@@ -361,15 +361,15 @@ function WeekSchedule() {
               }
             }}
           >
-            <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
-              <div className="text-[10px] font-[200] text-white">
+            <div className="w-[58px] h-[90px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
+              <div className="text-[13px] font-[200] text-white">
                 {day_list[startDateTime.getDay()]}
               </div>
-              <div className="text-h6 font-[600]  text-white">
+              <div className="text-h4 font-[600]  text-white">
                 {startDateTime.getDate()}
               </div>
             </div>
-            <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px] rounded-2xl">
+            <div className="flex flex-col w-full h-[90px] ml-[5px] bg-white pl-[10px] pt-[10px] rounded-2xl">
               <div className="text-black text-h7 font-[300]">
                 [{schedule.club_name}] {schedule.title}
               </div>
@@ -398,7 +398,7 @@ function WeekSchedule() {
 }
 
 function Interesting() {
-  //'내 동아리'정보
+  //'관심 동아리'정보
   let [userInterest, setUserInterest] = useState([]); //유저 관심 동아리 정보
   let [token, setToken] = useRecoilState(tokenState);
   let [clubs, setClubs] = useState([]); //모든 동아리 이름 정보
@@ -442,10 +442,10 @@ function Interesting() {
                     }}
                   >
                     {/* 사각 아이콘 안에 첫글자만 보여줌 */}
-                    <div className="grid justify-center">
-                      <div className="club_icon">{club.title.charAt(0)}</div>
+                    <div className="grid justify-center ">
+                      <div className="grid club_icon content-center">{club.title.charAt(0)}</div>
                     </div>
-                    <div className="text-center ">{club.title}</div>
+                    <div className="text-center">{club.title}</div>
                     {/* 동아리 이름 출력 */}
                   </div>
                 );

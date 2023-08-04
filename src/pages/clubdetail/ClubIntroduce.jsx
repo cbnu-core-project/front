@@ -104,7 +104,7 @@ export default function ClubIntroduce() {
                 }}
               >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>수정하기</div>
+                <div>사진변경</div>
               </button>
             </div>
             <div>
@@ -273,13 +273,13 @@ export default function ClubIntroduce() {
             <div className="flex w-full gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>동아리 프로그램</div>
               <button
-                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
                 onClick={() => {
                   setClubProgramModfy(!clubProgramModfy);
                 }}
               >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>{clubProgramModfy ? "수정하기" : "완료하기"}</div>
+                <div>{clubProgramModfy ? "수정" : "완료"}</div>
               </button>
             </div>
             <div
@@ -347,13 +347,13 @@ export default function ClubIntroduce() {
             <div className="flex w-full">
               <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
               <button
-                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
                 onClick={() => {
                   setClubHistoryModfy(!clubHistoryModfy);
                 }}
               >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>{clubHistoryModfy ? "수정하기" : "완료하기"}</div>
+                <div>{clubHistoryModfy ? "수정" : "완료"}</div>
               </button>
             </div>
             <div
