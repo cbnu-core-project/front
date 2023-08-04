@@ -23,7 +23,7 @@ export default function Mypage() {
     //로그인 됐을 때만 보임
     return (
       <>
-        <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 pt-[25px] pb-[25px] ">
+        <div className="bg-background pl-[40px] pr-[40px] w-side fixed z-50 h-screen overflow-y-scroll top-0 right-0 pt-[25px] pb-[25px] ">
           <div className="flex justify-between">
             <span
               class="material-symbols-outlined cursor-pointer mt-auto mb-auto text-[30px] text-midgray"

@@ -10,7 +10,12 @@ import {
   setRefreshToken,
 } from "../utils/token";
 import { useRecoilState } from "recoil";
-import { userSchedulesState, tokenState, sidebar_ui, userState} from "../store";
+import {
+  userSchedulesState,
+  tokenState,
+  sidebar_ui,
+  userState,
+} from "../store";
 import { readAllClubs } from "../api/club";
 import ScheduleDetaile from "./ScheduleDetail";
 
@@ -48,7 +53,7 @@ export default function SideBar() {
     //로그인 됐을 때만 보임
     return (
       <div
-        className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0"
+        className="bg-background pl-[40px] pr-[40px] fixed z-50 w-side h-screen overflow-y-scroll top-0 right-0"
         onClick={() => {
           setMyState(false); //닉네임 옆 역삼각형 아이콘 외에 다른 구역을 클릭하면 모달창이 닫히도록 하기 위함
         }}
@@ -194,9 +199,12 @@ function Modal() {
             "grid grid-rows-2 pt-[15px] pl-[15px] absolute w-[150px] h-[100px] ml-[50px] bg-white rounded-xl shadow-md z-1"
           }
         >
-          <div className="flex gap-2 cursor-pointer" onClick={()=>{
-            setSiderbarUI("myinfo");
-          }}>
+          <div
+            className="flex gap-2 cursor-pointer"
+            onClick={() => {
+              setSiderbarUI("myinfo");
+            }}
+          >
             <span class="material-symbols-outlined">account_circle</span>
             <div>프로필 사용</div>
           </div>
@@ -249,7 +257,8 @@ function MyClub() {
     });
   }, [userInfo]);
 
-  if (userInfo == null) return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
+  if (userInfo == null)
+    return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
   else
     return (
       <>
@@ -382,8 +391,10 @@ function WeekSchedule() {
           </div>
           {count === i ? (
             <ScheduleDetaile
+              type={"user"}
               schedule={schedule}
               setCount={setCount}
+              color={schedule.color}
               getSchedules={getUserSchedules}
             />
           ) : null}
@@ -392,7 +403,6 @@ function WeekSchedule() {
     }
   });
 }
-
 
 function Interesting() {
   //'내 동아리'정보
@@ -416,7 +426,8 @@ function Interesting() {
     });
   }, [userInterest]);
 
-  if (userInterest == null) return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
+  if (userInterest == null)
+    return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
   else
     return (
       <>
@@ -430,7 +441,9 @@ function Interesting() {
                   <div
                     className="cursor-pointer"
                     onClick={() => {
-                      navigate("/clubdetail/" + userInterest[i] + "/clubintroduce");
+                      navigate(
+                        "/clubdetail/" + userInterest[i] + "/clubintroduce"
+                      );
                       // window.location.reload();
                       // navigate로 부드럽게 이동하도록 수정. id를 deps에 줌.
                     }}
