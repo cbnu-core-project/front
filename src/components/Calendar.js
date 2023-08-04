@@ -224,8 +224,10 @@ const SelectedDateSchedule = () => {
                 </div>
                 {count === i ? (
                   <ScheduleDetaile
+                    type={"user"}
                     schedule={schedule}
                     setCount={setCount}
+                    color={schedule.color}
                     getSchedules={getUserSchedules}
                   />
                 ) : null}

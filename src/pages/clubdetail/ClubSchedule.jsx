@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { selectedClubScheduleDateState, clubSchedulesState } from "../../store";
+import {
+  selectedClubScheduleDateState,
+  clubSchedulesState,
+  postStatusState,
+  clubScheduleSelectedStatusState,
+} from "../../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import ScheduleDetaile from "../../components/ScheduleDetail";
 import { useParams } from "react-router-dom";
 import * as dayjs from "dayjs";
-import Calendar from "../../components/Calendar";
+import { bg_colors } from "../../common/colors";
+import "./ClubSchedule.css";
 
 export default function ClubSchedule() {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedDate, setSelectedDate] = useRecoilState(
     selectedClubScheduleDateState
   );
+  const [selectedDateIndex, setSelectedDateIndex] = useState(0);
   const [schedules, setSchedules] = useRecoilState(clubSchedulesState); // user에 맞는 정보 불러와 넣을 곳
-  // const [selectedStatus, setSelectedStatus] = useState(true);
-  // const [count, setCount] = useState(-1);
+  const [selectedStatus, setSelectedStatus] = useRecoilState(
+    clubScheduleSelectedStatusState
+  );
+  const [count, setCount] = useState(-1);
+  const [postStatus, setPostStatus] = useRecoilState(postStatusState);
   const { id } = useParams();
   const day_list = [
     "Sunday",
@@ -45,15 +55,23 @@ export default function ClubSchedule() {
     "col-start-7",
   ];
 
+  const left = [
+    "left-[0px]",
+    "left-[180px]",
+    "left-[360px]",
+    "left-[540px]",
+    "left-[720px]",
+    "left-[900px]",
+    "left-[1080px]",
+    "left-[1260px]",
+  ];
+
   ////////////////////////////////////////////////////////////////////////////
   const getClubSchedules = () => {
     axios.get("/api/user/schedule/club_objid/" + id).then((res) => {
       const schedules = res.data;
       let copy_schedules1 = [];
       let copy_schedules2 = [];
-
-      console.log(currentDate);
-      console.log(currentDate.startOf("month").startOf("week"));
 
       // 일정이 2일이상이면 맨 앞으로 정렬
       for (let i in schedules) {
@@ -66,7 +84,6 @@ export default function ClubSchedule() {
           copy_schedules2.push(schedules[i]);
         }
       }
-      // console.log([...copy_schedules1, ...copy_schedules2]);
 
       setSchedules([...copy_schedules1, ...copy_schedules2]);
     });
@@ -106,8 +123,22 @@ export default function ClubSchedule() {
         continue;
       }
 
-      week.push({ year: year, month: month, date: date });
-      matrix.push(week);
+      week.push({ year: year, month: month, date: date, scheduleCount: 0 });
+
+      // 현재  month와 다른 month의 주로만 이루어진 줄이 생기지 않도록 체크
+      let count = 0;
+      for (let j = 0; j < 7; j++) {
+        if (week[j].month !== currentDate.get("month")) {
+          count += 1;
+        }
+      }
+      // 만약 week에 현재 달의 날짜가 포함되어있는 행이면 추가
+      if (count < 7) {
+        matrix.push(week);
+      }
+
+      // 만약 42일로 표현하고 싶으면 위에 대신 밑에 줄 사용
+      // matrix.push(week);
       week = [];
     }
 
@@ -118,9 +149,9 @@ export default function ClubSchedule() {
   ////////////////////////////////////////////////////////////////////////////
   // 기록할 변수
   let dateMatrix = getCalendarDateMatrix();
-  let calendarCount = [];
+  let scheduleFromDate = [];
   for (let i = 0; i < 42; i++) {
-    calendarCount.push(0);
+    scheduleFromDate.push([]);
   }
   ////////////////////////////////////////////////////////////////////////////
 
@@ -138,101 +169,377 @@ export default function ClubSchedule() {
     setCurrentDate(nextMonth);
   };
 
+  // 일정리스트 창을 닫기 위한 함수
+  const onListClose = () => {
+    setSelectedStatus(false);
+  };
+
   return (
     <>
-      <div className="mx-auto p-[32px] w-[1326px]">
-        <div className="flex items-center justify-center mb-4 gap-[20px]">
-          <span
-            className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
-            onClick={goToPrevMonth}
-          >
-            chevron_left
-          </span>
-          <h2 className="text-h2 font-bold">
-            {`${currentDate.get("year")}.${String(
-              currentDate.get("month") + 1
-            ).padStart(2, "0")}`}
-          </h2>
-          <span
-            className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
-            onClick={goToNextMonth}
-          >
-            chevron_right
-          </span>
-        </div>
-        <div className="grid grid-cols-7">
-          {day_list.map((day) => (
-            <div key={day} className="text-center text-h5 text-midgray">
-              {day}
+      {/*
+      수정하기/등록하기 버튼 을 눌렀을 때, 캘린더를 수정/등록 화면으로 전부 대체
+      */}
+      {postStatus ? (
+        <ClubSchedulePost />
+      ) : (
+        <div className="mx-auto p-[32px] w-[1326px] relative">
+          {/* 날짜를 클릭 시 띄워 줄 그 날의 일정리스트 */}
+          {selectedStatus ? (
+            <div
+              className={"w-screen h-screen fixed z-40 pl-[380px]"}
+              onClick={onListClose}
+            >
+              <ClubDateScheduleList
+                scheduleFromDate={scheduleFromDate}
+                selectedDate={selectedDate}
+                selectedDateIndex={selectedDateIndex}
+                setSelectedStatus={setSelectedStatus}
+                getSchedules={getClubSchedules} // 동아리 일정 전체 재 랜더링을 위한 함수
+              />
             </div>
-          ))}
-        </div>
-        <div className={"text-gray2 border border-gray3"}>
-          {dateMatrix.map((week, i) => {
-            return (
-              // week 박스
-              <div
-                className={
-                  "h-[180px] grid grid-flow-row-dense grid-cols-7 grid-rows-5"
-                }
-                id={"week"}
-              >
-                {week.map((day, j) => {
-                  return (
-                    <>
-                      {/*date 표시 박스*/}
-                      <div
-                        className={`w-[180px] h-[36px] row-start-1 col-start-${
-                          j + 1
-                        } ${
-                          currentDate.get("year") === day.year &&
-                          currentDate.get("month") === day.month
-                            ? "text-black"
-                            : ""
-                        }
-                        `}
-                      >
-                        {day.date}
-                      </div>
-                      {/*일정 그려주기*/}
-                      {schedules.map((schedule, index) => {
-                        const startDateTime = dayjs(
-                          schedule.calendar_start_datetime
-                        );
-                        const endDateTime = dayjs(schedule.end_datetime);
-                        const scheduleLength = schedule.schedule_length;
+          ) : null}
 
-                        if (
-                          day.year === startDateTime.get("year") &&
-                          day.month === startDateTime.get("month") &&
-                          day.date === startDateTime.get("date")
-                        ) {
-                          for (let k = 0; k < scheduleLength; k++) {
-                            calendarCount[
-                              startDateTime.get("date") - 1 + k
-                            ] += 1;
-                          }
-
-                          return (
-                            <div
-                              className={`h-[36px] bg-gray col-start-${
-                                startDateTime.get("day") + 1
-                              } col-span-${scheduleLength}`}
-                            >
-                              {schedule.title}
-                            </div>
-                          );
-                        }
-                      })}
-                    </>
-                  );
-                })}
+          <div className="flex items-center justify-center mb-4 gap-[20px]">
+            <span
+              className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
+              onClick={goToPrevMonth}
+            >
+              chevron_left
+            </span>
+            <h2 className="text-h2 font-bold">
+              {`${currentDate.get("year")}.${String(
+                currentDate.get("month") + 1
+              ).padStart(2, "0")}`}
+            </h2>
+            <span
+              className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
+              onClick={goToNextMonth}
+            >
+              chevron_right
+            </span>
+          </div>
+          <div className="grid grid-cols-7">
+            {day_list.map((day) => (
+              <div key={day} className="text-center text-h5 text-midgray">
+                {day}
               </div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/**
+         화면 ( -1 ) ( 최하단의 화면 )
+         */}
+          <div
+            className={
+              "text-gray2 absolute grid grid-cols-7 border-t border-l border-gray3 -z-10"
+            }
+          >
+            {dateMatrix.map((week, i) => {
+              return week.map((day, j) => {
+                return (
+                  <div
+                    className={
+                      "w-[180px] h-[180px] border-b border-r border-gray3"
+                    }
+                  ></div>
+                );
+              });
+            })}
+          </div>
+
+          {/**
+         화면 ( 0 ) ( 가운데 화면 ) But, 일정버튼만 맨 위로 z-20( 2 )
+         */}
+          <div className={"text-gray2 absolute"}>
+            {dateMatrix.map((week, i) => {
+              return (
+                // week 박스
+                <div
+                  className={
+                    "h-[180px] grid grid-flow-row-dense grid-cols-7 grid-rows-20 overflow-hidden"
+                  }
+                  id={"week"}
+                >
+                  {week.map((day, j) => {
+                    return (
+                      <>
+                        {/*date 표시 박스*/}
+                        <div
+                          className={`w-[180px] h-[36px] p-[4px] row-start-1 col-start-${
+                            j + 1
+                          } ${
+                            currentDate.get("year") === day.year &&
+                            currentDate.get("month") === day.month
+                              ? "text-black"
+                              : ""
+                          }
+                        `}
+                        >
+                          <div className={"flex justify-between"}>
+                            <div></div>
+                            <div>{day.date}</div>
+                          </div>
+                        </div>
+
+                        {/*일정 그려주기*/}
+                        {schedules.map((schedule, index) => {
+                          const startDateTime = dayjs(
+                            schedule.calendar_start_datetime
+                          );
+                          const endDateTime = dayjs(schedule.end_datetime);
+                          const scheduleLength = schedule.schedule_length;
+
+                          if (
+                            day.year === startDateTime.get("year") &&
+                            day.month === startDateTime.get("month") &&
+                            day.date === startDateTime.get("date")
+                          ) {
+                            // 현재 날에 있는 일정들을 구하는 코드
+                            for (let k = 0; k < scheduleLength; k++) {
+                              scheduleFromDate[i * 7 + j + k].push(schedule);
+                            }
+                            // console.log(scheduleFromDate);
+
+                            return (
+                              <>
+                                <div
+                                  className={`m-[1px] z-20 h-[16px] ${
+                                    bg_colors[schedule.color]
+                                  } bg-opacity-50 cursor-pointer rounded-2xl pl-[10px] mx-[4px] col-start-${
+                                    startDateTime.get("day") + 1
+                                  } col-span-${scheduleLength}`}
+                                >
+                                  <div
+                                    className={"text-gray3 text-h7 font-[400]"}
+                                    onClick={() => {
+                                      if (count >= 0 && index === count) {
+                                        setCount(-1);
+                                      } else {
+                                        setCount(index);
+                                      }
+                                    }}
+                                  >
+                                    {schedule.title.length <= 14 ? (
+                                      <span>{schedule.title}</span>
+                                    ) : (
+                                      <span>
+                                        {schedule.title.slice(0, 13)}..
+                                      </span>
+                                    )}
+
+                                    {/*
+                                  {count === index ? (
+                                    <div className={`z-30`}>
+                                      <ScheduleDetaile
+                                        schedule={schedule}
+                                        setCount={setCount}
+                                        getSchedules={getClubSchedules}
+                                      />
+                                    </div>
+                                  ) : null}
+                                  */}
+                                  </div>
+                                </div>
+                                {count === index ? (
+                                  <div
+                                    className={`col-start-${
+                                      startDateTime.get("day") + 1
+                                    } col-span-${scheduleLength} flex justify-end`}
+                                  >
+                                    <ScheduleDetaile
+                                      type={"club"}
+                                      schedule={schedule}
+                                      setCount={setCount}
+                                      color={schedule.color}
+                                      getSchedules={getClubSchedules}
+                                    />
+                                  </div>
+                                ) : null}
+                              </>
+                            );
+                          }
+                        })}
+                      </>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+
+          {/**
+         화면 ( 1 ) ( 최상단의 화면 )
+         */}
+          <div className={"absolute grid grid-cols-7 z-10"}>
+            {dateMatrix.map((week, i) => {
+              return week.map((day, j) => {
+                return (
+                  <div
+                    className={`w-[180px] h-[180px] hover:bg-main_mid hover:opacity-20 ${
+                      selectedDate.get("year") === dateMatrix[i][j].year &&
+                      selectedDate.get("month") === dateMatrix[i][j].month &&
+                      selectedDate.get("date") === dateMatrix[i][j].date
+                        ? "bg-main_mid opacity-20"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedDate(
+                        dayjs(
+                          `${dateMatrix[i][j].year}-${
+                            dateMatrix[i][j].month + 1
+                          }-${dateMatrix[i][j].date}`
+                        )
+                      );
+                      /* 내일 이 부분을 이용해 당일 일정 화면을 띄우자.*/
+                      setSelectedStatus(true);
+                      setSelectedDateIndex(i * 7 + j);
+                    }}
+                  ></div>
+                );
+              });
+            })}
+          </div>
         </div>
-      </div>
-      <div className={"h-[160px]"} />
+      )}
+
+      {/* 하단 간격 */}
+      <div className={"h-[1700px]"} />
     </>
   );
 }
+
+const ClubDateScheduleList = (props) => {
+  const schedules = props.scheduleFromDate[props.selectedDateIndex];
+  const [count, setCount] = useState(-1);
+
+  console.log(props.as); // undefined
+
+  const onClose = () => {
+    props.setSelectedStatus(false);
+  };
+
+  return (
+    <div>
+      <div
+        className={
+          "text-black w-[500px] h-[700px] bg-gray3 p-[32px] rounded-[40px]"
+        }
+        onClick={(e) => {
+          e.stopPropagation(); // 부모요소까지 클릭이 전파되지 않도록 막기
+        }}
+      >
+        <div className={"h-[60px] text-center text-h2 font-[700]"}>
+          <span>{props.selectedDate.get("year")}년</span>{" "}
+          <span>{props.selectedDate.get("month") + 1}월</span>{" "}
+          <span>{props.selectedDate.get("date")}일</span>
+        </div>
+        <div
+          className="ml-[412px] top-[32px] absolute text-center flex flex-col justify-center rounded-full bg-[#C1C1C1] w-[20px] h-[20px] cursor-pointer hover:bg-red_error"
+          onClick={onClose}
+        >
+          <span className="material-symbols-outlined text-white text-[10px] font-thin">
+            close
+          </span>
+        </div>
+        <div
+          className={`w-full h-[6px] bg-main_mid rounded-full mx-auto`}
+        ></div>
+        <div className={"flex w-full mt-[40px]"}>
+          <div className={"w-[76px]"}>
+            <i className="fa-regular fa-calendar-check fa-2xl"></i>
+          </div>
+          <div>
+            {schedules.map((schedule, index) => {
+              const startDateTime = dayjs(schedule.start_datetime);
+              const endDateTime = dayjs(schedule.end_datetime);
+              const day_list = ["일", "월", "화", "수", "목", "금", "토"];
+
+              return (
+                <>
+                  <div
+                    className={"flex gap-[12px]"}
+                    onClick={() => {
+                      if (count >= 0 && index === count) {
+                        setCount(-1);
+                      } else {
+                        setCount(index);
+                      }
+                    }}
+                  >
+                    <div
+                      className={`w-[4px] h-[28px] ${
+                        bg_colors[schedule.color]
+                      } rounded-full`}
+                    ></div>
+                    <div>
+                      <p className={"text-h3 font-[600]"}>{schedule.title}</p>
+                      <p className={"text-h5 text-gray font-[400]"}>
+                        {startDateTime.get("month") + 1}월{" "}
+                        {startDateTime.get("date")}일{" "}
+                        {day_list[startDateTime.get("day")]}요일{" "}
+                        {startDateTime.get("hour")}:
+                        {startDateTime.get("minute")} ~{" "}
+                        {endDateTime.get("month") + 1}월{" "}
+                        {endDateTime.get("date")}일{" "}
+                        {day_list[endDateTime.get("day")]}
+                        요일 {endDateTime.get("hour")}:
+                        {endDateTime.get("minute")}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    {count === index ? (
+                      <ScheduleDetaile
+                        type={"club"}
+                        schedule={schedule}
+                        setCount={setCount}
+                        color={schedule.color}
+                        getSchedules={props.getSchedules}
+                      />
+                    ) : null}
+                  </div>
+                </>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ClubSchedulePost = () => {
+  return (
+    <div className={"w-[986px] h-[774px]"}>
+      <div>일정 등록</div>
+      <div className={"flex"}>
+        <div className={"w-[150px]"}>제목</div>
+        <div>b</div>
+      </div>
+      <div className={"flex"}>
+        <div className={"w-[150px]"}>제목</div>
+        <div>b</div>
+      </div>
+      <div className={"flex"}>
+        <div className={"w-[150px]"}>제목</div>
+        <div>b</div>
+      </div>
+      <div className={"flex"}>
+        <div className={"w-[150px]"}>제목</div>
+        <div>b</div>
+      </div>
+      <div className={"flex"}>
+        <div className={"w-[150px]"}>제목</div>
+        <div>b</div>
+      </div>
+      <div className={"flex"}>
+        <div className={"w-[150px]"}>제목</div>
+        <div>b</div>
+      </div>
+      <div className={"text-end"}>
+        <button>a</button>
+        <button>b</button>
+      </div>
+    </div>
+  );
+};

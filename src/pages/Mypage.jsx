@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import Login from "../pages/Login";
-import { sidebar_ui, userState, tokenState } from "../store";
+import { sidebar_ui, tokenState, userInfoState } from "../store";
 import {
   getAccessToken,
   setAccessToken,
   setRefreshToken,
 } from "../utils/token";
 import axios from "axios";
-import { baseUrl } from "../common/global";
 
 <link
   rel="stylesheet"
@@ -16,14 +15,14 @@ import { baseUrl } from "../common/global";
 />;
 export default function Mypage() {
   let [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
-  let [user, setUser] = useRecoilState(userState); //유저 정보
   let [token, setToken] = useRecoilState(tokenState); //토큰
+  let [userInfo] = useRecoilState(userInfoState); //유저 정보가 담긴 변수만 가져옴
 
   if (token) {
     //로그인 됐을 때만 보임
     return (
       <>
-        <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 pt-[25px] pb-[25px] ">
+        <div className="bg-background pl-[40px] pr-[40px] w-side fixed z-50 h-screen overflow-y-scroll top-0 right-0 pt-[25px] pb-[25px] ">
           <div className="flex justify-between">
             <span
               class="material-symbols-outlined cursor-pointer mt-auto mb-auto text-[30px] text-midgray"

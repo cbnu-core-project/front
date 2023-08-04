@@ -23,6 +23,15 @@ module.exports = {
       gray3: "#F4F4F4",
       white: "#FFFFFF",
 
+      // 스케줄에서 사용할, 무지개색 컬러
+      red: "#FF0000",
+      orange: "#ff8c00",
+      yellow: "#ffff00",
+      blue: "#0000ff",
+      green: "#008000",
+      indigo: "#4b0082",
+      purple: "#800080",
+
       // 그 외 추가 컬러
       // ...
     },

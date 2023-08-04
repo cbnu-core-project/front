@@ -1,16 +1,16 @@
 import { useRecoilState } from "recoil";
-import { sidebar_ui, userState } from "../store";
+import { sidebar_ui, userInfoState } from "../store";
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />;
 export default function MyInfo() {
   let [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
-  let [user, setUser] = useRecoilState(userState); //유저 정보
+  let [userInfo] = useRecoilState(userInfoState); //유저 정보가 담긴 변수만 가져옴
 
   return (
     <>
-      <div className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0 pt-[25px] pb-[45px] ">
+      <div className="bg-background pl-[40px] pr-[40px] w-side fixed z-50 h-screen overflow-y-scroll top-0 right-0 pt-[25px] pb-[45px] ">
         <div className="flex justify-between">
           <span
             class="material-symbols-outlined cursor-pointer mt-auto mb-auto text-[30px] text-midgray"
@@ -36,7 +36,9 @@ export default function MyInfo() {
         <div className=" relative">
           <div className="absolute ml-[220px] mt-[120px]">
             <div className="text-center flex flex-col justify-center rounded-full bg-darkgray w-[33px] h-[33px] cursor-pointer">
-              <span class="material-symbols-outlined text-background">photo_camera</span>
+              <span class="material-symbols-outlined text-background">
+                photo_camera
+              </span>
             </div>
           </div>
         </div>
@@ -95,9 +97,9 @@ export default function MyInfo() {
             </div>
 
             <div className="grid gap-[8px]">
-                <label for="tell" className="text-[20px] font-[500]">
-                  전화번호 <span className="text-sub">(필수)</span>
-                </label>
+              <label for="tell" className="text-[20px] font-[500]">
+                전화번호 <span className="text-sub">(필수)</span>
+              </label>
               <input
                 type="tel"
                 name="tell"
@@ -108,10 +110,10 @@ export default function MyInfo() {
             </div>
 
             <div className="grid gap-[8px]">
-                <label for="email" className="text-[20px] font-[500]">
-                  이메일 <span className="text-sub">(필수)</span>
-                </label>
-                
+              <label for="email" className="text-[20px] font-[500]">
+                이메일 <span className="text-sub">(필수)</span>
+              </label>
+
               <input
                 type="email"
                 name="email"
@@ -122,9 +124,9 @@ export default function MyInfo() {
             </div>
 
             <div className="grid gap-[8px]">
-                <label for="adress" className="text-[20px] font-[500]">
-                  주소
-                </label>
+              <label for="adress" className="text-[20px] font-[500]">
+                주소
+              </label>
               <input
                 type="text"
                 name="adress"
@@ -135,21 +137,34 @@ export default function MyInfo() {
 
             <div className="flex w-[406px] gap-[30px] ">
               <legend for="gender" className="text-[20px] font-[500] ">
-                성별 
+                성별
               </legend>
               <div className="grid content-center">
-              <div class="flex text-black text-[16px] gap-[10px] ">
-                <div class="flex gap-[4px]">
-                <input type="radio" name="gender" value="male" className="h-[20px] w-[20px] self-center"></input>
-                <label for="male" className="font-[400] ">남자</label>
-                </div>
+                <div class="flex text-black text-[16px] gap-[10px] ">
+                  <div class="flex gap-[4px]">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="male"
+                      className="h-[20px] w-[20px] self-center"
+                    ></input>
+                    <label for="male" className="font-[400] ">
+                      남자
+                    </label>
+                  </div>
 
-                <div class="flex gap-[4px]">
-                <input type="radio" name="gender" value="female" className="h-[20px] w-[20px] self-center"></input>
-                <label for="female" className="font-[400] ">여자</label>
+                  <div class="flex gap-[4px]">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="female"
+                      className="h-[20px] w-[20px] self-center"
+                    ></input>
+                    <label for="female" className="font-[400] ">
+                      여자
+                    </label>
+                  </div>
                 </div>
-                
-              </div>
               </div>
             </div>
 
@@ -160,10 +175,8 @@ export default function MyInfo() {
         </form>
       </div>
     </>
-
   );
 }
 
 //https://britny-no.tistory.com/21
 //이미지 업로드 관련 글
-
