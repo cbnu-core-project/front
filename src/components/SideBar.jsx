@@ -14,7 +14,7 @@ import {
   userSchedulesState,
   tokenState,
   sidebar_ui,
-  userState,
+  userInfoState,
 } from "../store";
 import { readAllClubs } from "../api/club";
 import ScheduleDetaile from "./ScheduleDetail";
@@ -38,16 +38,9 @@ export default function SideBar() {
   let [mytext, setMyText] = useState(true); //내가 작성한 글
   let [mystate, setMyState] = useState(false); //닉네임 옆 역삼각형 누를 때 생기는 창(모달)
 
-  let [user, setUser] = useRecoilState(userState); //유저 정보
+  let [user] = useRecoilState(userInfoState); //유저 정보
   let [token, setToken] = useRecoilState(tokenState); //토큰
   let [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
-
-  useEffect(() => {
-    //유저 정보 받아옴
-    axios.get("api/user/info").then((response) => {
-      setUser(response.data);
-    });
-  }, [token]);
 
   if (token) {
     //로그인 됐을 때만 보임

@@ -1,12 +1,12 @@
 import { useRecoilState } from "recoil";
-import { sidebar_ui, userState } from "../store";
+import { sidebar_ui, userInfoState } from "../store";
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />;
 export default function MyInfo() {
   let [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
-  let [user, setUser] = useRecoilState(userState); //유저 정보
+  let [userInfo] = useRecoilState(userInfoState); //유저 정보가 담긴 변수만 가져옴
 
   return (
     <>
