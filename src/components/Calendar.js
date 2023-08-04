@@ -67,7 +67,8 @@ const Calendar = () => {
   };
 
   return (
-    <div className="w-max-md mx-auto p-4 bg-white mt-[10px] rounded-3xl">
+    <>
+    <div className="w-max-md mx-auto p-4 bg-white mt-[10px] rounded-3xl h-[368px]">
       <div className="flex items-center justify-between mb-4">
         <span
           className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
@@ -138,7 +139,7 @@ const Calendar = () => {
                   // console.log("일정있는 날 선택");
                   return (
                     <div
-                      className={`absolute top-[5px] left-[20px] bg-main_mid rounded-full w-[5px] h-[5px]`}
+                      className={`absolute top-[5px] left-[30px] bg-main_mid rounded-full w-[5px] h-[5px]`}
                     />
                   );
                 }
@@ -149,16 +150,18 @@ const Calendar = () => {
           )
         )}
       </div>
-      <div className="mt-4 text-center font-bold text-h2 text-black">
+      {/* <div className="mt-4 text-center font-bold text-h2 text-black">
         {selectedStatus
           ? `${selectedDate.getFullYear()}년 ${
               selectedDate.getMonth() + 1
             }월 ${selectedDate.getDate()}일의 일정`
           : "None"}
-      </div>
-      <div className={"mt-[40px]"} />
-      {selectedStatus ? <SelectedDateSchedule /> : null}
+      </div> */}
+      
     </div>
+    <div className={"mt-[15px]"} />
+    {selectedStatus ? <SelectedDateSchedule /> : null}
+    </>
   );
 };
 
@@ -198,15 +201,15 @@ const SelectedDateSchedule = () => {
                     }
                   }}
                 >
-                  <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
-                    <div className="text-[10px] font-[200] text-white">
+                  <div className="w-[58px] h-[90px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
+                    <div className="text-[13px] font-[200] text-white">
                       {day_list[startDateTime.getDay()]}
                     </div>
-                    <div className="text-h6 font-[600]  text-white">
+                    <div className="text-h4 font-[600]  text-white">
                       {startDateTime.getDate()}
                     </div>
                   </div>
-                  <div className="flex flex-col w-full h-[80px] bg-background pl-[10px] pt-[10px] rounded-2xl">
+                  <div className="flex flex-col w-full h-[90px] ml-[5px] bg-white pl-[10px] pt-[10px] rounded-2xl">
                     <div className="text-black text-h7 font-[300]">
                       [{schedule.club_name}] {schedule.title}
                     </div>
