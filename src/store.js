@@ -82,11 +82,6 @@ export const sidebar_ui = atom({
   default: "standard", //로그인할 때 뜨는 사이드바 ui
 });
 
-export const userState = atom({
-  key: "userState",
-  default: [], //유저 정보
-});
-
 export const postStatusState = atom({
   key: "postStatusState",
   default: false,
