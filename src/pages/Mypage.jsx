@@ -48,7 +48,7 @@ export default function Mypage() {
             account_circle
           </span>
           <div className="flex justify-center mt-[7px] font-[700]">
-            {user.nickname}
+            {userInfo.nickname}
           </div>
           <div className="flex flex-col justify-between h-[790px]">
             <div className="grid place-content-center mt-[65px] gap-[25px]">
