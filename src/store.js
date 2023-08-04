@@ -74,7 +74,7 @@ export const addingImgState = atom({
 // 유저정보 필요할 때 이 state를 불러와서 사용하면 됨.
 export const userInfoState = atom({
   key: "userInfoState",
-  default: {},
+  default: { nickname: "", realname: "", clubs: [], interestes: [] },
 });
 
 export const sidebar_ui = atom({
