@@ -9,10 +9,6 @@ import {
 } from "../utils/token";
 import axios from "axios";
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>;
 export default function Mypage() {
   let [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
   let [token, setToken] = useRecoilState(tokenState); //토큰
