@@ -508,34 +508,125 @@ const ClubDateScheduleList = (props) => {
   );
 };
 
-const ClubSchedulePost = () => {
+const ClubSchedulePost = (props) => {
+  const [startDateTime, setStartDateTime] = useState(dayjs());
+  const [endDateTime, setEndDateTime] = useState(dayjs());
+
   return (
-    <div className={"w-[986px] h-[774px]"}>
-      <div>일정 등록</div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
+    <div
+      className={
+        "px-[40px] py-[32px] w-[986px] h-[774px] shadow-2xl rounded-3xl m-auto"
+      }
+    >
+      <div className={"text-h1"}>일정 등록</div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={"w-[150px] text-h2 flex flex-col justify-center"}
+          htmlFor={"title"}
+        >
+          제목
+        </label>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"title"}
+          name={"title"}
+          type={"text"}
+          placeholder={"제목을 입력 해 주세요."}
+          maxLength={26}
+        ></input>
+      </div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={"w-[150px] text-h2 flex flex-col justify-center"}
+          htmlFor={"startdatetime"}
+        >
+          날짜
+        </label>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"startdatetime"}
+          name={"startdatetime"}
+          type={"datetime-local"}
+          value={startDateTime.format("YYYY-MM-DDTHH:mm")}
+          onChange={(e) => setStartDateTime(dayjs(e.target.value))}
+        ></input>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"enddatetime"}
+          name={"enddatetime"}
+          type={"datetime-local"}
+          value={endDateTime.format("YYYY-MM-DDTHH:mm")}
+          onChange={(e) => setEndDateTime(dayjs(e.target.value))}
+        ></input>
+      </div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={"w-[150px] text-h2 flex flex-col justify-center"}
+          htmlFor={"place"}
+        >
+          장소
+        </label>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"place"}
+          name={"place"}
+          placeholder={"모이는 장소를 입력 해 주세요."}
+          value={""}
+        ></input>
+      </div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={"w-[150px] text-h2 flex flex-col justify-center"}
+          htmlFor={"member"}
+        >
+          참석자
+        </label>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"member"}
+          name={"member"}
+          placeholder={"참석자 이름"}
+          value={""}
+        ></input>
+      </div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={"w-[150px] text-h2 flex flex-col justify-center"}
+          htmlFor={"content"}
+        >
+          설명
+        </label>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"content"}
+          name={"content"}
+          placeholder={"일정에 대한 설명을 입력 해 주세요."}
+          value={""}
+        ></input>
+      </div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <div className={"w-[150px]"}>색상 선택</div>
         <div>b</div>
       </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
-      </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
-      </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
-      </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
-      </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
-      </div>
+      <div className={"h-[40px]"} />
       <div className={"text-end"}>
         <button>a</button>
         <button>b</button>
