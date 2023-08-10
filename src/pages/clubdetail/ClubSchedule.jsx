@@ -4,11 +4,13 @@ import {
   clubSchedulesState,
   postStatusState,
   clubScheduleSelectedStatusState,
+  updateScheduleState,
+  userInfoState,
 } from "../../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import ScheduleDetaile from "../../components/ScheduleDetail";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as dayjs from "dayjs";
 import { bg_colors } from "../../common/colors";
 import "./ClubSchedule.css";
@@ -180,7 +182,9 @@ export default function ClubSchedule() {
       수정하기/등록하기 버튼 을 눌렀을 때, 캘린더를 수정/등록 화면으로 전부 대체
       */}
       {postStatus ? (
-        <ClubSchedulePost />
+        <ClubSchedulePostAndPut
+          getSchedules={getClubSchedules} // 동아리 일정 전체 재 랜더링을 위한 함수
+        />
       ) : (
         <div className="mx-auto p-[32px] w-[1326px] relative">
           {/* 날짜를 클릭 시 띄워 줄 그 날의 일정리스트 */}
@@ -305,7 +309,7 @@ export default function ClubSchedule() {
                                 <div
                                   className={`m-[1px] z-20 h-[16px] ${
                                     bg_colors[schedule.color]
-                                  } bg-opacity-50 cursor-pointer rounded-2xl pl-[10px] mx-[4px] col-start-${
+                                  } cursor-pointer rounded-2xl pl-[10px] mx-[4px] col-start-${
                                     startDateTime.get("day") + 1
                                   } col-span-${scheduleLength}`}
                                 >
@@ -403,7 +407,11 @@ export default function ClubSchedule() {
       )}
 
       {/* 하단 간격 */}
-      <div className={"h-[1700px]"} />
+      {postStatus ? (
+        <div className={"h-[100px]"} />
+      ) : (
+        <div className={"h-[1300px]"} />
+      )}
     </>
   );
 }
@@ -472,7 +480,9 @@ const ClubDateScheduleList = (props) => {
                       } rounded-full`}
                     ></div>
                     <div>
-                      <p className={"text-h3 font-[600]"}>{schedule.title}</p>
+                      <p className={"text-h3 font-[600] w-[360px]"}>
+                        {schedule.title}
+                      </p>
                       <p className={"text-h5 text-gray font-[400]"}>
                         {startDateTime.get("month") + 1}월{" "}
                         {startDateTime.get("date")}일{" "}
@@ -508,38 +518,347 @@ const ClubDateScheduleList = (props) => {
   );
 };
 
-const ClubSchedulePost = () => {
+const ClubSchedulePostAndPut = (props) => {
+  const [postStatus, setPostStatus] = useRecoilState(postStatusState);
+  const [updateSchedule, setUpdateSchedule] =
+    useRecoilState(updateScheduleState);
+  const [users, setUsers] = useState([]);
+  const [userInfo] = useRecoilState(userInfoState);
+
+  useEffect(() => {
+    // 유저 정보 리스트 불러오기
+    axios
+      .post("/api/user/info/user_objid_list", {
+        users: updateSchedule.users,
+      })
+      .then((res) => {
+        /* 여기 작업하다가 말음 유저정보 불러와서 users state에 넣어주면 될듯 그리고 출력*/
+        setUsers(res.data);
+      });
+  }, []);
+
+  const changeColor = (color) => {
+    let copy = { ...updateSchedule };
+    copy.color = color;
+    setUpdateSchedule(copy);
+  };
+
+  const handleSubmit = () => {
+    if (postStatus === "post") {
+      return false;
+    } else if (postStatus === "put") {
+      axios
+        .put(
+          `/api/user/schedule/${updateSchedule.relative_schedule_unique_id}`,
+          {
+            user_objid: userInfo._id,
+            user_unique_id: userInfo.unique_id,
+            realname: userInfo.realname,
+            email: userInfo.email,
+            club_objid: updateSchedule.club_objid,
+            club_name: updateSchedule.club_name,
+            title: updateSchedule.title,
+            content: updateSchedule.content,
+            place: updateSchedule.place,
+            users: updateSchedule.users,
+            color: updateSchedule.color,
+            start_datetime: updateSchedule.start_datetime,
+            end_datetime: updateSchedule.end_datetime,
+          }
+        )
+        .then((res) => {
+          props.getSchedules();
+          setPostStatus(false);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   return (
-    <div className={"w-[986px] h-[774px]"}>
-      <div>일정 등록</div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
+    <form
+      className={"px-[40px] py-[32px] w-[986px] shadow-2xl rounded-3xl m-auto"}
+    >
+      <div className={"text-h1"}>일정 등록</div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={
+            "w-[150px] text-h2 font-[500] flex flex-col justify-center"
+          }
+          htmlFor={"title"}
+        >
+          제목
+        </label>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"title"}
+          name={"title"}
+          type={"text"}
+          placeholder={"제목을 입력 해 주세요."}
+          value={updateSchedule.title}
+          onChange={(e) => {
+            if (e.target.value.length <= 24) {
+              let copy = { ...updateSchedule };
+              copy.title = e.target.value;
+              setUpdateSchedule(copy);
+            }
+          }}
+        ></input>
       </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={
+            "w-[150px] text-h2 font-[500] flex flex-col justify-center"
+          }
+          htmlFor={"startdatetime"}
+        >
+          날짜
+        </label>
+        <div>
+          <input
+            className={"bg-gray3 px-[14px] py-[10px] text-h5 rounded-xl"}
+            id={"startdatetime"}
+            name={"startdatetime"}
+            type={"datetime-local"}
+            value={dayjs(updateSchedule.start_datetime).format(
+              "YYYY-MM-DDTHH:mm"
+            )}
+            onChange={(e) => {
+              let copy = { ...updateSchedule };
+              copy.start_datetime = e.target.value;
+              setUpdateSchedule(copy);
+            }}
+          ></input>{" "}
+          ~{" "}
+          <input
+            className={"bg-gray3 px-[14px] py-[10px] text-h5 rounded-xl"}
+            id={"enddatetime"}
+            name={"enddatetime"}
+            type={"datetime-local"}
+            value={dayjs(updateSchedule.end_datetime).format(
+              "YYYY-MM-DDTHH:mm"
+            )}
+            onChange={(e) => {
+              let copy = { ...updateSchedule };
+              copy.end_datetime = e.target.value;
+              setUpdateSchedule(copy);
+            }}
+          ></input>
+        </div>
       </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={
+            "w-[150px] text-h2 font-[500] flex flex-col justify-center"
+          }
+          htmlFor={"place"}
+        >
+          장소
+        </label>
+        <input
+          className={
+            "bg-gray3 w-[756px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"place"}
+          name={"place"}
+          placeholder={"모이는 장소를 입력 해 주세요."}
+          value={updateSchedule.place}
+          onChange={(e) => {
+            if (e.target.value.length <= 15) {
+              let copy = { ...updateSchedule };
+              copy.place = e.target.value;
+              setUpdateSchedule(copy);
+            }
+          }}
+        ></input>
       </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <label
+          className={
+            "w-[150px] text-h2 font-[500] flex flex-col justify-center"
+          }
+        >
+          참석자
+        </label>
+        <div
+          className={"grid grid-cols-8 gap-[3px] h-[52px] overflow-y-scroll"}
+        >
+          {users.map((user) => {
+            return (
+              <div className={"flex gap-[5px]"}>
+                <img
+                  src={user.profile_image_url}
+                  alt={"profile"}
+                  className={"rounded-full w-[24px] h-[24px]"}
+                />
+                {user.realname.length <= 3 ? (
+                  <div className={"pt-[2px]"}>{user.realname}</div>
+                ) : (
+                  <div className={"pt-[2px]"}>
+                    {user.realname.slice(0, 2)}..
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
+      <div className={"h-[40px]"} />
       <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
+        <label
+          className={
+            "w-[150px] text-h2 font-[500] flex flex-col justify-center h-[48px]"
+          }
+          htmlFor={"content"}
+        >
+          설명
+        </label>
+        <textarea
+          className={
+            "bg-gray3 w-[756px] h-[240px] px-[14px] py-[10px] text-h5 rounded-xl"
+          }
+          id={"content"}
+          name={"content"}
+          placeholder={"일정에 대한 설명을 입력 해 주세요."}
+          value={updateSchedule.content}
+          onChange={(e) => {
+            if (e.target.value.length <= 1000) {
+              let copy = { ...updateSchedule };
+              copy.content = e.target.value;
+              setUpdateSchedule(copy);
+            }
+          }}
+        ></textarea>
       </div>
-      <div className={"flex"}>
-        <div className={"w-[150px]"}>제목</div>
-        <div>b</div>
+      <div className={"h-[40px]"} />
+      <div className={"flex h-[48px]"}>
+        <div className={"w-[150px] text-h2 font-[500]"}>색상 선택</div>
+        <div className={"flex gap-[20px]"}>
+          <div
+            className={
+              "w-[50px] h-[50px] rounded-full bg-red hover:scale-125 flex flex-col justify-center text-center"
+            }
+            onClick={() => {
+              changeColor("red");
+            }}
+          >
+            {updateSchedule.color === "red" ? (
+              <i className="fa-solid fa-check fa-2xl text-black"></i>
+            ) : null}
+          </div>
+          <div
+            className={
+              "w-[50px] h-[50px] rounded-full bg-orange hover:scale-125 flex flex-col justify-center text-center"
+            }
+            onClick={() => {
+              changeColor("orange");
+            }}
+          >
+            {updateSchedule.color === "orange" ? (
+              <i className="fa-solid fa-check fa-2xl text-black"></i>
+            ) : null}
+          </div>
+          <div
+            className={
+              "w-[50px] h-[50px] rounded-full bg-yellow hover:scale-125 flex flex-col justify-center text-center"
+            }
+            onClick={() => {
+              changeColor("yellow");
+            }}
+          >
+            {updateSchedule.color === "yellow" ? (
+              <i className="fa-solid fa-check fa-2xl text-black"></i>
+            ) : null}
+          </div>
+          <div
+            className={
+              "w-[50px] h-[50px] rounded-full bg-green hover:scale-125 flex flex-col justify-center text-center"
+            }
+            onClick={() => {
+              changeColor("green");
+            }}
+          >
+            {updateSchedule.color === "green" ? (
+              <i className="fa-solid fa-check fa-2xl text-black"></i>
+            ) : null}
+          </div>
+          <div
+            className={
+              "w-[50px] h-[50px] rounded-full bg-blue hover:scale-125 flex flex-col justify-center text-center"
+            }
+            onClick={() => {
+              changeColor("blue");
+            }}
+          >
+            {updateSchedule.color === "blue" ? (
+              <i className="fa-solid fa-check fa-2xl text-black"></i>
+            ) : null}
+          </div>
+          <div
+            className={
+              "w-[50px] h-[50px] rounded-full bg-indigo hover:scale-125 flex flex-col justify-center text-center"
+            }
+            onClick={() => {
+              changeColor("indigo");
+            }}
+          >
+            {updateSchedule.color === "indigo" ? (
+              <i className="fa-solid fa-check fa-2xl text-black"></i>
+            ) : null}
+          </div>
+          <div
+            className={
+              "w-[50px] h-[50px] rounded-full bg-purple hover:scale-125 flex flex-col justify-center text-center"
+            }
+            onClick={() => {
+              changeColor("purple");
+            }}
+          >
+            {updateSchedule.color === "purple" ? (
+              <i className="fa-solid fa-check fa-2xl text-black"></i>
+            ) : null}
+          </div>
+        </div>
       </div>
+      <div className={"h-[40px]"} />
       <div className={"text-end"}>
-        <button>a</button>
-        <button>b</button>
+        <button
+          className={
+            "w-[87px] h-[40px] text-h5 text-center text-white bg-sub rounded"
+          }
+          type={"button"}
+          onClick={handleSubmit}
+        >
+          저장하기
+        </button>
+        <button
+          className={
+            "ml-[10px] w-[87px] h-[40px] text-h5 text-center border border-line rounded"
+          }
+          type={"button"}
+          onClick={() => {
+            setPostStatus(false);
+            setUpdateSchedule({
+              club_objid: "",
+              club_name: "",
+              title: "",
+              start_datetime: dayjs(),
+              end_datetime: dayjs(),
+              place: "",
+              users: [],
+              content: "",
+              color: "red",
+            });
+          }}
+        >
+          취소
+        </button>
       </div>
-    </div>
+    </form>
   );
 };

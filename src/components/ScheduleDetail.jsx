@@ -7,12 +7,18 @@ import {
 import { bg_colors, text_colors } from "../common/colors";
 import "./ScheduleDetail.css";
 import { useRecoilState } from "recoil";
-import { clubScheduleSelectedStatusState, postStatusState } from "../store";
+import {
+  clubScheduleSelectedStatusState,
+  postStatusState,
+  updateScheduleState,
+} from "../store";
 
 const ScheduleDetaile = (props) => {
   const [users, setUsers] = useState([]);
   const [authority, setAuthority] = useState(5);
   const [postStatus, setPostStatus] = useRecoilState(postStatusState); // 글 작성/수정 컴포넌트
+  const [updateSchedule, setUpdateSchedule] =
+    useRecoilState(updateScheduleState);
   const [clubScheduleSelectedStatus, setClubScheduleSelectedStatus] =
     useRecoilState(clubScheduleSelectedStatusState);
 
@@ -35,11 +41,12 @@ const ScheduleDetaile = (props) => {
       });
   }, []);
 
-  const handleUpdate = () => {
+  const clickUpdate = () => {
     // setState (수정하기 모달창 띄워주는 여부)
-    setPostStatus(true);
+    setUpdateSchedule(props.schedule);
+    setPostStatus("put");
     props.setCount(-1);
-    setClubScheduleSelectedStatus(true);
+    setClubScheduleSelectedStatus(false);
   };
 
   const handleDelete = () => {
@@ -68,7 +75,7 @@ const ScheduleDetaile = (props) => {
       <div
         className={`w-[284px] h-[4px] ${
           bg_colors[props.color]
-        } bg-opacity-50 rounded-full mx-auto`}
+        } rounded-full mx-auto`}
       ></div>
       <div className={"h-[24px]"} />
       <div className={"px-[24px]"}>
@@ -77,7 +84,7 @@ const ScheduleDetaile = (props) => {
             <span
               className={`material-symbols-outlined ${
                 text_colors[props.color]
-              } text-opacity-50`}
+              }`}
             >
               event
             </span>
@@ -117,7 +124,7 @@ const ScheduleDetaile = (props) => {
             <span
               className={`material-symbols-outlined ${
                 text_colors[props.color]
-              } text-opacity-50`}
+              }`}
             >
               location_on
             </span>
@@ -132,7 +139,7 @@ const ScheduleDetaile = (props) => {
             <span
               className={`material-symbols-outlined ${
                 text_colors[props.color]
-              } text-opacity-50`}
+              }`}
             >
               person
             </span>
@@ -146,16 +153,18 @@ const ScheduleDetaile = (props) => {
         >
           {users.map((user) => {
             return (
-              <div className={"flex"}>
+              <div className={"flex gap-[3px]"}>
                 <img
                   src={user.profile_image_url}
                   alt={"profile"}
                   className={"rounded-full w-[24px] h-[24px]"}
                 />
                 {user.realname.length <= 3 ? (
-                  <span>{user.realname}</span>
+                  <div className={"pt-[2px] text-h6"}>{user.realname}</div>
                 ) : (
-                  <span>{user.realname.slice(0, 2)}..</span>
+                  <div className={"pt-[2px] text-h6"}>
+                    {user.realname.slice(0, 2)}..
+                  </div>
                 )}
               </div>
             );
@@ -167,7 +176,7 @@ const ScheduleDetaile = (props) => {
             <span
               className={`material-symbols-outlined ${
                 text_colors[props.color]
-              } text-opacity-50`}
+              }`}
             >
               format_align_left
             </span>
@@ -190,7 +199,7 @@ const ScheduleDetaile = (props) => {
               className={
                 "text-h7 text-white font-[400] bg-sub w-[72px] h-[32px] rounded-xl transition hover:scale-110"
               }
-              onClick={handleUpdate}
+              onClick={clickUpdate}
             >
               수정하기
             </button>

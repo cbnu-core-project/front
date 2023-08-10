@@ -21,12 +21,6 @@ import ScheduleDetaile from "./ScheduleDetail";
 
 axios.defaults.baseURL = baseUrl;
 
-//google icon 불러오는 링크
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>;
-
 export default function SideBar() {
   const navigate = useNavigate();
   //사이드바 세부적인 열기/닫기 기능 구현을 위한 변수들, 구역마다 함수로 빼놓음
