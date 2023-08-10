@@ -87,6 +87,21 @@ export const postStatusState = atom({
   default: false,
 });
 
+export const updateScheduleState = atom({
+  key: "updateScheduleState",
+  default: {
+    club_objid: "",
+    club_name: "",
+    title: "",
+    start_datetime: dayjs(),
+    end_datetime: dayjs(),
+    place: "",
+    users: [],
+    content: "",
+    color: "red",
+  }, // 수정할 기존의 스케줄 데이터
+});
+
 export const clubScheduleSelectedStatusState = atom({
   key: "clubScheduleSelectedStatus",
   default: false,
