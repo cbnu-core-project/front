@@ -14,6 +14,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as dayjs from "dayjs";
 import { bg_colors } from "../../common/colors";
 import "./ClubSchedule.css";
+import Swal from "sweetalert2";
+import { commonErrorAlert } from "../../alerts/commonAlert";
 
 export default function ClubSchedule() {
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -25,6 +27,9 @@ export default function ClubSchedule() {
   const [selectedStatus, setSelectedStatus] = useRecoilState(
     clubScheduleSelectedStatusState
   );
+  const [updateSchedule, setUpdateSchedule] =
+    useRecoilState(updateScheduleState);
+
   const [count, setCount] = useState(-1);
   const [postStatus, setPostStatus] = useRecoilState(postStatusState);
   const { id } = useParams();
@@ -176,6 +181,23 @@ export default function ClubSchedule() {
     setSelectedStatus(false);
   };
 
+  const clickPost = () => {
+    setUpdateSchedule({
+      club_objid: id,
+      club_name: "",
+      title: "",
+      start_datetime: dayjs(),
+      end_datetime: dayjs(),
+      place: "",
+      users: [],
+      content: "",
+      color: "red",
+    });
+    setPostStatus("post");
+    setCount(-1);
+    setSelectedStatus(false);
+  };
+
   return (
     <>
       {/*
@@ -203,28 +225,60 @@ export default function ClubSchedule() {
             </div>
           ) : null}
 
-          <div className="flex items-center justify-center mb-4 gap-[20px]">
-            <span
-              className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
-              onClick={goToPrevMonth}
+          <div className="flex justify-center gap-[20px]">
+            <div
+              className={
+                "w-[32px] h-[32px] text-center border border-gray2 rounded flex flex-col justify-center"
+              }
             >
-              chevron_left
-            </span>
+              <span
+                className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
+                onClick={goToPrevMonth}
+              >
+                chevron_left
+              </span>
+            </div>
             <h2 className="text-h2 font-bold">
               {`${currentDate.get("year")}.${String(
                 currentDate.get("month") + 1
               ).padStart(2, "0")}`}
             </h2>
-            <span
-              className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
-              onClick={goToNextMonth}
+            <div
+              className={
+                "w-[32px] h-[32px] text-center border border-gray2 rounded flex flex-col justify-center"
+              }
             >
-              chevron_right
-            </span>
+              <span
+                className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
+                onClick={goToNextMonth}
+              >
+                chevron_right
+              </span>
+            </div>
+            <button
+              type={"button"}
+              className={
+                "absolute py-[8px] px-[12px] right-[48px] flex text-white bg-sub rounded-full"
+              }
+              onClick={clickPost}
+            >
+              <div className={"h-[24px] flex flex-col justify-center"}>
+                <span className="material-symbols-outlined">add</span>
+              </div>
+              <div
+                className={"h-[24px] flex flex-col justify-center font-[500]"}
+              >
+                <span>일정 등록하기</span>
+              </div>
+            </button>
           </div>
-          <div className="grid grid-cols-7">
+          <div className={"h-[20px]"} />
+          <div className="grid grid-cols-7 border-t border-l border-gray3">
             {day_list.map((day) => (
-              <div key={day} className="text-center text-h5 text-midgray">
+              <div
+                key={day}
+                className="text-center text-h5 text-midgray border-b border-r border-gray3"
+              >
                 {day}
               </div>
             ))}
@@ -281,7 +335,7 @@ export default function ClubSchedule() {
                         >
                           <div className={"flex justify-between"}>
                             <div></div>
-                            <div>{day.date}</div>
+                            <div className={"pr-[10px]"}>{day.date}</div>
                           </div>
                         </div>
 
@@ -543,9 +597,33 @@ const ClubSchedulePostAndPut = (props) => {
     setUpdateSchedule(copy);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (postStatus === "post") {
-      return false;
+      axios
+        .post(`/api/user/schedule`, {
+          user_objid: userInfo._id,
+          user_unique_id: userInfo.unique_id,
+          realname: userInfo.realname,
+          email: userInfo.email,
+          club_objid: updateSchedule.club_objid,
+          club_name: updateSchedule.club_name,
+          title: updateSchedule.title,
+          content: updateSchedule.content,
+          place: updateSchedule.place,
+          users: updateSchedule.users,
+          color: updateSchedule.color,
+          start_datetime: updateSchedule.start_datetime,
+          end_datetime: updateSchedule.end_datetime,
+        })
+        .then((res) => {
+          props.getSchedules();
+          setPostStatus(false);
+        })
+        .catch((err) => {
+          commonErrorAlert(err, "에러");
+        });
     } else if (postStatus === "put") {
       axios
         .put(
@@ -570,15 +648,18 @@ const ClubSchedulePostAndPut = (props) => {
           props.getSchedules();
           setPostStatus(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          commonErrorAlert(err, "에러");
+        });
     }
   };
 
   return (
     <form
       className={"px-[40px] py-[32px] w-[986px] shadow-2xl rounded-3xl m-auto"}
+      onSubmit={handleSubmit}
     >
-      <div className={"text-h1"}>일정 등록</div>
+      <div className={"text-h1 font-[700] text-sub"}>일정 등록</div>
       <div className={"h-[40px]"} />
       <div className={"flex h-[48px]"}>
         <label
@@ -598,6 +679,7 @@ const ClubSchedulePostAndPut = (props) => {
           type={"text"}
           placeholder={"제목을 입력 해 주세요."}
           value={updateSchedule.title}
+          required
           onChange={(e) => {
             if (e.target.value.length <= 24) {
               let copy = { ...updateSchedule };
@@ -631,6 +713,7 @@ const ClubSchedulePostAndPut = (props) => {
               copy.start_datetime = e.target.value;
               setUpdateSchedule(copy);
             }}
+            required
           ></input>{" "}
           ~{" "}
           <input
@@ -646,6 +729,7 @@ const ClubSchedulePostAndPut = (props) => {
               copy.end_datetime = e.target.value;
               setUpdateSchedule(copy);
             }}
+            required
           ></input>
         </div>
       </div>
@@ -674,6 +758,7 @@ const ClubSchedulePostAndPut = (props) => {
               setUpdateSchedule(copy);
             }
           }}
+          required
         ></input>
       </div>
       <div className={"h-[40px]"} />
@@ -733,6 +818,7 @@ const ClubSchedulePostAndPut = (props) => {
               setUpdateSchedule(copy);
             }
           }}
+          required
         ></textarea>
       </div>
       <div className={"h-[40px]"} />
@@ -831,8 +917,7 @@ const ClubSchedulePostAndPut = (props) => {
           className={
             "w-[87px] h-[40px] text-h5 text-center text-white bg-sub rounded"
           }
-          type={"button"}
-          onClick={handleSubmit}
+          type={"submit"}
         >
           저장하기
         </button>

@@ -2,7 +2,7 @@ import HomeClubList from "../components/home/HomeClubList";
 import HomePromotionList from "../components/home/HomePromotionList";
 import HomeNoticeList from "../components/home/HomeNoticeList";
 import { useEffect } from "react";
-
+import { baseUrl } from "../common/global";
 
 export default function Home() {
   useEffect(() => {
