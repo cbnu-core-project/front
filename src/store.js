@@ -91,8 +91,3 @@ export const clubScheduleSelectedStatusState = atom({
   key: "clubScheduleSelectedStatus",
   default: false,
 });
-
-export const userInfoState = atom({
-  key : "userInfoState",
-  default: false,
-});

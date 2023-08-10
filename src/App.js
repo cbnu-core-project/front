@@ -74,6 +74,7 @@ function App() {
           console.log(err);
           setRefreshToken();
           setUserInfo({});
+          setToken("");
         });
     }
   }
