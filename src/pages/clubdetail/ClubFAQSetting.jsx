@@ -60,16 +60,18 @@ export default function ClubFAQSetting() {
           placeholder={" ex) 문의 가능한 링크를 등록해주세요. (오픈채팅방 등)"}
           value={post.open_url}
           onChange={(e)=>{
-            let copy = {...post}
-            copy.open_url = e.target.value
-            setPost(copy)
+            if(e.target.value.length <= 100){
+              let copy = {...post}
+              copy.open_url = e.target.value
+              setPost(copy)
+            }
           }}
         />
         <div className={'mt-10 font-[Pv] font-bold text-h3'}>질문 & 답변 추가
           <button className={'w-[36px] h-[36px] ml-3 bg-gray2 rounded-full font-[Pv] font-bold text-darkgray'}
             onClick={() => {
               let copy = {...post}
-              copy.faqs.push({question: "", answer: ""});
+              copy.faqs.push({question: "", answer: ""}); //빈칸넣는거임
               setPost(copy)
             }}
           > + </button>
@@ -124,7 +126,7 @@ function QnaBox({ idx, faq, post, setPost}) {
       <button className={'mt-5 w-[60px] px-[8px] py-[12px] text-h7 font-[Pv] font-bold ml-[1166px] bg-gray rounded-md text-white'}
         onClick={() => {
           let copy = {...post}
-              copy.faqs.splice(idx, 1);
+              copy.faqs.splice(idx, 1); //블럭 삭제
               setPost(copy)
         }}>삭제</button>
     </>

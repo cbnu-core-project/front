@@ -40,7 +40,7 @@ export default function ClubFAQ() {
         }
       >
         자주 묻는 질문
-        {authorityOfClub === 4 && token ? (
+        {authorityOfClub <= 4 && token ? (
           <button
             className={
               "w-[155px] h-[40px] mt-2 font-[Pv] text-[20px] font-bold bg-sub text-white rounded-md mr-[64px]"
@@ -58,7 +58,13 @@ export default function ClubFAQ() {
       <div className={"mt-[36px]"} />
 
       {/* 데이터 자체가 없을 경우 빈 화면 띄워주기 */}
-      {post._id === undefined ? null : (
+      {post.faqs.length === 0 ? 
+        <div className={'mt-[150px]'}>
+          <img src = {"/images/금지표시.jpg"}
+              alt="img"
+              className={'rounded-lg h-[150px] ml-[628px]'}/>
+          <div className={'ml-[530px] mt-12 w-[360px] px-[24px] py-[32px] font-[Pv] rounded-md font-bold text-center text-h5 text-white bg-sub '}> 아직 FAQ가 생성되지 않았습니다! <br/> FAQ설정을 통해, 동아리 FAQ를 만들어주세요.</div>
+        </div> : (
         <div>
           <ul
             className={
@@ -106,7 +112,7 @@ export default function ClubFAQ() {
           </ul>
           {token ? (
             <a
-              href={post.open_url}
+              href={post.open_url} //<아무것도 없으면로컬호스트쪽으로
               target="blank"
               className={
                 "flex ml-[628px] justify-center mt-8 px-[12px] py-[8px] w-[170px] text-h3 text-white font-[Pv] bg-sub rounded-md "
