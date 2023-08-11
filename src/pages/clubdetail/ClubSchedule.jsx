@@ -576,8 +576,9 @@ const ClubSchedulePostAndPut = (props) => {
   const [postStatus, setPostStatus] = useRecoilState(postStatusState);
   const [updateSchedule, setUpdateSchedule] =
     useRecoilState(updateScheduleState);
-  const [users, setUsers] = useState([]);
+  const [userInfos, setUserInfos] = useState([]);
   const [userInfo] = useRecoilState(userInfoState);
+  const [addBtn, setAddBtn] = useState(false);
 
   useEffect(() => {
     // 유저 정보 리스트 불러오기
@@ -587,7 +588,7 @@ const ClubSchedulePostAndPut = (props) => {
       })
       .then((res) => {
         /* 여기 작업하다가 말음 유저정보 불러와서 users state에 넣어주면 될듯 그리고 출력*/
-        setUsers(res.data);
+        setUserInfos(res.data);
       });
   }, []);
 
@@ -652,6 +653,34 @@ const ClubSchedulePostAndPut = (props) => {
           commonErrorAlert(err, "에러");
         });
     }
+  };
+
+  const handleUserAdd = (user_objid) => {
+    for (let i = 0; i < updateSchedule.users.length; i++) {
+      if (updateSchedule.users[i] === user_objid) {
+        Swal.fire({
+          title: "중복 발생",
+          text: `이미 참석자 목록에 있습니다.`,
+          icon: "error",
+          confirmButtonText: "확인",
+        });
+        return false;
+      }
+    }
+    console.log("hllo");
+
+    let copy = { ...updateSchedule };
+    copy.users = [...copy.users, user_objid];
+    setUpdateSchedule(copy);
+
+    // 유저 정보 리스트 불러오기
+    axios
+      .post("/api/user/info/user_objid_list", {
+        users: copy.users,
+      })
+      .then((res) => {
+        setUserInfos(res.data);
+      });
   };
 
   return (
@@ -773,7 +802,7 @@ const ClubSchedulePostAndPut = (props) => {
         <div
           className={"grid grid-cols-8 gap-[3px] h-[52px] overflow-y-scroll"}
         >
-          {users.map((user) => {
+          {userInfos.map((user) => {
             return (
               <div className={"flex gap-[5px]"}>
                 <img
@@ -791,6 +820,49 @@ const ClubSchedulePostAndPut = (props) => {
               </div>
             );
           })}
+          <div>
+            <div
+              className={
+                "h-[28px] w-[28px] text-center flex flex-col justify-center border-2 border-darkgray rounded-full ml-[6px] cursor-pointer"
+              }
+              // onClick={() => handleUserAdd("64bb9cb3e5723a73730bfb63")}
+              onClick={() => setAddBtn(!addBtn)}
+            >
+              <div className="material-symbols-outlined">add</div>
+            </div>
+            {addBtn ? (
+              <div
+                className={
+                  "absolute mt-[16px] h-[300px] bg-gray3 rounded-xl shadow-xl py-[12px] overflow-y-scroll"
+                }
+              >
+                {userInfos.map((user) => {
+                  return (
+                    <div
+                      className={
+                        "flex flex-col justify-center gap-[5px] w-[120px] h-[40px] px-[4px] hover:bg-gray2"
+                      }
+                    >
+                      <div className={"flex"}>
+                        <img
+                          src={user.profile_image_url}
+                          alt={"profile"}
+                          className={"rounded-full w-[24px] h-[24px]"}
+                        />
+                        {user.realname.length <= 5 ? (
+                          <div className={"pt-[2px]"}>{user.realname}</div>
+                        ) : (
+                          <div className={"pt-[2px]"}>
+                            {user.realname.slice(0, 4)}..
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
       <div className={"h-[40px]"} />
