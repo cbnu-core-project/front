@@ -37,7 +37,7 @@ export default function ClubFAQ() {
     <>
       <div className={"text-[32px] font-bold text-sub flex ml-[628px] justify-between"}>
         자주 묻는 질문
-        {authorityOfClub === 4 && token
+        {authorityOfClub <= 2 && token
         ? <button className={'w-[155px] h-[40px] mt-2 font-[Pv] text-[20px] font-bold bg-sub text-white rounded-md mr-[64px]'}
           onClick={() => {
             navigate("./clubfaqsetting");
