@@ -14,6 +14,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as dayjs from "dayjs";
 import { bg_colors } from "../../common/colors";
 import "./ClubSchedule.css";
+import Swal from "sweetalert2";
+import { commonErrorAlert } from "../../alerts/commonAlert";
 
 export default function ClubSchedule() {
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -25,6 +27,9 @@ export default function ClubSchedule() {
   const [selectedStatus, setSelectedStatus] = useRecoilState(
     clubScheduleSelectedStatusState
   );
+  const [updateSchedule, setUpdateSchedule] =
+    useRecoilState(updateScheduleState);
+
   const [count, setCount] = useState(-1);
   const [postStatus, setPostStatus] = useRecoilState(postStatusState);
   const { id } = useParams();
@@ -176,6 +181,23 @@ export default function ClubSchedule() {
     setSelectedStatus(false);
   };
 
+  const clickPost = () => {
+    setUpdateSchedule({
+      club_objid: id,
+      club_name: "",
+      title: "",
+      start_datetime: dayjs(),
+      end_datetime: dayjs(),
+      place: "",
+      users: [],
+      content: "",
+      color: "red",
+    });
+    setPostStatus("post");
+    setCount(-1);
+    setSelectedStatus(false);
+  };
+
   return (
     <>
       {/*
@@ -203,28 +225,60 @@ export default function ClubSchedule() {
             </div>
           ) : null}
 
-          <div className="flex items-center justify-center mb-4 gap-[20px]">
-            <span
-              className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
-              onClick={goToPrevMonth}
+          <div className="flex justify-center gap-[20px]">
+            <div
+              className={
+                "w-[32px] h-[32px] text-center border border-gray2 rounded flex flex-col justify-center"
+              }
             >
-              chevron_left
-            </span>
+              <span
+                className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
+                onClick={goToPrevMonth}
+              >
+                chevron_left
+              </span>
+            </div>
             <h2 className="text-h2 font-bold">
               {`${currentDate.get("year")}.${String(
                 currentDate.get("month") + 1
               ).padStart(2, "0")}`}
             </h2>
-            <span
-              className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
-              onClick={goToNextMonth}
+            <div
+              className={
+                "w-[32px] h-[32px] text-center border border-gray2 rounded flex flex-col justify-center"
+              }
             >
-              chevron_right
-            </span>
+              <span
+                className="material-symbols-outlined text-midgray hover:text-darkgray cursor-pointer"
+                onClick={goToNextMonth}
+              >
+                chevron_right
+              </span>
+            </div>
+            <button
+              type={"button"}
+              className={
+                "absolute py-[8px] px-[12px] right-[48px] flex text-white bg-sub rounded-full"
+              }
+              onClick={clickPost}
+            >
+              <div className={"h-[24px] flex flex-col justify-center"}>
+                <span className="material-symbols-outlined">add</span>
+              </div>
+              <div
+                className={"h-[24px] flex flex-col justify-center font-[500]"}
+              >
+                <span>일정 등록하기</span>
+              </div>
+            </button>
           </div>
-          <div className="grid grid-cols-7">
+          <div className={"h-[20px]"} />
+          <div className="grid grid-cols-7 border-t border-l border-gray3">
             {day_list.map((day) => (
-              <div key={day} className="text-center text-h5 text-midgray">
+              <div
+                key={day}
+                className="text-center text-h5 text-midgray border-b border-r border-gray3"
+              >
                 {day}
               </div>
             ))}
@@ -281,7 +335,7 @@ export default function ClubSchedule() {
                         >
                           <div className={"flex justify-between"}>
                             <div></div>
-                            <div>{day.date}</div>
+                            <div className={"pr-[10px]"}>{day.date}</div>
                           </div>
                         </div>
 
@@ -522,8 +576,9 @@ const ClubSchedulePostAndPut = (props) => {
   const [postStatus, setPostStatus] = useRecoilState(postStatusState);
   const [updateSchedule, setUpdateSchedule] =
     useRecoilState(updateScheduleState);
-  const [users, setUsers] = useState([]);
+  const [userInfos, setUserInfos] = useState([]);
   const [userInfo] = useRecoilState(userInfoState);
+  const [addBtn, setAddBtn] = useState(false);
 
   useEffect(() => {
     // 유저 정보 리스트 불러오기
@@ -533,7 +588,7 @@ const ClubSchedulePostAndPut = (props) => {
       })
       .then((res) => {
         /* 여기 작업하다가 말음 유저정보 불러와서 users state에 넣어주면 될듯 그리고 출력*/
-        setUsers(res.data);
+        setUserInfos(res.data);
       });
   }, []);
 
@@ -543,9 +598,33 @@ const ClubSchedulePostAndPut = (props) => {
     setUpdateSchedule(copy);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (postStatus === "post") {
-      return false;
+      axios
+        .post(`/api/user/schedule`, {
+          user_objid: userInfo._id,
+          user_unique_id: userInfo.unique_id,
+          realname: userInfo.realname,
+          email: userInfo.email,
+          club_objid: updateSchedule.club_objid,
+          club_name: updateSchedule.club_name,
+          title: updateSchedule.title,
+          content: updateSchedule.content,
+          place: updateSchedule.place,
+          users: updateSchedule.users,
+          color: updateSchedule.color,
+          start_datetime: updateSchedule.start_datetime,
+          end_datetime: updateSchedule.end_datetime,
+        })
+        .then((res) => {
+          props.getSchedules();
+          setPostStatus(false);
+        })
+        .catch((err) => {
+          commonErrorAlert(err, "에러");
+        });
     } else if (postStatus === "put") {
       axios
         .put(
@@ -570,15 +649,46 @@ const ClubSchedulePostAndPut = (props) => {
           props.getSchedules();
           setPostStatus(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          commonErrorAlert(err, "에러");
+        });
     }
+  };
+
+  const handleUserAdd = (user_objid) => {
+    for (let i = 0; i < updateSchedule.users.length; i++) {
+      if (updateSchedule.users[i] === user_objid) {
+        Swal.fire({
+          title: "중복 발생",
+          text: `이미 참석자 목록에 있습니다.`,
+          icon: "error",
+          confirmButtonText: "확인",
+        });
+        return false;
+      }
+    }
+    console.log("hllo");
+
+    let copy = { ...updateSchedule };
+    copy.users = [...copy.users, user_objid];
+    setUpdateSchedule(copy);
+
+    // 유저 정보 리스트 불러오기
+    axios
+      .post("/api/user/info/user_objid_list", {
+        users: copy.users,
+      })
+      .then((res) => {
+        setUserInfos(res.data);
+      });
   };
 
   return (
     <form
       className={"px-[40px] py-[32px] w-[986px] shadow-2xl rounded-3xl m-auto"}
+      onSubmit={handleSubmit}
     >
-      <div className={"text-h1"}>일정 등록</div>
+      <div className={"text-h1 font-[700] text-sub"}>일정 등록</div>
       <div className={"h-[40px]"} />
       <div className={"flex h-[48px]"}>
         <label
@@ -598,6 +708,7 @@ const ClubSchedulePostAndPut = (props) => {
           type={"text"}
           placeholder={"제목을 입력 해 주세요."}
           value={updateSchedule.title}
+          required
           onChange={(e) => {
             if (e.target.value.length <= 24) {
               let copy = { ...updateSchedule };
@@ -631,6 +742,7 @@ const ClubSchedulePostAndPut = (props) => {
               copy.start_datetime = e.target.value;
               setUpdateSchedule(copy);
             }}
+            required
           ></input>{" "}
           ~{" "}
           <input
@@ -646,6 +758,7 @@ const ClubSchedulePostAndPut = (props) => {
               copy.end_datetime = e.target.value;
               setUpdateSchedule(copy);
             }}
+            required
           ></input>
         </div>
       </div>
@@ -674,6 +787,7 @@ const ClubSchedulePostAndPut = (props) => {
               setUpdateSchedule(copy);
             }
           }}
+          required
         ></input>
       </div>
       <div className={"h-[40px]"} />
@@ -688,7 +802,7 @@ const ClubSchedulePostAndPut = (props) => {
         <div
           className={"grid grid-cols-8 gap-[3px] h-[52px] overflow-y-scroll"}
         >
-          {users.map((user) => {
+          {userInfos.map((user) => {
             return (
               <div className={"flex gap-[5px]"}>
                 <img
@@ -706,6 +820,49 @@ const ClubSchedulePostAndPut = (props) => {
               </div>
             );
           })}
+          <div>
+            <div
+              className={
+                "h-[28px] w-[28px] text-center flex flex-col justify-center border-2 border-darkgray rounded-full ml-[6px] cursor-pointer"
+              }
+              // onClick={() => handleUserAdd("64bb9cb3e5723a73730bfb63")}
+              onClick={() => setAddBtn(!addBtn)}
+            >
+              <div className="material-symbols-outlined">add</div>
+            </div>
+            {addBtn ? (
+              <div
+                className={
+                  "absolute mt-[16px] h-[300px] bg-gray3 rounded-xl shadow-xl py-[12px] overflow-y-scroll"
+                }
+              >
+                {userInfos.map((user) => {
+                  return (
+                    <div
+                      className={
+                        "flex flex-col justify-center gap-[5px] w-[120px] h-[40px] px-[4px] hover:bg-gray2"
+                      }
+                    >
+                      <div className={"flex"}>
+                        <img
+                          src={user.profile_image_url}
+                          alt={"profile"}
+                          className={"rounded-full w-[24px] h-[24px]"}
+                        />
+                        {user.realname.length <= 5 ? (
+                          <div className={"pt-[2px]"}>{user.realname}</div>
+                        ) : (
+                          <div className={"pt-[2px]"}>
+                            {user.realname.slice(0, 4)}..
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
       <div className={"h-[40px]"} />
@@ -733,6 +890,7 @@ const ClubSchedulePostAndPut = (props) => {
               setUpdateSchedule(copy);
             }
           }}
+          required
         ></textarea>
       </div>
       <div className={"h-[40px]"} />
@@ -831,8 +989,7 @@ const ClubSchedulePostAndPut = (props) => {
           className={
             "w-[87px] h-[40px] text-h5 text-center text-white bg-sub rounded"
           }
-          type={"button"}
-          onClick={handleSubmit}
+          type={"submit"}
         >
           저장하기
         </button>
