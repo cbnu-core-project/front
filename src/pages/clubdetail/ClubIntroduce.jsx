@@ -123,45 +123,164 @@ export default function ClubIntroduce() {
               "w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] shadow-lg rounded-xl"
             }
           >
-            <div className={"flex p-2 mt-[20px] ml-[24px] gap-3"}>
-              <p className={"text-h2 font-bold "}>{posts.title}</p>
-              <div className={"gap-2 flex mt-[9px]"}>
-                <div
-                  className={
-                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
-                  }
-                >
-                  {posts.tag1}
+            {tagModfy ? ( //기본 동아리 정보 관련 창
+              <>
+                <div className={"flex p-2 mt-[20px] ml-[24px] gap-3"}>
+                  <p className={"text-h2 font-bold "}>{posts.title}</p>
+
+                  <div className={"gap-2 flex mt-[9px]"}>
+                    <div
+                      className={
+                        "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
+                      }
+                    >
+                      {posts.tag1}
+                    </div>
+                    <div
+                      className={
+                        "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
+                      }
+                    >
+                      {posts.tag2}
+                    </div>
+                    <div
+                      className={
+                        "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
+                      }
+                    >
+                      {posts.tag3}
+                    </div>
+                  </div>
+
+                  <button
+                    className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                    onClick={() => {
+                      setTagModfy(!tagModfy);
+                    }}
+                  >
+                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div>수정하기</div>
+                  </button>
                 </div>
-                <div
-                  className={
-                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
-                  }
-                >
-                  {posts.tag2}
+
+                <p className={"text-h3 ml-8"}>{posts.sub_content}</p>
+                <p className={"text-h6 px-8 py-4 text-darkgray"}>
+                  {posts.main_content}
+                </p>
+              </> //수정 중인 동아리 정보 관련 창
+            ) : (
+              <>
+                <div className={"flex p-2 mt-[20px] ml-[24px] gap-3 "}>
+                  <p className={"text-h2 font-bold "}>{posts.title}</p>
+
+                  <div className={"gap-2 w-[370px] flex mt-[9px]"}>
+                    <input
+                      type="text"
+                      maxLength={7}
+                      value={posts.tag1}
+                      placeholder="태그1"
+                      className={
+                        "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
+                      }
+                      onChange={(e) => {
+                        let copy = [...posts];
+                        copy.tag1 = e.target.value;
+                        setPosts(copy);
+                      }}
+                    />
+                    <input
+                      type="text"
+                      maxLength={7}
+                      value={posts.tag2}
+                      placeholder="태그2"
+                      className={
+                        "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
+                      }
+                      onChange={(e) => {
+                        let copy = [...posts];
+                        copy.tag2 = e.target.value;
+                        setPosts(copy);
+                      }}
+                    />
+                    <input
+                      type="text"
+                      maxLength={7}
+                      value={posts.tag3}
+                      placeholder="태그3"
+                      className={
+                        "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
+                      }
+                      onChange={(e) => {
+                        let copy = [...posts];
+                        copy.tag3 = e.target.value;
+                        setPosts(copy);
+                      }}
+                    />
+                  </div>
+                  <button
+                    className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                    onClick={() => { //완료 버튼 클릭시 내용수정 반영
+                      setTagModfy(!tagModfy);
+                      
+                      // axios
+                      //   .put("/api/club/" + id, {
+                      //     //입력받은 사용자 정보 api전달
+                      //     title: String(posts.title),
+                      //     main_content: String(posts.main_content),
+                      //     sub_content: String(posts.sub_content),
+                      //     user_objid: String(posts.user_objid),
+                      //     image_urls: String([posts.image_urls]),
+                      //     activity_tags: String([posts.activity_tags]),
+                      //     nickname: String(posts.nickname),
+                      //     tag1: String(posts.tag1),
+                      //     tag2: String(posts.tag2),
+                      //     tag3: String(posts.tag3),
+                      //     classification: posts.classification,
+                      //     last_updated: String(posts.last_updated),
+                      //     president: String([posts.president]),
+                      //     executive: String([posts.executive]),
+                      //     member: String([posts.member]),
+                      //   })
+                      //   .then((res) => {
+                      //     //랜더링
+                      //     axios.get("/api/club/" + id).then((response) => {
+                      //       setPosts(response.data);
+                      //     });
+                      //   });
+                    }}
+                  >
+                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div>완료하기</div>
+                  </button>
                 </div>
-                <div
-                  className={
-                    "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
-                  }
-                >
-                  {posts.tag3}
+                <div className="flex flex-col">
+                <input
+                  type="text"
+                  maxLength={70}
+                  value={posts.sub_content}
+                  placeholder="제목을 입력해주세요"
+                  className={"text-h3 ml-8 outline-none"}
+                  onChange={(e) => {
+                    let copy = [...posts];
+                    copy.sub_content = e.target.value;
+                    setPosts(copy);
+                  }}
+                />
+                <input
+                  type="text"
+                  maxLength={200}
+                  value={posts.main_content}
+                  placeholder="내용을 입력해주세요"
+                  className={"text-h6 px-8 py-4 text-darkgray outline-none"}
+                  onChange={(e) => {
+                    let copy = [...posts];
+                    copy.main_content = e.target.value;
+                    setPosts(copy);
+                  }}
+                />
                 </div>
-              </div>
-              <button
-                className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
-                onClick={() => {
-                  setTagModfy(!tagModfy);
-                }}
-              >
-                <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>{tagModfy ? "수정하기" : "완료하기"}</div>
-              </button>
-            </div>
-            <p className={"text-h3 ml-8"}>{posts.sub_content}</p>
-            <p className={"text-h6 px-8 py-4 text-darkgray"}>
-              {posts.main_content}
-            </p>
+              </>
+            )}
             <div className={"grid place-content-center"}>
               <div className={"border-t mt-2 border-gray2 w-[573px] h-[120px]"}>
                 <div className={"mt-[24px]"} />
@@ -272,7 +391,7 @@ export default function ClubIntroduce() {
             {/* <div className="bg-main from-white absolute top-0"></div> */}
             <div className="flex w-[315px] gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>동아리 프로그램</div>
-              {clubProgramModfy ? (
+              {clubProgramModfy ? ( //수정 버튼
                 <button
                   className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
                   onClick={() => {
@@ -283,6 +402,7 @@ export default function ClubIntroduce() {
                   <div>수정</div>
                 </button>
               ) : (
+                //취소, 완료 버튼
                 <div className="flex gap-1 ml-auto">
                   <button
                     className="text-center gap-[5px] my-6 bg-[#29CCC7] text-white text-[18px] w-[70px] h-[30px] rounded-md"
@@ -315,7 +435,9 @@ export default function ClubIntroduce() {
                       });
                     }}
                   >
-                    <div class="material-symbols-outlined ml-[7px] text-[15px]">edit</div>
+                    <div class="material-symbols-outlined ml-[7px] text-[15px]">
+                      edit
+                    </div>
                     <div>완료</div>
                   </button>
                 </div>
@@ -328,7 +450,7 @@ export default function ClubIntroduce() {
             >
               {/* 동아리 프로그램 세부내용 */}
               {clubProgramModfy ? null : ( //3항연산자 써서 수정 버튼 눌렀을 때 ui바꿔줌
-                <button
+                <button //활동내역 추가 클릭 시 동작
                   className="w-[160px] h-[32px] bg-gray2 text-[16px] text-[3B3B3B] rounded-md font-[500] mt-5 text-center grid content-center"
                   onClick={() => {
                     axios
@@ -356,7 +478,7 @@ export default function ClubIntroduce() {
                 //수정중일 때와 아닐때를 3항 연산자로 구분
                 return (
                   <>
-                    {clubProgramModfy ? (
+                    {clubProgramModfy ? ( //기본 화면
                       <div className={"h-[60px]"}>
                         <p className={"text-h4 text-black mt-[10px]"}>
                           {program.title}
@@ -366,6 +488,7 @@ export default function ClubIntroduce() {
                         </p>
                       </div>
                     ) : (
+                      //수정 중
                       <div className={"h-[100px]  grid"}>
                         <input
                           type="text"
@@ -428,7 +551,7 @@ export default function ClubIntroduce() {
             {/* 활동내역 소제목 */}
             <div className="flex w-full">
               <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
-              {clubHistoryModfy ? (
+              {clubHistoryModfy ? ( //수정 버튼
                 <button
                   className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
                   onClick={() => {
@@ -439,6 +562,7 @@ export default function ClubIntroduce() {
                   <div>수정</div>
                 </button>
               ) : (
+                //취소, 완료 버튼
                 <div className="flex gap-1 ml-auto">
                   <button
                     className="text-center gap-[5px] my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
@@ -485,7 +609,7 @@ export default function ClubIntroduce() {
               }
             >
               {clubHistoryModfy ? null : ( //3항연산자 써서 수정 버튼 눌렀을 때 ui바꿔줌
-                <button
+                <button //활동내역 추가 시 동작
                   className="w-[160px] h-[32px] bg-gray2 text-[16px] text-[3B3B3B] rounded-md font-[500] mt-5 text-center grid content-center"
                   onClick={() => {
                     axios
@@ -587,7 +711,7 @@ export default function ClubIntroduce() {
                             }}
                           />
                           {/* 연도 변경 */}
-                          {/* <div className="flex flex-col">
+                          {/* <div className="flex flex-col"> //변경 버튼 따로 생성한 ui
                               <span class="material-symbols-outlined  w-[20px] h-[16px] text-[18px] text-gray bg-gray3 cursor-pointer">
                                 expand_less
                               </span>
@@ -630,7 +754,7 @@ export default function ClubIntroduce() {
                                   />
                                   {/* {String(acti.month).padStart(2, "0")} */}
                                   {/* 월 변경 */}
-                                  {/* <div className="flex flex-col ">
+                                  {/* <div className="flex flex-col "> //변경 버튼 따로 생성한 ui
                                     <span class="material-symbols-outlined  w-[20px] h-[16px] text-[18px] text-gray bg-gray3 cursor-pointer">
                                       expand_less
                                     </span>
