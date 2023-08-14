@@ -12,7 +12,13 @@ axios.defaults.baseURL = baseUrl;
 
 export default function ClubIntroduce() {
   const { id } = useParams();
-  const [posts, setPosts] = useState({ activity_tags: [], image_urls: [] });
+  const [post, setpost] = useState({
+    activity_tags: [],
+    image_urls: [],
+    president: [],
+    executive: [],
+    member: [],
+  });
   const [promotions, setPromotions] = useRecoilState(promotionsState);
   const [activity, setActivity] = useState([]); //동아리 주요활동 내역
   const [programs, setPrograms] = useState([]); //동아리 활동 프로그램 내역
@@ -23,13 +29,25 @@ export default function ClubIntroduce() {
   const [clubProgramModfy, setClubProgramModfy] = useState(true); //동아리 프로그램 수정버튼 클릭에 따른 ui변화
   const [clubHistoryModfy, setClubHistoryModfy] = useState(true); //동아리 활동내역 수정버튼 클릭에 따른 ui변화
 
+  /////////////////////////////////////////
+  // 현재 로그인 된 사용자의 권한 받아오기
+  const [authorityOfClub, setAuthorityOfClub] = useState(5);
+
+  useEffect(() => {
+    axios.get("/api/user/authority_of_club/" + id).then((res) => {
+      setAuthorityOfClub(res.data);
+    });
+  }, []);
+  /////////////////////////////////////////
+
+
   let prev_length = 0; //주요활동내역의 년도 시각화에 필요한 변수1
   let list = []; //2
   let after_length = 0; //3
   const navigate = useNavigate();
 
   function getClubPost() {
-    readOneClub(id).then((res) => setPosts(res.data[0]));
+    readOneClub(id).then((res) => setpost(res.data[0]));
   }
 
   function getPromotionPost() {
@@ -96,10 +114,10 @@ export default function ClubIntroduce() {
           <div
             className={
               "relative w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden"
-            }
+            }F
           >
             <div className="absolute z-10">
-              <button
+              { authorityOfClub <= 2 ? <button
                 className="flex items-center gap-[5px] ml-[480px] my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
                 onClick={() => {
                   setAddImg(true);
@@ -107,11 +125,11 @@ export default function ClubIntroduce() {
               >
                 <div class="material-symbols-outlined ml-[7px]">edit</div>
                 <div>사진변경</div>
-              </button>
+              </button> : null}
             </div>
             <div>
               <img
-                src={`${baseUrl}/${posts.image_urls[0]}`}
+                src={`${baseUrl}/${post.image_urls[0]}`}
                 className={"w-[637px] h-[432px] relative"}
                 alt="main_image"
               ></img>
@@ -126,7 +144,7 @@ export default function ClubIntroduce() {
             {tagModfy ? ( //기본 동아리 정보 관련 창
               <>
                 <div className={"flex p-2 mt-[20px] ml-[24px] gap-3"}>
-                  <p className={"text-h2 font-bold "}>{posts.title}</p>
+                  <p className={"text-h2 font-bold "}>{post.title}</p>
 
                   <div className={"gap-2 flex mt-[9px]"}>
                     <div
@@ -134,24 +152,24 @@ export default function ClubIntroduce() {
                         "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
                       }
                     >
-                      {posts.tag1}
+                      {post.tag1}
                     </div>
                     <div
                       className={
                         "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
                       }
                     >
-                      {posts.tag2}
+                      {post.tag2}
                     </div>
                     <div
                       className={
                         "h-[20px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px]"
                       }
                     >
-                      {posts.tag3}
+                      {post.tag3}
                     </div>
                   </div>
-
+                  { authorityOfClub <= 2 ?(
                   <button
                     className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
                     onClick={() => {
@@ -160,93 +178,94 @@ export default function ClubIntroduce() {
                   >
                     <div class="material-symbols-outlined ml-[7px]">edit</div>
                     <div>수정하기</div>
-                  </button>
+                  </button>):null}
                 </div>
 
-                <p className={"text-h3 ml-8"}>{posts.sub_content}</p>
+                <p className={"text-h3 ml-8"}>{post.sub_content}</p>
                 <p className={"text-h6 px-8 py-4 text-darkgray"}>
-                  {posts.main_content}
+                  {post.main_content}
                 </p>
               </> //수정 중인 동아리 정보 관련 창
             ) : (
               <>
                 <div className={"flex p-2 mt-[20px] ml-[24px] gap-3 "}>
-                  <p className={"text-h2 font-bold "}>{posts.title}</p>
+                  <p className={"text-h2 font-bold "}>{post.title}</p>
 
                   <div className={"gap-2 w-[370px] flex mt-[9px]"}>
                     <input
                       type="text"
                       maxLength={7}
-                      value={posts.tag1}
+                      value={post.tag1}
                       placeholder="태그1"
                       className={
                         "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
                       }
                       onChange={(e) => {
-                        let copy = [...posts];
+                        let copy = {...post};
                         copy.tag1 = e.target.value;
-                        setPosts(copy);
+                        setpost(copy);
                       }}
                     />
                     <input
                       type="text"
                       maxLength={7}
-                      value={posts.tag2}
+                      value={post.tag2}
                       placeholder="태그2"
                       className={
                         "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
                       }
                       onChange={(e) => {
-                        let copy = [...posts];
+                        let copy = {...post};
                         copy.tag2 = e.target.value;
-                        setPosts(copy);
+                        setpost(copy);
                       }}
                     />
                     <input
                       type="text"
                       maxLength={7}
-                      value={posts.tag3}
+                      value={post.tag3}
                       placeholder="태그3"
                       className={
                         "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
                       }
                       onChange={(e) => {
-                        let copy = [...posts];
+                        let copy = {...post};
                         copy.tag3 = e.target.value;
-                        setPosts(copy);
+                        setpost(copy);
                       }}
                     />
                   </div>
                   <button
                     className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
-                    onClick={() => { //완료 버튼 클릭시 내용수정 반영
+                    onClick={() => {
+                      //완료 버튼 클릭시 내용수정 반영
                       setTagModfy(!tagModfy);
-                      
-                      // axios
-                      //   .put("/api/club/" + id, {
-                      //     //입력받은 사용자 정보 api전달
-                      //     title: String(posts.title),
-                      //     main_content: String(posts.main_content),
-                      //     sub_content: String(posts.sub_content),
-                      //     user_objid: String(posts.user_objid),
-                      //     image_urls: String([posts.image_urls]),
-                      //     activity_tags: String([posts.activity_tags]),
-                      //     nickname: String(posts.nickname),
-                      //     tag1: String(posts.tag1),
-                      //     tag2: String(posts.tag2),
-                      //     tag3: String(posts.tag3),
-                      //     classification: posts.classification,
-                      //     last_updated: String(posts.last_updated),
-                      //     president: String([posts.president]),
-                      //     executive: String([posts.executive]),
-                      //     member: String([posts.member]),
-                      //   })
-                      //   .then((res) => {
-                      //     //랜더링
-                      //     axios.get("/api/club/" + id).then((response) => {
-                      //       setPosts(response.data);
-                      //     });
-                      //   });
+
+                      axios
+                        .put("/api/club/" + id, {
+                          //입력받은 사용자 정보 api전달
+                          title: post.title,
+                          main_content: post.main_content,
+                          sub_content: post.sub_content,
+                          user_objid: post.user_objid,
+                          image_urls: post.image_urls,
+                          activity_tags: post.activity_tags,
+                          nickname: post.nickname,
+                          tag1: post.tag1,
+                          tag2: post.tag2,
+                          tag3: post.tag3,
+                          classification: post.classification,
+                          last_updated: post.last_updated,
+                          president: post.president,
+                          executive: post.executive,
+                          member: post.member,
+                        })
+                        .then((res) => {
+                          //랜더링
+                          axios.get("/api/club/" + id).then((response) => {
+                            setpost(response.data[0]);
+                          });
+                        });
                     }}
                   >
                     <div class="material-symbols-outlined ml-[7px]">edit</div>
@@ -254,30 +273,30 @@ export default function ClubIntroduce() {
                   </button>
                 </div>
                 <div className="flex flex-col">
-                <input
-                  type="text"
-                  maxLength={70}
-                  value={posts.sub_content}
-                  placeholder="제목을 입력해주세요"
-                  className={"text-h3 ml-8 outline-none"}
-                  onChange={(e) => {
-                    let copy = [...posts];
-                    copy.sub_content = e.target.value;
-                    setPosts(copy);
-                  }}
-                />
-                <input
-                  type="text"
-                  maxLength={200}
-                  value={posts.main_content}
-                  placeholder="내용을 입력해주세요"
-                  className={"text-h6 px-8 py-4 text-darkgray outline-none"}
-                  onChange={(e) => {
-                    let copy = [...posts];
-                    copy.main_content = e.target.value;
-                    setPosts(copy);
-                  }}
-                />
+                  <input
+                    type="text"
+                    maxLength={70}
+                    value={post.sub_content}
+                    placeholder="제목을 입력해주세요"
+                    className={"text-h3 ml-8 outline-none"}
+                    onChange={(e) => {
+                      let copy = {...post};
+                      copy.sub_content = e.target.value;
+                      setpost(copy);
+                    }}
+                  />
+                  <input
+                    type="text"
+                    maxLength={200}
+                    value={post.main_content}
+                    placeholder="내용을 입력해주세요"
+                    className={"text-h6 px-8 py-4 text-darkgray outline-none"}
+                    onChange={(e) => {
+                      let copy = {...post};
+                      copy.main_content = e.target.value;
+                      setpost(copy);
+                    }}
+                  />
                 </div>
               </>
             )}
@@ -293,13 +312,13 @@ export default function ClubIntroduce() {
                       "text-midgray list-disc list-outside text-h4 mt-[5px]"
                     }
                   >
-                    가입 인원 <span className={"font-bold"}>15</span>명
+                    가입 인원 <span className={"font-bold"}>{post.member.length}</span>명
                   </p>
                 </div>
                 <div
                   className={"flex flex-wrap gap-y-0 text-center max-h-[180px]"}
                 >
-                  {posts.activity_tags.map((tags, i) => {
+                  {post.activity_tags.map((tags, i) => {
                     return (
                       <div className="h-[40px]">
                         {tagModfy ? null : (
@@ -317,7 +336,7 @@ export default function ClubIntroduce() {
                                     )
                                     .then((res) => {
                                       readOneClub(id).then((res) =>
-                                        setPosts(res.data[0])
+                                        setpost(res.data[0])
                                       );
                                     });
                                 }}
@@ -342,7 +361,7 @@ export default function ClubIntroduce() {
                   {addTag ? ( //활동추가 시 태그 추가 칸 생성됨
                     <input
                       className={
-                        //http://vnthf.logdown.com/posts/2016/05/18/front-input-box
+                        //http://vnthf.logdown.com/post/2016/05/18/front-input-box
                         "border border-sub text-sub rounded-lg h-[30px] font-[600] px-[10px] mt-[10px] outline-none w-[120px] mr-[10px]"
                       }
                       onChange={(e) => {
@@ -364,7 +383,7 @@ export default function ClubIntroduce() {
                               )
                               .then((res) => {
                                 readOneClub(id).then((res) =>
-                                  setPosts(res.data[0])
+                                  setpost(res.data[0])
                                 );
                               });
                           setTagInput(null);
@@ -392,6 +411,7 @@ export default function ClubIntroduce() {
             <div className="flex w-[315px] gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>동아리 프로그램</div>
               {clubProgramModfy ? ( //수정 버튼
+                 authorityOfClub <= 2 ? (
                 <button
                   className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
                   onClick={() => {
@@ -400,7 +420,7 @@ export default function ClubIntroduce() {
                 >
                   <div class="material-symbols-outlined ml-[7px]">edit</div>
                   <div>수정</div>
-                </button>
+                </button>):null
               ) : (
                 //취소, 완료 버튼
                 <div className="flex gap-1 ml-auto">
@@ -450,6 +470,7 @@ export default function ClubIntroduce() {
             >
               {/* 동아리 프로그램 세부내용 */}
               {clubProgramModfy ? null : ( //3항연산자 써서 수정 버튼 눌렀을 때 ui바꿔줌
+              
                 <button //활동내역 추가 클릭 시 동작
                   className="w-[160px] h-[32px] bg-gray2 text-[16px] text-[3B3B3B] rounded-md font-[500] mt-5 text-center grid content-center"
                   onClick={() => {
@@ -552,6 +573,7 @@ export default function ClubIntroduce() {
             <div className="flex w-full">
               <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
               {clubHistoryModfy ? ( //수정 버튼
+              authorityOfClub <= 2 ?(
                 <button
                   className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
                   onClick={() => {
@@ -560,7 +582,7 @@ export default function ClubIntroduce() {
                 >
                   <div class="material-symbols-outlined ml-[7px]">edit</div>
                   <div>수정</div>
-                </button>
+                </button>):null
               ) : (
                 //취소, 완료 버튼
                 <div className="flex gap-1 ml-auto">
@@ -820,6 +842,7 @@ export default function ClubIntroduce() {
           >
             <div className="flex w-full gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>홍보 게시판</div>
+              {authorityOfClub <= 2 ?(
               <button
                 className="flex items-center ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[167px] h-[40px] rounded-md"
                 onClick={() => {
@@ -828,7 +851,7 @@ export default function ClubIntroduce() {
               >
                 <div className="ml-[10px]">게시물 등록하기</div>
                 <span class="material-symbols-outlined">chevron_right</span>
-              </button>
+              </button>):null}
             </div>
             <div className={"border-t border-gray2 w-[390px] h-[430px]"}>
               <div className={"h-[24px]"} />
