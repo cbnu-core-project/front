@@ -14,7 +14,7 @@ export default function ClubFAQ() {
   const [post, setPost] = useState({ faqs: [] }); //useEffect 실행속도가 느려서 데이터가 나중에들어가는데, 오류 방지를 위해 빈리스트 삽입
   const [count, setCount] = useState(-1);
   const [token, setToken] = useRecoilState(tokenState);
-  const [authorityOfClub, setAuthorityOfClub] = useState(0);
+  const [authorityOfClub, setAuthorityOfClub] = useState(5);
 
   useEffect(() => {
     axios.get("/api/club_faq/" + id).then((res) => {
