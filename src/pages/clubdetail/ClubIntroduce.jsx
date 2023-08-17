@@ -7,6 +7,7 @@ import { promotionsState, addingImgState } from "../../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useQuery } from "react-query";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -111,7 +112,7 @@ export default function ClubIntroduce() {
             </div>
             <div>
               <img
-                src={`${baseUrl}/${posts.image_urls[0]}`}
+                src={`${posts.image_urls[0]}`}
                 className={"w-[637px] h-[432px] relative"}
                 alt="main_image"
               ></img>
@@ -219,9 +220,10 @@ export default function ClubIntroduce() {
                   </div>
                   <button
                     className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
-                    onClick={() => { //완료 버튼 클릭시 내용수정 반영
+                    onClick={() => {
+                      //완료 버튼 클릭시 내용수정 반영
                       setTagModfy(!tagModfy);
-                      
+
                       // axios
                       //   .put("/api/club/" + id, {
                       //     //입력받은 사용자 정보 api전달
@@ -254,30 +256,30 @@ export default function ClubIntroduce() {
                   </button>
                 </div>
                 <div className="flex flex-col">
-                <input
-                  type="text"
-                  maxLength={70}
-                  value={posts.sub_content}
-                  placeholder="제목을 입력해주세요"
-                  className={"text-h3 ml-8 outline-none"}
-                  onChange={(e) => {
-                    let copy = [...posts];
-                    copy.sub_content = e.target.value;
-                    setPosts(copy);
-                  }}
-                />
-                <input
-                  type="text"
-                  maxLength={200}
-                  value={posts.main_content}
-                  placeholder="내용을 입력해주세요"
-                  className={"text-h6 px-8 py-4 text-darkgray outline-none"}
-                  onChange={(e) => {
-                    let copy = [...posts];
-                    copy.main_content = e.target.value;
-                    setPosts(copy);
-                  }}
-                />
+                  <input
+                    type="text"
+                    maxLength={70}
+                    value={posts.sub_content}
+                    placeholder="제목을 입력해주세요"
+                    className={"text-h3 ml-8 outline-none"}
+                    onChange={(e) => {
+                      let copy = [...posts];
+                      copy.sub_content = e.target.value;
+                      setPosts(copy);
+                    }}
+                  />
+                  <input
+                    type="text"
+                    maxLength={200}
+                    value={posts.main_content}
+                    placeholder="내용을 입력해주세요"
+                    className={"text-h6 px-8 py-4 text-darkgray outline-none"}
+                    onChange={(e) => {
+                      let copy = [...posts];
+                      copy.main_content = e.target.value;
+                      setPosts(copy);
+                    }}
+                  />
                 </div>
               </>
             )}
@@ -904,7 +906,7 @@ function Addimg() {
             <div>
               <div className="font-[700] text-[20px]">파일 첨부</div>
               <p className="text-[16px] mt-[10px]">
-                000MB 이하의 이미지 파일을 업로드 가능합니다.
+                10MB 이하의 jpg, jpeg, png, gif 이미지 파일만 업로드 가능합니다.
               </p>
             </div>
             <UploadImageForm />
@@ -920,6 +922,7 @@ const UploadImageForm = () => {
   const [image, setImage] = useState({ preview: "", raw: "" });
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     // console.log(URL.createObjectURL(e.target.files[0]));
@@ -936,23 +939,10 @@ const UploadImageForm = () => {
     setImage({ preview: "", raw: "" });
   };
 
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("image", image.raw);
-
-    if (image.raw == "") {
-      Swal.fire({
-        title: "올릴 이미지가 없습니다",
-        text: "이미지를 업로드 해 주세요 !",
-        icon: "error",
-        confirmButtonText: "확인",
-      });
-      return;
-    }
-
-    await axios
-      .post("/image", formData, {
+  /*
+  const fetchFn = (formData) => {
+    return axios
+      .post("/upload/image", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -965,6 +955,51 @@ const UploadImageForm = () => {
           )
           .then((res) => {
             setAddImg(false);
+          });
+      });
+  };
+
+  const useUploadImageQuery = (formData) => {
+    return useQuery(["upload_image"], () => fetchFn(formData));
+  };
+
+  const { isLoading } = useUploadImageQuery();
+*/
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    // 여기도 매우 중요함. 여기의 "image_file" 이랑 fastapi의 받는 변수명 똑같이 맞춰야함
+    formData.append("image_file", image.raw);
+
+    if (image.raw == "") {
+      Swal.fire({
+        title: "올릴 이미지가 없습니다",
+        text: "이미지를 업로드 해 주세요 !",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
+      return false;
+    }
+
+    setLoading(true);
+
+    axios
+      .post("/upload/image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        // console.log(res.data.image_url);
+        axios
+          .put(
+            `/api/club/image/update?club_objid=${id}&image_url=${res.data.image_url}`
+          )
+          .then((res) => {
+            setAddImg(false);
+            setLoading(false);
           });
       });
   };
@@ -1018,22 +1053,26 @@ const UploadImageForm = () => {
             </div>
           </div>
         </div>
-        <div className=" flex place-self-end gap-[10px] text-[16px]">
-          <button
-            className="w-[87px] h-[40px] border border-[#E5E5E5] rounded-md"
-            onClick={() => {
-              setAddImg(false);
-            }}
-          >
-            취소
-          </button>
-          <button
-            className="bg-[#29CCC7] text-white w-[87px] h-[40px] rounded-md"
-            onClick={handleUpload}
-          >
-            업로드완료
-          </button>
-        </div>
+        {loading ? (
+          <div className="transition animate-pulse text-h2">업로드 중 ...</div>
+        ) : (
+          <div className=" flex place-self-end gap-[10px] text-[16px]">
+            <button
+              className="w-[87px] h-[40px] border border-[#E5E5E5] rounded-md"
+              onClick={() => {
+                setAddImg(false);
+              }}
+            >
+              취소
+            </button>
+            <button
+              className="bg-[#29CCC7] text-white w-[87px] h-[40px] rounded-md"
+              onClick={handleUpload}
+            >
+              업로드완료
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
