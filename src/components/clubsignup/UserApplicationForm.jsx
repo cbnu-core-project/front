@@ -3,6 +3,8 @@ import DropdownMenu from "../../components/DropDownMenu";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../common/global";
+import { useRecoilState } from "recoil";
+import { listsState } from "../../store";
 
 export default function UserApplicationForm(props) {
   const [title, setTitle] = useState("");
@@ -42,7 +44,7 @@ export default function UserApplicationForm(props) {
       .put(`api/club_application_form/club_objid/${props.id}`, {
         title: title,
         content: content,
-        club_objid: `${props.id}`,
+        club_objid: props.id,
         club_name: "1",
         deadline: d,
         announcement_of_acceptance: d,
@@ -69,6 +71,14 @@ export default function UserApplicationForm(props) {
       setData(res.data[0]);
     });
   }
+
+  //  //해당 동아리 지원한 사람들의 리스트 -> 관리자 입장에서 approval로 승인, 거절 선택할 수 있음
+  //  function getClubApplicationLists() {
+  //   axios.get(`api/club_application_lists/${id}`).then((res) => {
+  //     setListData(res.data);
+  //     console.log(res.data);
+  //   });
+  // }
 
   useEffect(() => {
     getClubApplicationForm();
