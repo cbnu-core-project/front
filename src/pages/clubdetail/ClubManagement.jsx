@@ -5,6 +5,9 @@ import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../../store";
 import { baseUrl } from "../../common/global";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { check } from "prettier";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -19,14 +22,24 @@ export default function ClubManagement() {
 
 function ManagerSignUp() {
   const { id } = useParams();
-  const [members, setMenbers] = useState([]);
+  const [members, setMembers] = useState([]);
   const [userInfo] = useRecoilState(userInfoState);
   const [authorityOfClub, setAuthorityOfClub] = useState(0);
   const [count, setCount] = useState(-1)
 
+
+
   useEffect(() => {
     axios.get('/api/club/member/' + id).then((res) => {
-      setMenbers(res.data);
+      let copys = [...res.data];
+      copys.forEach(_ => {
+        copys.sort(function (a, b) {
+          return a.current_club_authority < b.current_club_authority ? -1 : a.current_club_authority > b.current_club_authority ? 1 : 0;
+
+        })
+      });
+      setMembers(copys);
+      //console.log(res.data);
     })
   }, []);
 
@@ -37,7 +50,7 @@ function ManagerSignUp() {
   }, []);
 
 
-  if (authorityOfClub <= 1) {
+  if (authorityOfClub <= 2) {
     return (
       <>
         <div className="w-full relative">
@@ -96,7 +109,6 @@ function ManagerSignUp() {
             {members.map((member, idx) => {
               return (
                 <>
-
                   <li
                     className={
                       member.length === 10
@@ -157,10 +169,30 @@ function ManagerSignUp() {
                         >
                           설정
                         </button>
-                        {count === idx ? <Setting member={member} /> : null}
+                        {count === idx ? <Setting member={member} setCount={setCount} setMembers={setMembers} /> : null}
                       </div>
                       <div className={"w-[124px] grid justify-end"}>
-                        <button className={"member_delete"}>탈퇴</button>
+                        <button className={"w-[100px] h-[40px] bg-[#FF847C7D] rounded-md text-h5"}
+                          onClick={() => {
+                            setCount(-1);
+                            Swal.fire({
+                              title: "<div class=\"font-[Pv] text-h3\"> 한번 삭제하면, 복구할 수 없습니다.</div>",
+                              html:
+                                '정말로&nbsp;' + member.realname + '님을 탈퇴시킬까요?',
+                              icon: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: '탈퇴',
+                              cancelButtonText: '취소',
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                Swal.fire('탈퇴 성공!', member.realname + "님이 탈퇴처리 되었습니다.", 'success')
+                              }
+                            })
+                          }}
+                        >탈퇴</button>
+
                       </div>
                     </div>
                   </li>
@@ -174,8 +206,8 @@ function ManagerSignUp() {
       </>
     );
   }
-  else{
-    return(
+  else {
+    return (
       <>
         <div>응 넌 못봐~</div>
       </>
@@ -183,11 +215,12 @@ function ManagerSignUp() {
   }
 }
 function Setting(props) {
+  const navigate = useNavigate();
   // useEffect(() => {
   //   document.getElementById("overlay").style.cssText = `
   //     position: fixed;
   //     top: 0;
-  //     left: 0;
+  //     left: 0;s
   //     background-color: gray;
   //     width: 100%;
   //     heigth: 100%;
@@ -197,6 +230,30 @@ function Setting(props) {
   //     document.body.style.cssText = ""
   //   }
   // }, [])
+
+  const [selectedAuthority, setSelectedAuthority] = useState(props.member.current_club_authority)
+  const { id } = useParams()
+
+  const onChange = (e) => {
+    setSelectedAuthority(parseInt(e.target.value))
+  }
+
+  const handleSubmit = (member, authority) => {
+
+    axios.post(`/api/club/member?club_objid=${id}&user_objid=${member._id}&authority=${authority}`).then((res) => {
+      axios.get('/api/club/member/' + id).then((res) => {
+        let copys = [...res.data];
+        copys.forEach(_ => {
+          copys.sort(function (a, b) {
+            return a.current_club_authority < b.current_club_authority ? -1 : a.current_club_authority > b.current_club_authority ? 1 : 0;
+
+          })
+        });
+        props.setMembers(copys);
+        props.setCount(-1);
+      })
+    })
+  }
 
   return (
     <>
@@ -211,16 +268,25 @@ function Setting(props) {
             <p className="text-h5 font-bold ">직책 선택</p>
             <div className="h-[12px]"></div>
             <div className="w-[182px] h-[96px] text-h5 text-black">
-              <label><input type="radio" name="position" value="1" /> 동아리 회장</label>
+              <label><input type="radio" name="position" value="1" checked={selectedAuthority === 1} onChange={onChange} /> 동아리 회장</label>
               <br />
-              <label><input type="radio" name="position" value="2" /> 동아리 임원</label>
+              <label><input type="radio" name="position" value="2" checked={selectedAuthority === 2} onChange={onChange} /> 동아리 임원</label>
               <br />
-              <label><input type="radio" name="position" value="3" /> 동아리 멤버</label>
+              <label><input type="radio" name="position" value="3" checked={selectedAuthority === 3} onChange={onChange} /> 동아리 부원</label>
             </div>
+          </div>
+          <div className="flex justify-center">
+            <button className={"mt-8 ml-[126px] font-[Pv] text-h6 text-black px-2 py-3 border border-gray2 rounded-md"}
+              onClick={() => {
+                props.setCount(-1);
+              }}>닫기</button>
+            <button className={"mt-8 ml-2 font-[Pv] px-2 py-3 text-white text-h6 border border-sub bg-sub rounded-md"}
+              onClick={() => handleSubmit(props.member, selectedAuthority)
+              }
+            >저장하기</button>
           </div>
         </div>
       </div>
     </>
   );
 }
-
