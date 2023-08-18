@@ -39,12 +39,30 @@ export default function Login() {
         서비스 이용을 위해 로그인 해주세요.
       </div>
       <div>
-        <div className={"text-black text-center font-[Pv] font-bold"}>
-          <button onClick={handleKakaoLogin}>
-            <img src={"/images/kakao_login_medium_wide.png"} width={350} />
+        <div className={"text-black text-center font-[Pv] font-bold mt-[150px]"}>
+          <button className={'px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'}
+            onClick={handleKakaoLogin}>
+            <img src={"/images/카카오.png"} width={30} />
+            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 카카오로 로그인하기 </div>
           </button>
-          <button onClick={handleNaverLogin}>
-            <img src={"/images/naver_login/btnG_완성형.png"} width={350} />
+          <button className={'mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'} 
+            onClick={handleNaverLogin}>
+            <img src={"/images/네이버.png"} width={30} />
+            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 네이버로 로그인하기 </div>
+          </button>
+          <button className={'mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'} 
+            onClick={() => {
+              alert("구현중");
+            }}>
+            <img src={"/images/구글.png"} width={30} />
+            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 구글로 로그인하기 </div>
+          </button>
+          <button className={'mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'} 
+            onClick={() => {
+              alert("구현중");
+            }}>
+            <img src={"/images/페이스북.png"} width={30} />
+            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 페이스북으로 로그인하기 </div>
           </button>
         </div>
         <div className={"mt-[120px]"} />

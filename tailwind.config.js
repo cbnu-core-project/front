@@ -10,6 +10,7 @@ module.exports = {
       main_light: "#ECEDFB",
       background: "#F1F2FC",
       sub: "#29CCC7",
+      line: "#e5e5e5",
 
       // Particular colors
       red_error: "#FF5449",
@@ -22,6 +23,15 @@ module.exports = {
       gray2: "#DBDBDB",
       gray3: "#F4F4F4",
       white: "#FFFFFF",
+
+      // 스케줄에서 사용할, 무지개색 컬러
+      red: "#FF6666",
+      orange: "#ffb266",
+      yellow: "#FFE600",
+      green: "#00CC66",
+      blue: "#66b2ff",
+      indigo: "#6666ff",
+      purple: "#b266ff",
 
       // 그 외 추가 컬러
       // ...

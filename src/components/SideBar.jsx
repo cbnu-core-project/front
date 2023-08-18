@@ -10,17 +10,16 @@ import {
   setRefreshToken,
 } from "../utils/token";
 import { useRecoilState } from "recoil";
-import { userSchedulesState, tokenState, sidebar_ui, userState} from "../store";
+import {
+  userSchedulesState,
+  tokenState,
+  sidebar_ui,
+  userInfoState,
+} from "../store";
 import { readAllClubs } from "../api/club";
 import ScheduleDetaile from "./ScheduleDetail";
 
 axios.defaults.baseURL = baseUrl;
-
-//google icon 불러오는 링크
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>;
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -33,22 +32,15 @@ export default function SideBar() {
   let [mytext, setMyText] = useState(true); //내가 작성한 글
   let [mystate, setMyState] = useState(false); //닉네임 옆 역삼각형 누를 때 생기는 창(모달)
 
-  let [user, setUser] = useRecoilState(userState); //유저 정보
+  let [user] = useRecoilState(userInfoState); //유저 정보
   let [token, setToken] = useRecoilState(tokenState); //토큰
   let [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
-
-  useEffect(() => {
-    //유저 정보 받아옴
-    axios.get("api/user/info").then((response) => {
-      setUser(response.data);
-    });
-  }, [token]);
 
   if (token) {
     //로그인 됐을 때만 보임
     return (
       <div
-        className="bg-background pl-[40px] pr-[40px] w-side fixed h-screen overflow-y-scroll top-0 right-0"
+        className="bg-background pl-[40px] pr-[40px] fixed z-50 w-side h-screen overflow-y-scroll top-0 right-0"
         onClick={() => {
           setMyState(false); //닉네임 옆 역삼각형 아이콘 외에 다른 구역을 클릭하면 모달창이 닫히도록 하기 위함
         }}
@@ -62,7 +54,7 @@ export default function SideBar() {
           >
             account_circle
           </span>
-          <div className="pl-[8px] leading-[20px] w-full">
+          <div className="pl-[8px] text-[18px] leading-[20px] w-full">
             <div>안녕하세요,</div>
             {/* 유저 닉네임 들어감 */}
             <div>
@@ -79,9 +71,7 @@ export default function SideBar() {
           </div>
 
           <span
-
             class="cursor-pointer ml-outo material-symbols-outlined mt-auto mb-auto text-[#1C1B1F] text-[30px]"
-
             onClick={() => {
               alert("서비스 준비중입니다");
             }}
@@ -91,10 +81,10 @@ export default function SideBar() {
           {/* 참일 때 닉네임 옆 역삼각형 누를 때 나오는 창이 뜸 */}
         </div>
         {mystate == true ? <Modal /> : null}
-        <div className="flex mt-[40px] ">
-          <div className="side_title ">나의 동아리</div>
+        <div className="flex mt-[40px]">
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">나의 동아리</div>
           <button
-            class="ml-auto material-symbols-outlined "
+            class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setMyclub(!myclub);
             }} //버튼 클릭 시에 '나의 동아리' 정보 열림/닫힘
@@ -106,9 +96,9 @@ export default function SideBar() {
         {myclub == true ? <MyClub /> : null}
 
         <div className="flex mt-[20px] w-full">
-          <div className="side_title ">월간 일정</div>
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">월간 일정</div>
           <button
-            class="ml-auto material-symbols-outlined"
+            class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setCalender(!calender); //버튼 클릭 시에 '월간 일정' 정보 열림/닫힘
             }}
@@ -119,9 +109,9 @@ export default function SideBar() {
         {calender == true ? <Calendar /> : null}
         {/* 참일 때 '이번주 일정' 정보 열림*/}
         <div className="flex mt-[25px] w-full">
-          <div className="side_title">이번주 일정</div>
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">이번주 일정</div>
           <button
-            class="ml-auto material-symbols-outlined"
+            class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setSchedule(!schedule);
             }} //버튼 클릭 시에 '이번주 일정' 정보 열림/닫힘
@@ -145,9 +135,9 @@ export default function SideBar() {
         {/*{register == true ? <Register /> : null}*/}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
-          <div className="side_title w-full ">관심 동아리</div>
+          <div className="side_title w-full text-[22px] font-[700] text-darkgray self-center">관심 동아리</div>
           <button
-            class="ml-outo material-symbols-outlined"
+            class="ml-outo material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
               setInteresting(!interesting); //버튼 클릭 시에 '관심 동아리' 정보 열림/닫힘
             }}
@@ -196,9 +186,12 @@ function Modal() {
             "grid grid-rows-2 pt-[15px] pl-[15px] absolute w-[150px] h-[100px] ml-[50px] bg-white rounded-xl shadow-md z-1"
           }
         >
-          <div className="flex gap-2 cursor-pointer" onClick={()=>{
-            setSiderbarUI("myinfo");
-          }}>
+          <div
+            className="flex gap-2 cursor-pointer"
+            onClick={() => {
+              setSiderbarUI("myinfo");
+            }}
+          >
             <span class="material-symbols-outlined">account_circle</span>
             <div>프로필 사용</div>
           </div>
@@ -214,6 +207,7 @@ function Modal() {
                   setAccessToken();
                   setRefreshToken();
                   setToken(""); //빈 토큰 설정==로그아웃
+                  window.location.reload();
                 })
                 .catch((err) => {
                   console.log(err);
@@ -251,7 +245,8 @@ function MyClub() {
     });
   }, [userInfo]);
 
-  if (userInfo == null) return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
+  if (userInfo == null)
+    return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
   else
     return (
       <>
@@ -272,7 +267,7 @@ function MyClub() {
                   >
                     {/* 사각 아이콘 안에 첫글자만 보여줌 */}
                     <div className="grid justify-center">
-                      <div className="club_icon">{club.title.charAt(0)}</div>
+                      <div className="grid club_icon content-center">{club.title.charAt(0)}</div>
                     </div>
                     <div className="text-center ">{club.title}</div>
                     {/* 동아리 이름 출력 */}
@@ -361,15 +356,15 @@ function WeekSchedule() {
               }
             }}
           >
-            <div className="w-[50px] h-[80px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
-              <div className="text-[10px] font-[200] text-white">
+            <div className="w-[58px] h-[90px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
+              <div className="text-[13px] font-[200] text-white">
                 {day_list[startDateTime.getDay()]}
               </div>
-              <div className="text-h6 font-[600]  text-white">
+              <div className="text-h4 font-[600]  text-white">
                 {startDateTime.getDate()}
               </div>
             </div>
-            <div className="flex flex-col w-full h-[80px] bg-white pl-[10px] pt-[10px] rounded-2xl">
+            <div className="flex flex-col w-full h-[90px] ml-[5px] bg-white pl-[10px] pt-[10px] rounded-2xl">
               <div className="text-black text-h7 font-[300]">
                 [{schedule.club_name}] {schedule.title}
               </div>
@@ -384,8 +379,10 @@ function WeekSchedule() {
           </div>
           {count === i ? (
             <ScheduleDetaile
+              type={"user"}
               schedule={schedule}
               setCount={setCount}
+              color={schedule.color}
               getSchedules={getUserSchedules}
             />
           ) : null}
@@ -395,9 +392,8 @@ function WeekSchedule() {
   });
 }
 
-
 function Interesting() {
-  //'내 동아리'정보
+  //'관심 동아리'정보
   let [userInterest, setUserInterest] = useState([]); //유저 관심 동아리 정보
   let [token, setToken] = useRecoilState(tokenState);
   let [clubs, setClubs] = useState([]); //모든 동아리 이름 정보
@@ -418,7 +414,8 @@ function Interesting() {
     });
   }, [userInterest]);
 
-  if (userInterest == null) return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
+  if (userInterest == null)
+    return <div>등록된 동아리가 없습니다.</div>; //구현 막힘!!!!수정 필요!!!
   else
     return (
       <>
@@ -432,16 +429,18 @@ function Interesting() {
                   <div
                     className="cursor-pointer"
                     onClick={() => {
-                      navigate("/clubdetail/" + userInterest[i] + "/clubintroduce");
+                      navigate(
+                        "/clubdetail/" + userInterest[i] + "/clubintroduce"
+                      );
                       // window.location.reload();
                       // navigate로 부드럽게 이동하도록 수정. id를 deps에 줌.
                     }}
                   >
                     {/* 사각 아이콘 안에 첫글자만 보여줌 */}
-                    <div className="grid justify-center">
-                      <div className="club_icon">{club.title.charAt(0)}</div>
+                    <div className="grid justify-center ">
+                      <div className="grid club_icon content-center">{club.title.charAt(0)}</div>
                     </div>
-                    <div className="text-center ">{club.title}</div>
+                    <div className="text-center">{club.title}</div>
                     {/* 동아리 이름 출력 */}
                   </div>
                 );

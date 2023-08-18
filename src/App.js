@@ -13,6 +13,7 @@ import {
   ClubFAQ,
   ClubIntroduce,
   ClubSchedule,
+  ClubFAQSetting,
   UserApplicationForm,
 } from "./pages";
 import SideBar from "./components/SideBar";
@@ -26,7 +27,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "./utils/token";
-import { tokenState, userInfoState } from "./store";
+import { tokenState, userInfoState, sidebar_ui } from "./store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import { baseUrl } from "./common/global";
@@ -37,13 +38,15 @@ import { sidebar_ui } from "./store";
 // 토큰 만료기간 확인 후, 만료 처리
 function App() {
   const [token, setToken] = useRecoilState(tokenState);
-  const [sidebarUI,setSiderbarUI]=useRecoilState(sidebar_ui);//사이드바 UI변경 변수
+  const [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
   // 사이드바 대체 함수 임폴트하기
 
   const PARAMS = new URL(document.location).searchParams;
   const CODE = PARAMS.get("code");
   const STATE = PARAMS.get("state");
   const navigate = useNavigate();
+
+  // 유저정보를 불러와 state에 리코일 저장하기.
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   function postAccessToken() {
@@ -72,6 +75,7 @@ function App() {
           console.log(err);
           setRefreshToken();
           setUserInfo({});
+          setToken("");
         });
     }
   }
@@ -151,7 +155,6 @@ function App() {
   }, []);
 
   return (
-
     <div className={"font-[Pv]"}>
       <Navigation />
       <div className={"mr-side mt-[80px]"}>
@@ -167,27 +170,24 @@ function App() {
             <Route path="clubmanagement" element={<ClubManagement />}></Route>
             <Route path="clubschedule" element={<ClubSchedule />}></Route>
             <Route path="clubsignup" element={<ClubSignUp />}></Route>
+            <Route path="clubfaq/clubfaqsetting" element={<ClubFAQSetting />}></Route>
           </Route>
           <Route path="/club/search/" element={<ClubSearch />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </div>
-      <Sidebarif/>
-    </div>   
-  
+
+      <Sidebarif />
+    </div>
   );
 }
 
-function Sidebarif(){
-  const [sidebarUI,setSiderbarUI]=useRecoilState(sidebar_ui);//사이드바 UI변경 변수
+function Sidebarif() {
+  const [sidebarUI, setSiderbarUI] = useRecoilState(sidebar_ui); //사이드바 UI변경 변수
 
-  if(sidebarUI=="standard")
-    return(<SideBar></SideBar>);
-  if(sidebarUI=="mypage")
-    return(<Mypage></Mypage>);
-  if(sidebarUI=="myinfo")
-    return(<MyInfo></MyInfo>);
+  if (sidebarUI == "standard") return <SideBar></SideBar>;
+  if (sidebarUI == "mypage") return <Mypage></Mypage>;
+  if (sidebarUI == "myinfo") return <MyInfo></MyInfo>;
 }
-
 
 export default App;

@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import dayjs from "dayjs";
 
 //데이터 저장
 export const clubsState = atom({
@@ -43,7 +44,15 @@ export const userSchedulesState = atom({
 });
 export const clubSchedulesState = atom({
   key: "clubSchedulesState",
-  default: [{ start_datetime: new Date(), end_datetime: new Date() }],
+  default: [
+    {
+      title: "",
+      content: "",
+      color: "",
+      start_datetime: new Date(),
+      end_datetime: new Date(),
+    },
+  ],
 });
 
 export const selectedUserScheduleDateState = atom({
@@ -53,7 +62,7 @@ export const selectedUserScheduleDateState = atom({
 
 export const selectedClubScheduleDateState = atom({
   key: "selectedClubScheduleDateState",
-  default: new Date(),
+  default: dayjs("1999-08-25"),
 });
 
 export const addingImgState = atom({
@@ -61,19 +70,21 @@ export const addingImgState = atom({
   default: false,
 });
 
+// 로그인 되었으면, 여기에 로그인한 유저정보가 기본적으로 저장됨.
+// 유저정보 필요할 때 이 state를 불러와서 사용하면 됨.
 export const userInfoState = atom({
   key: "userInfoState",
-  default: {},
+  default: { nickname: "", realname: "", clubs: [], interestes: [] },
 });
 
-export const sidebar_ui =atom({
+export const sidebar_ui = atom({
   key: "sidebar_ui",
-  default: "standard",//로그인할 때 뜨는 사이드바 ui
+  default: "standard", //로그인할 때 뜨는 사이드바 ui
 });
 
-export const userState =atom({
-  key: "userState",
-  default: [],//유저 정보
+export const postStatusState = atom({
+  key: "postStatusState",
+  default: false,
 });
 
 //가입 신청 현황 리스트 가져오기
@@ -96,3 +107,22 @@ export const viewButtonState = atom({
   key: "viewButtonState",
   default: 0,
 })
+export const updateScheduleState = atom({
+  key: "updateScheduleState",
+  default: {
+    club_objid: "",
+    club_name: "",
+    title: "",
+    start_datetime: dayjs(),
+    end_datetime: dayjs(),
+    place: "",
+    users: [],
+    content: "",
+    color: "red",
+  }, // 수정할 기존의 스케줄 데이터
+});
+
+export const clubScheduleSelectedStatusState = atom({
+  key: "clubScheduleSelectedStatus",
+  default: false,
+});

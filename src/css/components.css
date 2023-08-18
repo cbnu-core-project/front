@@ -44,7 +44,7 @@
     }
 
     .club_icon{
-        @apply  w-[50px] h-[50px] bg-main_mid rounded-xl text-center text-white font-[600] pt-[12px]
+        @apply  w-[64px] h-[64px] bg-main_mid rounded-2xl text-center text-white font-[600] text-[24px]
     }
 
     .club_text{
@@ -61,9 +61,6 @@
     }
     .signup_deny{
         @apply w-[100px] h-[40px] bg-[#C1C1C1] text-white rounded-md text-h5
-    }
-    .management_president{
-        @apply w-[74px] h-[40px] bg-main_mid rounded-md text-white py-[6px] px-[23px]
     }
     .member_delete{
         @apply w-[100px] h-[40px] bg-[#FF847C7D] rounded-md text-h5
