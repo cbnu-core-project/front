@@ -87,6 +87,26 @@ export const postStatusState = atom({
   default: false,
 });
 
+//가입 신청 현황 리스트 가져오기
+export const listsState = atom({
+  key: "listsState",
+  default: [{
+    user_objid: "",
+    club_objid: "",
+    title: "",
+    club_name: "",
+    approval: 1,
+    classification: 0,
+    data: {},
+  }]
+});
+
+
+//신청서 보기 버튼 클릭시 user_objid가 state값에 젖아
+export const viewButtonState = atom({
+  key: "viewButtonState",
+  default: 0,
+})
 export const updateScheduleState = atom({
   key: "updateScheduleState",
   default: {
