@@ -41,7 +41,6 @@ export default function ClubIntroduce() {
   }, []);
   /////////////////////////////////////////
 
-
   let prev_length = 0; //주요활동내역의 년도 시각화에 필요한 변수1
   let list = []; //2
   let after_length = 0; //3
@@ -115,22 +114,25 @@ export default function ClubIntroduce() {
           <div
             className={
               "relative w-[450px] h-[320px] 2xl:w-[637px] 2xl:h-[432px] bg-gray2 drop-shadow-md rounded-xl overflow-hidden"
-            }F
+            }
+            F
           >
             <div className="absolute z-10">
-              { authorityOfClub <= 2 ? <button
-                className="flex items-center gap-[5px] ml-[480px] my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
-                onClick={() => {
-                  setAddImg(true);
-                }}
-              >
-                <div class="material-symbols-outlined ml-[7px]">edit</div>
-                <div>사진변경</div>
-              </button> : null}
+              {authorityOfClub <= 2 ? (
+                <button
+                  className="flex items-center gap-[5px] ml-[480px] my-6 bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                  onClick={() => {
+                    setAddImg(true);
+                  }}
+                >
+                  <div class="material-symbols-outlined ml-[7px]">edit</div>
+                  <div>사진변경</div>
+                </button>
+              ) : null}
             </div>
             <div>
               <img
-                src={`${posts.image_urls[0]}`}
+                src={`${post.image_urls[0]}`}
                 className={"w-[637px] h-[432px] relative"}
                 alt="main_image"
               ></img>
@@ -170,16 +172,17 @@ export default function ClubIntroduce() {
                       {post.tag3}
                     </div>
                   </div>
-                  { authorityOfClub <= 2 ?(
-                  <button
-                    className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
-                    onClick={() => {
-                      setTagModfy(!tagModfy);
-                    }}
-                  >
-                    <div class="material-symbols-outlined ml-[7px]">edit</div>
-                    <div>수정하기</div>
-                  </button>):null}
+                  {authorityOfClub <= 2 ? (
+                    <button
+                      className="flex items-center gap-[5px] ml-auto mr-[35px] bg-[#29CCC7] text-white text-[18px] w-[120px] h-[40px] rounded-md"
+                      onClick={() => {
+                        setTagModfy(!tagModfy);
+                      }}
+                    >
+                      <div class="material-symbols-outlined ml-[7px]">edit</div>
+                      <div>수정하기</div>
+                    </button>
+                  ) : null}
                 </div>
 
                 <p className={"text-h3 ml-8"}>{post.sub_content}</p>
@@ -202,7 +205,7 @@ export default function ClubIntroduce() {
                         "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
                       }
                       onChange={(e) => {
-                        let copy = {...post};
+                        let copy = { ...post };
                         copy.tag1 = e.target.value;
                         setpost(copy);
                       }}
@@ -216,7 +219,7 @@ export default function ClubIntroduce() {
                         "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
                       }
                       onChange={(e) => {
-                        let copy = {...post};
+                        let copy = { ...post };
                         copy.tag2 = e.target.value;
                         setpost(copy);
                       }}
@@ -230,7 +233,7 @@ export default function ClubIntroduce() {
                         "h-[20px] w-[100px] 2xl:h-[20px] bg-black text-h7 text-white rounded-md px-[5px] outline-none"
                       }
                       onChange={(e) => {
-                        let copy = {...post};
+                        let copy = { ...post };
                         copy.tag3 = e.target.value;
                         setpost(copy);
                       }}
@@ -281,7 +284,7 @@ export default function ClubIntroduce() {
                     placeholder="제목을 입력해주세요"
                     className={"text-h3 ml-8 outline-none"}
                     onChange={(e) => {
-                      let copy = {...post};
+                      let copy = { ...post };
                       copy.sub_content = e.target.value;
                       setpost(copy);
                     }}
@@ -293,7 +296,7 @@ export default function ClubIntroduce() {
                     placeholder="내용을 입력해주세요"
                     className={"text-h6 px-8 py-4 text-darkgray outline-none"}
                     onChange={(e) => {
-                      let copy = {...post};
+                      let copy = { ...post };
                       copy.main_content = e.target.value;
                       setpost(copy);
                     }}
@@ -313,7 +316,8 @@ export default function ClubIntroduce() {
                       "text-midgray list-disc list-outside text-h4 mt-[5px]"
                     }
                   >
-                    가입 인원 <span className={"font-bold"}>{post.member.length}</span>명
+                    가입 인원{" "}
+                    <span className={"font-bold"}>{post.member.length}</span>명
                   </p>
                 </div>
                 <div
@@ -412,16 +416,17 @@ export default function ClubIntroduce() {
             <div className="flex w-[315px] gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>동아리 프로그램</div>
               {clubProgramModfy ? ( //수정 버튼
-                 authorityOfClub <= 2 ? (
-                <button
-                  className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
-                  onClick={() => {
-                    setClubProgramModfy(!clubProgramModfy);
-                  }}
-                >
-                  <div class="material-symbols-outlined ml-[7px]">edit</div>
-                  <div>수정</div>
-                </button>):null
+                authorityOfClub <= 2 ? (
+                  <button
+                    className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
+                    onClick={() => {
+                      setClubProgramModfy(!clubProgramModfy);
+                    }}
+                  >
+                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div>수정</div>
+                  </button>
+                ) : null
               ) : (
                 //취소, 완료 버튼
                 <div className="flex gap-1 ml-auto">
@@ -471,7 +476,6 @@ export default function ClubIntroduce() {
             >
               {/* 동아리 프로그램 세부내용 */}
               {clubProgramModfy ? null : ( //3항연산자 써서 수정 버튼 눌렀을 때 ui바꿔줌
-              
                 <button //활동내역 추가 클릭 시 동작
                   className="w-[160px] h-[32px] bg-gray2 text-[16px] text-[3B3B3B] rounded-md font-[500] mt-5 text-center grid content-center"
                   onClick={() => {
@@ -574,16 +578,17 @@ export default function ClubIntroduce() {
             <div className="flex w-full">
               <div className={"font-bold text-h2 py-6"}>주요 활동내역</div>
               {clubHistoryModfy ? ( //수정 버튼
-              authorityOfClub <= 2 ?(
-                <button
-                  className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
-                  onClick={() => {
-                    setClubHistoryModfy(!clubHistoryModfy);
-                  }}
-                >
-                  <div class="material-symbols-outlined ml-[7px]">edit</div>
-                  <div>수정</div>
-                </button>):null
+                authorityOfClub <= 2 ? (
+                  <button
+                    className="flex items-center gap-[5px] ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[95px] h-[40px] rounded-md"
+                    onClick={() => {
+                      setClubHistoryModfy(!clubHistoryModfy);
+                    }}
+                  >
+                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div>수정</div>
+                  </button>
+                ) : null
               ) : (
                 //취소, 완료 버튼
                 <div className="flex gap-1 ml-auto">
@@ -843,16 +848,17 @@ export default function ClubIntroduce() {
           >
             <div className="flex w-full gap-[17px]">
               <div className={"font-bold text-h2 py-6"}>홍보 게시판</div>
-              {authorityOfClub <= 2 ?(
-              <button
-                className="flex items-center ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[167px] h-[40px] rounded-md"
-                onClick={() => {
-                  alert("서비스 준비중입니다");
-                }}
-              >
-                <div className="ml-[10px]">게시물 등록하기</div>
-                <span class="material-symbols-outlined">chevron_right</span>
-              </button>):null}
+              {authorityOfClub <= 2 ? (
+                <button
+                  className="flex items-center ml-auto my-6 bg-[#29CCC7] text-white text-[18px] w-[167px] h-[40px] rounded-md"
+                  onClick={() => {
+                    alert("서비스 준비중입니다");
+                  }}
+                >
+                  <div className="ml-[10px]">게시물 등록하기</div>
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+              ) : null}
             </div>
             <div className={"border-t border-gray2 w-[390px] h-[430px]"}>
               <div className={"h-[24px]"} />
