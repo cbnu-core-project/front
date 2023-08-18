@@ -33,7 +33,6 @@ import axios from "axios";
 import { baseUrl } from "./common/global";
 import { useQuery } from "react-query";
 import { getCookie } from "./utils/cookie";
-import { sidebar_ui } from "./store";
 
 // 토큰 만료기간 확인 후, 만료 처리
 function App() {

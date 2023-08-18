@@ -130,7 +130,7 @@ export default function ClubIntroduce() {
             </div>
             <div>
               <img
-                src={`${posts.image_urls[0]}`}
+                src={`${post.image_urls[0]}`}
                 className={"w-[637px] h-[432px] relative"}
                 alt="main_image"
               ></img>
