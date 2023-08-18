@@ -27,9 +27,7 @@ function ManagerSignUp() {
   const [authorityOfClub, setAuthorityOfClub] = useState(0);
   const [count, setCount] = useState(-1)
 
-
-
-  useEffect(() => {
+  const sortNgetMembers = () => {
     axios.get('/api/club/member/' + id).then((res) => {
       let copys = [...res.data];
       copys.forEach(_ => {
@@ -39,15 +37,26 @@ function ManagerSignUp() {
         })
       });
       setMembers(copys);
+      setCount(-1);
       //console.log(res.data);
     })
-  }, []);
+  }
+
+
+  useEffect(() => sortNgetMembers(), []);
 
   useEffect(() => {
     axios.get("/api/user/authority_of_club/" + id).then((res) => {
       setAuthorityOfClub(res.data);
     });
   }, []);
+
+  const deletehandleSubmit = (member) => {
+
+    axios.delete(`/api/club/delete/member?club_objid=${id}&user_objid=${member._id}`).then((res) => {
+      sortNgetMembers();
+    })
+  }
 
 
   if (authorityOfClub <= 2) {
@@ -169,7 +178,7 @@ function ManagerSignUp() {
                         >
                           설정
                         </button>
-                        {count === idx ? <Setting member={member} setCount={setCount} setMembers={setMembers} /> : null}
+                        {count === idx ? <Setting member={member} setCount={setCount} setMembers={setMembers} sortNgetMembers={sortNgetMembers} /> : null}
                       </div>
                       <div className={"w-[124px] grid justify-end"}>
                         <button className={"w-[100px] h-[40px] bg-[#FF847C7D] rounded-md text-h5"}
@@ -187,7 +196,8 @@ function ManagerSignUp() {
                               cancelButtonText: '취소',
                             }).then((result) => {
                               if (result.isConfirmed) {
-                                Swal.fire('탈퇴 성공!', member.realname + "님이 탈퇴처리 되었습니다.", 'success')
+                                Swal.fire('탈퇴 성공!', member.realname + "님이 탈퇴처리 되었습니다.", 'success');
+                                deletehandleSubmit(member);
                               }
                             })
                           }}
@@ -216,21 +226,7 @@ function ManagerSignUp() {
 }
 function Setting(props) {
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   document.getElementById("overlay").style.cssText = `
-  //     position: fixed;
-  //     top: 0;
-  //     left: 0;s
-  //     background-color: gray;
-  //     width: 100%;
-  //     heigth: 100%;
-  //     z-index: 9999;
-  //   `
-  //   return () => {
-  //     document.body.style.cssText = ""
-  //   }
-  // }, [])
-
+  const [userInfo] = useRecoilState(userInfoState);
   const [selectedAuthority, setSelectedAuthority] = useState(props.member.current_club_authority)
   const { id } = useParams()
 
@@ -238,21 +234,38 @@ function Setting(props) {
     setSelectedAuthority(parseInt(e.target.value))
   }
 
+
   const handleSubmit = (member, authority) => {
-
-    axios.post(`/api/club/member?club_objid=${id}&user_objid=${member._id}&authority=${authority}`).then((res) => {
-      axios.get('/api/club/member/' + id).then((res) => {
-        let copys = [...res.data];
-        copys.forEach(_ => {
-          copys.sort(function (a, b) {
-            return a.current_club_authority < b.current_club_authority ? -1 : a.current_club_authority > b.current_club_authority ? 1 : 0;
-
+    if(member._id === userInfo._id){
+      Swal.fire('경고!', "자신의 직위는 변경할 수 없습니다.", 'warning');
+    }
+    else if(selectedAuthority <= 1){
+      props.setCount(-1);
+      Swal.fire({
+        title: "<div class=\"font-[Pv] text-h3\"> 신중하게 생각해주세요.</div>",
+        html:
+          '정말로&nbsp;' + member.realname + '에게 회장을 넘기겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '예',
+        cancelButtonText: '아니오',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('성공!', member.realname + "님이 회장이 되었습니다.", 'success');
+          axios.post(`/api/club/member?club_objid=${id}&user_objid=${member._id}&authority=${authority}`).then((res) => {
+            props.sortNgetMembers();
           })
-        });
-        props.setMembers(copys);
-        props.setCount(-1);
+        }
       })
-    })
+    }
+    else{
+      axios.post(`/api/club/member?club_objid=${id}&user_objid=${member._id}&authority=${authority}`).then((res) => {
+        props.sortNgetMembers();
+      })
+    }
+    
   }
 
   return (
