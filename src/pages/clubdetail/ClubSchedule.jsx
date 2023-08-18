@@ -132,20 +132,20 @@ export default function ClubSchedule() {
 
       week.push({ year: year, month: month, date: date, scheduleCount: 0 });
 
-      // 현재  month와 다른 month의 주로만 이루어진 줄이 생기지 않도록 체크
-      let count = 0;
-      for (let j = 0; j < 7; j++) {
-        if (week[j].month !== currentDate.get("month")) {
-          count += 1;
-        }
-      }
-      // 만약 week에 현재 달의 날짜가 포함되어있는 행이면 추가
-      if (count < 7) {
-        matrix.push(week);
-      }
+      // // 현재  month와 다른 month의 주로만 이루어진 줄이 생기지 않도록 체크
+      // let count = 0;
+      // for (let j = 0; j < 7; j++) {
+      //   if (week[j].month !== currentDate.get("month")) {
+      //     count += 1;
+      //   }
+      // }
+      // // 만약 week에 현재 달의 날짜가 포함되어있는 행이면 추가
+      // if (count < 7) {
+      //   matrix.push(week);
+      // }
 
       // 만약 42일로 표현하고 싶으면 위에 대신 밑에 줄 사용
-      // matrix.push(week);
+      matrix.push(week);
       week = [];
     }
 
@@ -212,7 +212,9 @@ export default function ClubSchedule() {
           {/* 날짜를 클릭 시 띄워 줄 그 날의 일정리스트 */}
           {selectedStatus ? (
             <div
-              className={"w-screen h-screen fixed z-40 pl-[380px]"}
+              className={
+                "w-screen h-screen absolute mt-[200px] z-40 pl-[380px]"
+              }
               onClick={onListClose}
             >
               <ClubDateScheduleList
@@ -334,7 +336,9 @@ export default function ClubSchedule() {
                         `}
                         >
                           <div className={"flex justify-between"}>
-                            <div></div>
+                            <div className={"pl-[10px]"}>
+                              {/*{scheduleFromDate[i * 7 + j].length}*/}
+                            </div>
                             <div className={"pr-[10px]"}>{day.date}</div>
                           </div>
                         </div>
@@ -356,7 +360,7 @@ export default function ClubSchedule() {
                             for (let k = 0; k < scheduleLength; k++) {
                               scheduleFromDate[i * 7 + j + k].push(schedule);
                             }
-                            // console.log(scheduleFromDate);
+                            console.log(scheduleFromDate);
 
                             return (
                               <>
