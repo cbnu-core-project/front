@@ -60,9 +60,11 @@ export default function ClubFAQSetting() {
           placeholder={" ex) 문의 가능한 링크를 등록해주세요. (오픈채팅방 등)"}
           value={post.open_url}
           onChange={(e)=>{
-            let copy = {...post}
+            if( e.target.value.length <= 100) {
+              let copy = {...post}
             copy.open_url = e.target.value
             setPost(copy)
+            }
           }}
         />
         <div className={'mt-10 font-[Pv] font-bold text-h3'}>질문 & 답변 추가
