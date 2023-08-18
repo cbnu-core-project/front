@@ -178,7 +178,7 @@ const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
       <img
-        src={`${baseUrl}/${props.post.image_urls[0]}`}
+        src={`${props.post.image_urls[0]}`}
         alt="img"
         className={"rounded-t-lg"}
       />
