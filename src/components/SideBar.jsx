@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Calendar from "./Calendar";
+import UserCalendar from "./UserCalendar";
 import axios from "axios";
 import { baseUrl } from "../common/global";
 import Login from "../pages/Login";
@@ -82,7 +82,9 @@ export default function SideBar() {
         </div>
         {mystate == true ? <Modal /> : null}
         <div className="flex mt-[40px]">
-          <div className="side_title text-[22px] font-[700] text-darkgray self-center">나의 동아리</div>
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">
+            나의 동아리
+          </div>
           <button
             class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
@@ -96,7 +98,9 @@ export default function SideBar() {
         {myclub == true ? <MyClub /> : null}
 
         <div className="flex mt-[20px] w-full">
-          <div className="side_title text-[22px] font-[700] text-darkgray self-center">월간 일정</div>
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">
+            월간 일정
+          </div>
           <button
             class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
@@ -106,10 +110,13 @@ export default function SideBar() {
             {calender ? "expand_more" : "expand_less"}
           </button>
         </div>
-        {calender == true ? <Calendar /> : null}
+        {calender == true ? <UserCalendar /> : null}
         {/* 참일 때 '이번주 일정' 정보 열림*/}
+        {/*
         <div className="flex mt-[25px] w-full">
-          <div className="side_title text-[22px] font-[700] text-darkgray self-center">이번주 일정</div>
+          <div className="side_title text-[22px] font-[700] text-darkgray self-center">
+            이번주 일정
+          </div>
           <button
             class="ml-auto material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
@@ -120,6 +127,8 @@ export default function SideBar() {
           </button>
         </div>
         {schedule == true ? <WeekSchedule /> : null}
+        */}
+
         {/* 참일 때 '이번주 일정' 정보 열림*/}
         {/* <div className="flex mt-[20px] w-full">
           <div className="side_title">동아리 신청 내역</div>
@@ -135,7 +144,9 @@ export default function SideBar() {
         {/*{register == true ? <Register /> : null}*/}
         {/* 참일 때 '동아리 신청 내역' 정보 열림*/}
         <div className="flex mt-[20px]">
-          <div className="side_title w-full text-[22px] font-[700] text-darkgray self-center">관심 동아리</div>
+          <div className="side_title w-full text-[22px] font-[700] text-darkgray self-center">
+            관심 동아리
+          </div>
           <button
             class="ml-outo material-symbols-outlined text-midgray text-[40px]"
             onClick={() => {
@@ -267,7 +278,9 @@ function MyClub() {
                   >
                     {/* 사각 아이콘 안에 첫글자만 보여줌 */}
                     <div className="grid justify-center">
-                      <div className="grid club_icon content-center">{club.title.charAt(0)}</div>
+                      <div className="grid club_icon content-center">
+                        {club.title.charAt(0)}
+                      </div>
                     </div>
                     <div className="text-center ">{club.title}</div>
                     {/* 동아리 이름 출력 */}
@@ -298,6 +311,7 @@ function Register() {
   );
 }
 
+/*
 function WeekSchedule() {
   //'이번주 일정'정보
   const [schedules, setSchedules] = useRecoilState(userSchedulesState);
@@ -391,6 +405,7 @@ function WeekSchedule() {
     }
   });
 }
+*/
 
 function Interesting() {
   //'관심 동아리'정보
@@ -438,7 +453,9 @@ function Interesting() {
                   >
                     {/* 사각 아이콘 안에 첫글자만 보여줌 */}
                     <div className="grid justify-center ">
-                      <div className="grid club_icon content-center">{club.title.charAt(0)}</div>
+                      <div className="grid club_icon content-center">
+                        {club.title.charAt(0)}
+                      </div>
                     </div>
                     <div className="text-center">{club.title}</div>
                     {/* 동아리 이름 출력 */}
