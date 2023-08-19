@@ -62,8 +62,5 @@
     .signup_deny{
         @apply w-[100px] h-[40px] bg-[#C1C1C1] text-white rounded-md text-h5
     }
-    .member_delete{
-        @apply w-[100px] h-[40px] bg-[#FF847C7D] rounded-md text-h5
-    }
 
 }
