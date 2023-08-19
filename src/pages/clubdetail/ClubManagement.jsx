@@ -86,31 +86,31 @@ function ManagerSignUp() {
                   "my-[16px] mx-[45px] w-[1226px] h-[40px] py-[6px] flex text-h5"
                 }
               >
-                <div className={"w-[98px]"}>
+                <div className={"w-[96px]"}>
                   <p className="pl-[23px]">직책</p>
                 </div>
-                <div className="w-[69px]">
+                <div className="w-[129px]">
                   <p className="text-center">이름</p>
                 </div>
-                <div className="w-[150px]">
+                {/* <div className="w-[150px]">
                   <p className={"text-center"}>닉네임</p>
-                </div>
-                <div className="w-[160px]">
+                </div> */}
+                <div className="w-[180px]">
                   <p className={"text-center"}>학과</p>
                 </div>
-                <div className="w-[142px]">
+                <div className="w-[182px]">
                   <p className="text-center">학번</p>
                 </div>
-                <div className="w-[178px]">
+                <div className="w-[198px]">
                   <p className="text-center">전화번호</p>
                 </div>
-                <div className="w-[190px]">
+                <div className="w-[210px]">
                   <p className="text-center">이메일</p>
                 </div>
-                <div className="w-[140px]">
+                <div className="w-[160px]">
                   <p className="text-center">직책 변경</p>
                 </div>
-                <div className="ml-auto w-[124px]">
+                <div className="w-[124px]">
                   <p className="text-center">멤버 탈퇴</p>
                 </div>
               </div>
@@ -128,42 +128,43 @@ function ManagerSignUp() {
                     <div className={"flex w-[1216px] h-[40px]"}>
                       <div className={"w-[96px] h-[40px]"}>
                         {member.current_club_authority <= 2 ?
-                          <div className={"w-[74px] h-[40px] bg-main_mid rounded-md text-white text-center px-[10px] flex flex-col justify-center"}>
-                            {member.current_club_authority <= 1 ? "회장" : "임원"} </div>
+                          <div>
+                            {member.current_club_authority <= 1 ? <div className={'w-[74px] h-[40px] rounded-md text-white text-center px-[10px] flex flex-col justify-center bg-main_default'}>회장</div> 
+                            : <div className={"w-[74px] h-[40px] rounded-md text-white text-center px-[10px] flex flex-col justify-center bg-main_mid"}>임원</div>} </div>
                           : <div className={"w-[74px] h-[40px] bg-main_light text-black text-center rounded-md px-[10px] flex flex-col justify-center"}>{member.current_club_authority > 2 ? "부원" : ""} </div>}
                       </div>
-                      <div className={"w-[69px]"}>
+                      <div className={"w-[129px]"}>
                         <p className={"text-h5 py-[6px] text-center text-gray"}>
                           {member.realname}
                         </p>
                       </div>
-                      <div className={"w-[150px]"}>
+                      {/* <div className={"w-[150px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {member.nickname}
                         </p>
-                      </div>
-                      <div className={"w-[160px]"}>
+                      </div> */}
+                      <div className={"w-[180px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {member.major}
                         </p>
                       </div>
-                      <div className={"w-[142px]"}>
+                      <div className={"w-[182px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {member.student_number}
                         </p>
                       </div>
-                      <div className={"w-[178px]"}>
+                      <div className={"w-[198px]"}>
                         <p className={"text-h5 py-[6px] text-center"}>
                           {member.phone_number}
                         </p>
                       </div>
-                      <div className={"w-[190px]"}>
+                      <div className={"w-[210px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {member.email}
                         </p>
                       </div>
 
-                      <div className={"w-[140px] grid justify-center"}>
+                      <div className={"w-[160px] grid justify-center"}>
                         <button
                           className={
                             "border border-[#C1C1C1] rounded-md w-[100px] h-[40px]"
