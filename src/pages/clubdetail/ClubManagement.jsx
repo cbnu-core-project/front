@@ -115,6 +115,7 @@ function ManagerSignUp() {
                 </div>
               </div>
             </div>
+            
             {members.map((member, idx) => {
               return (
                 <>
