@@ -92,9 +92,9 @@ function ManagerSignUp() {
                 <div className="w-[69px]">
                   <p className="text-center">이름</p>
                 </div>
-                <div className="w-[150px]">
+                {/* <div className="w-[150px]">
                   <p className={"text-center"}>닉네임</p>
-                </div>
+                </div> */}
                 <div className="w-[160px]">
                   <p className={"text-center"}>학과</p>
                 </div>
@@ -107,10 +107,10 @@ function ManagerSignUp() {
                 <div className="w-[190px]">
                   <p className="text-center">이메일</p>
                 </div>
-                <div className="w-[140px]">
+                <div className="ml-[52px] w-[140px]">
                   <p className="text-center">직책 변경</p>
                 </div>
-                <div className="ml-auto w-[124px]">
+                <div className="ml-[84px] w-[124px]">
                   <p className="text-center">멤버 탈퇴</p>
                 </div>
               </div>
@@ -139,11 +139,11 @@ function ManagerSignUp() {
                           {member.realname}
                         </p>
                       </div>
-                      <div className={"w-[150px]"}>
+                      {/* <div className={"w-[150px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {member.nickname}
                         </p>
-                      </div>
+                      </div> */}
                       <div className={"w-[160px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {member.major}
@@ -165,7 +165,7 @@ function ManagerSignUp() {
                         </p>
                       </div>
 
-                      <div className={"w-[140px] grid justify-center"}>
+                      <div className={"ml-[48px] w-[140px] grid justify-center"}>
                         <button
                           className={
                             "border border-[#C1C1C1] rounded-md w-[100px] h-[40px]"
@@ -182,7 +182,7 @@ function ManagerSignUp() {
                         </button>
                         {count === idx ? <Setting member={member} setCount={setCount} setMembers={setMembers} sortNgetMembers={sortNgetMembers} /> : null}
                       </div>
-                      <div className={"w-[124px] grid justify-end"}>
+                      <div className={"ml-[72px] w-[124px] grid justify-end"}>
                         <button className={"w-[100px] h-[40px] bg-[#FF847C7D] rounded-md text-h5"}
                           onClick={() => {
                             setCount(-1);
