@@ -37,7 +37,7 @@ function ManagerSignUp() {
   }, []);
 
 
-  if (authorityOfClub <= 1) {
+  if (authorityOfClub <= 4) {
     return (
       <>
         <div className="w-full relative">
@@ -93,10 +93,11 @@ function ManagerSignUp() {
                 </div>
               </div>
             </div>
+            
             {members.map((member, idx) => {
               return (
                 <>
-
+                  
                   <li
                     className={
                       member.length === 10
@@ -109,7 +110,8 @@ function ManagerSignUp() {
                         {member.current_club_authority <= 2 ?
                           <div className={"w-[74px] h-[40px] bg-main_mid rounded-md text-white text-center px-[10px] flex flex-col justify-center"}>
                             {member.current_club_authority <= 1 ? "회장" : "임원"} </div>
-                          : <div className={"w-[74px] h-[40px] bg-main_light text-black text-center rounded-md px-[10px] flex flex-col justify-center"}>{member.current_club_authority > 2 ? "부원" : ""} </div>}
+                          : <div className={"w-[74px] h-[40px] bg-main_light text-black text-center rounded-md px-[10px] flex flex-col justify-center"}>
+                            {member.current_club_authority > 2 ? "부원" : ""} </div>}
                       </div>
                       <div className={"w-[69px]"}>
                         <p className={"text-h5 py-[6px] text-center text-gray"}>
@@ -224,3 +226,8 @@ function Setting(props) {
   );
 }
 
+function AscendingSort(a,b){
+  if(a > b) return 1;
+  if(a === b) return 0;
+  if(a < b) return -1;
+}
