@@ -363,9 +363,9 @@ export default function ClubSchedule() {
                               {/*{scheduleFromDate[i * 7 + j].length >= 9*/}
                               {/*  ? `+  ${scheduleFromDate[i * 7 + j].length - 8}`*/}
                               {/*  : null}*/}
-                              {scheduleFromDate[i * 7 + j].length > 0
-                                ? scheduleFromDate[i * 7 + j].length
-                                : null}
+                              {/*{scheduleFromDate[i * 7 + j].length > 0*/}
+                              {/*  ? scheduleFromDate[i * 7 + j].length*/}
+                              {/*  : null}*/}
                             </div>
                             <div className={"pr-[10px]"}>{day.date}</div>
                           </div>
@@ -447,12 +447,12 @@ export default function ClubSchedule() {
               return week.map((day, j) => {
                 return (
                   <div
-                    className={`w-[180px] h-[180px] hover:bg-main_mid hover:opacity-20 ${
+                    className={`w-[180px] h-[180px] hover:text-gray hover:bg-main_mid hover:bg-opacity-20 pl-[10px] pt-[4px] ${
                       selectedDate.get("year") === dateMatrix[i][j].year &&
                       selectedDate.get("month") === dateMatrix[i][j].month &&
                       selectedDate.get("date") === dateMatrix[i][j].date
-                        ? "bg-main_mid opacity-20"
-                        : ""
+                        ? "bg-main_mid bg-opacity-20 text-gray"
+                        : "text-white"
                     }`}
                     onClick={() => {
                       setSelectedDate(
@@ -466,7 +466,9 @@ export default function ClubSchedule() {
                       setSelectedStatus(true);
                       setSelectedDateIndex(i * 7 + j);
                     }}
-                  ></div>
+                  >
+                    {scheduleFromDate[i * 7 + j].length}개의 일정
+                  </div>
                 );
               });
             })}
