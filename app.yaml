@@ -1,0 +1,25 @@
+runtime: nodejs16
+
+instance_class: B1
+
+manual_scaling:
+  instances: 1
+resources:
+  cpu: 1
+  memory_gb: 1
+  disk_size_gb: 10
+
+# 배포시 환경변수 ( 배포환경에 따른 코드조건문을 위해서 )
+env_variables:
+  NODE_ENV: "production"
+
+# 빌드파일 배포 경로
+handlers:
+  # Serve all static files with url ending with a file extension
+  - url: /(.*\..+)$
+    static_files: build/\1
+    upload: build/(.*\..+)$
+  # Catch all handler to index.html
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
