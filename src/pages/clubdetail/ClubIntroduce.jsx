@@ -381,7 +381,7 @@ export default function ClubIntroduce() {
                         onClick={() => {
                           // 태그 추가되도록 설정
                           setAddTag(!addTag);
-                          if (tagInput != null)
+                          if (tagInput != null){
                             axios
                               .post(
                                 `/api/club/activity_tag/push?objid=${id}&activity_tag=${tagInput}`
@@ -389,9 +389,12 @@ export default function ClubIntroduce() {
                               .then((res) => {
                                 readOneClub(id).then((res) =>
                                   setpost(res.data[0])
-                                );
-                              });
-                          setTagInput(null);
+                                )
+                              })
+                              .catch(err => {console.log(err)})
+                            setTagInput(null);
+                          }    
+                          
                         }}
                       >
                         + 활동 추가

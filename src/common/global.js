@@ -1,4 +1,5 @@
-let baseUrl = "http://127.0.0.1:8000";
+let baseUrl = "http://34.64.231.240:8080/";
+
 
 // if (process.env.NODE_ENV == "development") {
 //   /* 테스트용 외부 아이피 */
