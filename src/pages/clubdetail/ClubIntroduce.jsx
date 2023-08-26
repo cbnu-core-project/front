@@ -26,7 +26,7 @@ export default function ClubIntroduce() {
   const [AddImg, setAddImg] = useRecoilState(addingImgState); //이미지 추가하는 모달 창 여는 변수
   const [tagModfy, setTagModfy] = useState(true); //태그 수정버튼 클릭에 따른 ui변화
   const [addTag, setAddTag] = useState(false); //태그 활동추가 버튼 관련 기능
-  const [tagInput, setTagInput] = useState(""); //태그 인풋 내용
+  const [tagInput, setTagInput] = useState(null); //태그 인풋 내용
   const [clubProgramModfy, setClubProgramModfy] = useState(true); //동아리 프로그램 수정버튼 클릭에 따른 ui변화
   const [clubHistoryModfy, setClubHistoryModfy] = useState(true); //동아리 활동내역 수정버튼 클릭에 따른 ui변화
 
@@ -104,6 +104,7 @@ export default function ClubIntroduce() {
   useEffect(() => {
     getClubPost();
   }, [AddImg]);
+
 
   return (
     <>
