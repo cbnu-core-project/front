@@ -359,14 +359,7 @@ export default function ClubSchedule() {
                         `}
                         >
                           <div className={"flex justify-between"}>
-                            <div className={"pl-[10px] text-gray"}>
-                              {/*{scheduleFromDate[i * 7 + j].length >= 9*/}
-                              {/*  ? `+  ${scheduleFromDate[i * 7 + j].length - 8}`*/}
-                              {/*  : null}*/}
-                              {/*{scheduleFromDate[i * 7 + j].length > 0*/}
-                              {/*  ? scheduleFromDate[i * 7 + j].length*/}
-                              {/*  : null}*/}
-                            </div>
+                            <div className={"pl-[10px] text-gray"}></div>
                             <div className={"pr-[10px]"}>{day.date}</div>
                           </div>
                         </div>
