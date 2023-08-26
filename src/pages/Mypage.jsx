@@ -46,7 +46,7 @@ export default function Mypage() {
           <div className="flex justify-center mt-[7px] font-[700]">
             {userInfo.nickname}
           </div>
-          <div className="flex flex-col justify-between h-[790px]">
+          <div className="flex flex-col justify-between h-[690px]">
             <div className="grid place-content-center mt-[65px] gap-[25px]">
               <div
                 className="flex justify-between w-[360px] h-[48px] rounded-xl bg-white px-[5px] cursor-pointer"
