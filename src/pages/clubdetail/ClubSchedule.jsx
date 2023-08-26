@@ -16,6 +16,7 @@ import { bg_colors } from "../../common/colors";
 import "./ClubSchedule.css";
 import Swal from "sweetalert2";
 import { commonErrorAlert } from "../../alerts/commonAlert";
+import { Pagination } from "@mantine/core";
 
 export default function ClubSchedule() {
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -132,20 +133,20 @@ export default function ClubSchedule() {
 
       week.push({ year: year, month: month, date: date, scheduleCount: 0 });
 
-      // 현재  month와 다른 month의 주로만 이루어진 줄이 생기지 않도록 체크
-      let count = 0;
-      for (let j = 0; j < 7; j++) {
-        if (week[j].month !== currentDate.get("month")) {
-          count += 1;
-        }
-      }
-      // 만약 week에 현재 달의 날짜가 포함되어있는 행이면 추가
-      if (count < 7) {
-        matrix.push(week);
-      }
+      // // 현재  month와 다른 month의 주로만 이루어진 줄이 생기지 않도록 체크
+      // let count = 0;
+      // for (let j = 0; j < 7; j++) {
+      //   if (week[j].month !== currentDate.get("month")) {
+      //     count += 1;
+      //   }
+      // }
+      // // 만약 week에 현재 달의 날짜가 포함되어있는 행이면 추가
+      // if (count < 7) {
+      //   matrix.push(week);
+      // }
 
       // 만약 42일로 표현하고 싶으면 위에 대신 밑에 줄 사용
-      // matrix.push(week);
+      matrix.push(week);
       week = [];
     }
 
@@ -160,6 +161,28 @@ export default function ClubSchedule() {
   for (let i = 0; i < 42; i++) {
     scheduleFromDate.push([]);
   }
+
+  // 현재 일정 42칸의 스케줄들을 일별로 쪼개서 넣어줌
+  schedules.map((schedule, index) => {
+    const startDateTime = dayjs(schedule.calendar_start_datetime);
+    const endDateTime = dayjs(schedule.end_datetime);
+    const scheduleLength = schedule.schedule_length;
+
+    dateMatrix.map((week, index2) => {
+      week.map((day, index3) => {
+        if (
+          day.year === startDateTime.get("year") &&
+          day.month === startDateTime.get("month") &&
+          day.date === startDateTime.get("date")
+        ) {
+          for (let k = 0; k < scheduleLength; k++) {
+            scheduleFromDate[index2 * 7 + index3 + k].push(schedule);
+          }
+        }
+      });
+    });
+  });
+
   ////////////////////////////////////////////////////////////////////////////
 
   // 이전 달로 이동
@@ -212,7 +235,9 @@ export default function ClubSchedule() {
           {/* 날짜를 클릭 시 띄워 줄 그 날의 일정리스트 */}
           {selectedStatus ? (
             <div
-              className={"w-screen h-screen fixed z-40 pl-[380px]"}
+              className={
+                "w-screen h-screen absolute mt-[200px] z-40 pl-[380px]"
+              }
               onClick={onListClose}
             >
               <ClubDateScheduleList
@@ -334,7 +359,7 @@ export default function ClubSchedule() {
                         `}
                         >
                           <div className={"flex justify-between"}>
-                            <div></div>
+                            <div className={"pl-[10px] text-gray"}></div>
                             <div className={"pr-[10px]"}>{day.date}</div>
                           </div>
                         </div>
@@ -352,12 +377,6 @@ export default function ClubSchedule() {
                             day.month === startDateTime.get("month") &&
                             day.date === startDateTime.get("date")
                           ) {
-                            // 현재 날에 있는 일정들을 구하는 코드
-                            for (let k = 0; k < scheduleLength; k++) {
-                              scheduleFromDate[i * 7 + j + k].push(schedule);
-                            }
-                            // console.log(scheduleFromDate);
-
                             return (
                               <>
                                 <div
@@ -384,18 +403,6 @@ export default function ClubSchedule() {
                                         {schedule.title.slice(0, 13)}..
                                       </span>
                                     )}
-
-                                    {/*
-                                  {count === index ? (
-                                    <div className={`z-30`}>
-                                      <ScheduleDetaile
-                                        schedule={schedule}
-                                        setCount={setCount}
-                                        getSchedules={getClubSchedules}
-                                      />
-                                    </div>
-                                  ) : null}
-                                  */}
                                   </div>
                                 </div>
                                 {count === index ? (
@@ -433,12 +440,12 @@ export default function ClubSchedule() {
               return week.map((day, j) => {
                 return (
                   <div
-                    className={`w-[180px] h-[180px] hover:bg-main_mid hover:opacity-20 ${
+                    className={`w-[180px] h-[180px] hover:text-gray hover:bg-main_mid hover:bg-opacity-20 pl-[10px] pt-[4px] ${
                       selectedDate.get("year") === dateMatrix[i][j].year &&
                       selectedDate.get("month") === dateMatrix[i][j].month &&
                       selectedDate.get("date") === dateMatrix[i][j].date
-                        ? "bg-main_mid opacity-20"
-                        : ""
+                        ? "bg-main_mid bg-opacity-20 text-gray"
+                        : "text-white"
                     }`}
                     onClick={() => {
                       setSelectedDate(
@@ -452,7 +459,9 @@ export default function ClubSchedule() {
                       setSelectedStatus(true);
                       setSelectedDateIndex(i * 7 + j);
                     }}
-                  ></div>
+                  >
+                    {scheduleFromDate[i * 7 + j].length}개의 일정
+                  </div>
                 );
               });
             })}
@@ -471,10 +480,10 @@ export default function ClubSchedule() {
 }
 
 const ClubDateScheduleList = (props) => {
-  const schedules = props.scheduleFromDate[props.selectedDateIndex];
+  const scheduleFromDateElement =
+    props.scheduleFromDate[props.selectedDateIndex];
   const [count, setCount] = useState(-1);
-
-  console.log(props.as); // undefined
+  const [page, onChange] = useState(1);
 
   const onClose = () => {
     props.setSelectedStatus(false);
@@ -511,60 +520,71 @@ const ClubDateScheduleList = (props) => {
             <i className="fa-regular fa-calendar-check fa-2xl"></i>
           </div>
           <div>
-            {schedules.map((schedule, index) => {
-              const startDateTime = dayjs(schedule.start_datetime);
-              const endDateTime = dayjs(schedule.end_datetime);
-              const day_list = ["일", "월", "화", "수", "목", "금", "토"];
+            {scheduleFromDateElement
+              .slice((page - 1) * 8, page * 8)
+              .map((schedule, index) => {
+                const startDateTime = dayjs(schedule.start_datetime);
+                const endDateTime = dayjs(schedule.end_datetime);
+                const day_list = ["일", "월", "화", "수", "목", "금", "토"];
 
-              return (
-                <>
-                  <div
-                    className={"flex gap-[12px]"}
-                    onClick={() => {
-                      if (count >= 0 && index === count) {
-                        setCount(-1);
-                      } else {
-                        setCount(index);
-                      }
-                    }}
-                  >
+                return (
+                  <div className={""}>
                     <div
-                      className={`w-[4px] h-[28px] ${
-                        bg_colors[schedule.color]
-                      } rounded-full`}
-                    ></div>
-                    <div>
-                      <p className={"text-h3 font-[600] w-[360px]"}>
-                        {schedule.title}
-                      </p>
-                      <p className={"text-h5 text-gray font-[400]"}>
-                        {startDateTime.get("month") + 1}월{" "}
-                        {startDateTime.get("date")}일{" "}
-                        {day_list[startDateTime.get("day")]}요일{" "}
-                        {startDateTime.get("hour")}:
-                        {startDateTime.get("minute")} ~{" "}
-                        {endDateTime.get("month") + 1}월{" "}
-                        {endDateTime.get("date")}일{" "}
-                        {day_list[endDateTime.get("day")]}
-                        요일 {endDateTime.get("hour")}:
-                        {endDateTime.get("minute")}
-                      </p>
+                      className={"flex gap-[12px]"}
+                      onClick={() => {
+                        if (count >= 0 && index === count) {
+                          setCount(-1);
+                        } else {
+                          setCount(index);
+                        }
+                      }}
+                    >
+                      <div
+                        className={`w-[4px] h-[28px] ${
+                          bg_colors[schedule.color]
+                        } rounded-full`}
+                      ></div>
+                      <div>
+                        <p className={"text-h3 font-[600] w-[360px]"}>
+                          {schedule.title}
+                        </p>
+                        <p className={"text-h5 text-gray font-[400]"}>
+                          {startDateTime.get("month") + 1}월{" "}
+                          {startDateTime.get("date")}일{" "}
+                          {day_list[startDateTime.get("day")]}요일{" "}
+                          {startDateTime.get("hour")}:
+                          {startDateTime.get("minute")} ~{" "}
+                          {endDateTime.get("month") + 1}월{" "}
+                          {endDateTime.get("date")}일{" "}
+                          {day_list[endDateTime.get("day")]}
+                          요일 {endDateTime.get("hour")}:
+                          {endDateTime.get("minute")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className={""}>
+                      {count === index ? (
+                        <ScheduleDetaile
+                          type={"club"}
+                          schedule={schedule}
+                          setCount={setCount}
+                          color={schedule.color}
+                          getSchedules={props.getSchedules}
+                        />
+                      ) : null}
                     </div>
                   </div>
-                  <div>
-                    {count === index ? (
-                      <ScheduleDetaile
-                        type={"club"}
-                        schedule={schedule}
-                        setCount={setCount}
-                        color={schedule.color}
-                        getSchedules={props.getSchedules}
-                      />
-                    ) : null}
-                  </div>
-                </>
-              );
-            })}
+                );
+              })}
+          </div>
+        </div>
+        <div className={"w-full p-16 flex justify-center"}>
+          <div>
+            <Pagination
+              total={Math.ceil(scheduleFromDateElement.length / 8)}
+              boundaries={1}
+              onChange={onChange}
+            />
           </div>
         </div>
       </div>
@@ -581,6 +601,7 @@ const ClubSchedulePostAndPut = (props) => {
   const [userInfo] = useRecoilState(userInfoState);
   const [addBtn, setAddBtn] = useState(false);
   const { id } = useParams();
+  const [club, setClub] = useState({});
 
   useEffect(() => {
     // 유저 정보 리스트 불러오기
@@ -596,6 +617,11 @@ const ClubSchedulePostAndPut = (props) => {
     // 동아리 멤버 리스트 불러오기 ( 백엔드에 전용 api 추가히기 )
     axios.get("/api/club/member/" + id).then((res) => {
       setClubMembers(res.data);
+    });
+
+    // 현재 동아리 정보 불러오기
+    axios.get("/api/club/" + id).then((res) => {
+      setClub(res.data[0]);
     });
   }, []);
 
@@ -619,8 +645,8 @@ const ClubSchedulePostAndPut = (props) => {
           user_unique_id: userInfo.unique_id,
           realname: userInfo.realname,
           email: userInfo.email,
-          club_objid: updateSchedule.club_objid,
-          club_name: updateSchedule.club_name,
+          club_objid: club._id,
+          club_name: club.title,
           title: updateSchedule.title,
           content: updateSchedule.content,
           place: updateSchedule.place,
@@ -645,8 +671,8 @@ const ClubSchedulePostAndPut = (props) => {
             user_unique_id: userInfo.unique_id,
             realname: userInfo.realname,
             email: userInfo.email,
-            club_objid: updateSchedule.club_objid,
-            club_name: updateSchedule.club_name,
+            club_objid: club._id,
+            club_name: club.title,
             title: updateSchedule.title,
             content: updateSchedule.content,
             place: updateSchedule.place,

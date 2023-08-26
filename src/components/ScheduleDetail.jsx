@@ -12,6 +12,7 @@ import {
   postStatusState,
   updateScheduleState,
 } from "../store";
+import Swal from "sweetalert2";
 
 const ScheduleDetaile = (props) => {
   const [users, setUsers] = useState([]);
@@ -43,10 +44,18 @@ const ScheduleDetaile = (props) => {
 
   const clickUpdate = () => {
     // setState (수정하기 모달창 띄워주는 여부)
-    setUpdateSchedule(props.schedule);
-    setPostStatus("put");
-    props.setCount(-1);
-    setClubScheduleSelectedStatus(false);
+    if (authority <= 2) {
+      setUpdateSchedule(props.schedule);
+      setPostStatus("put");
+      props.setCount(-1);
+      setClubScheduleSelectedStatus(false);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "권한 문제",
+        text: "동아리 임원 이상부터 추가 가능합니다.",
+      });
+    }
   };
 
   const handleDelete = () => {

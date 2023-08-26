@@ -78,7 +78,7 @@ function UserSignUp(props) {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   //파일
-  const [files, setFiles] = useState({ raw: "" });
+  const [files, setFiles] = useState([]);
   const [filesUrl, setFilesUrl] = useState([]);
   var d = new Date();
 
@@ -101,34 +101,29 @@ function UserSignUp(props) {
   };
 
   const handleDelete = () => {
-    setFiles({ raw: "" });
+    // setFiles({ raw: "" });
   };
 
   const uploadFile = (e, data, i) => {
-    e.preventDefault();
     const formData = new FormData();
-    formData.append("files", files.raw);
+    formData.append("file", e.target.files[0]);
 
     axios
-      .post("/file", formData, {
+      .post("/upload/file", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
       .then((res) => {
-        // console.log(res.data.image_url);
-        setFilesUrl(res.data.file_url);
         console.log(res.data.file_url);
+        let copy = [...questions];
+        copy[i] = {
+          type: 1,
+          question: data.question,
+          answer: res.data.file_url,
+        };
+        setQuestions(copy);
       });
-
-    let copy = [...questions];
-    copy[i] = {
-      type: 1,
-      question: data.question,
-      answer: filesUrl,
-    };
-    console.log(e.target.value);
-    setQuestions(copy);
   };
 
   const testType = (data, i) => {
@@ -189,7 +184,7 @@ function UserSignUp(props) {
               required
               id="input_file"
               className="hidden"
-              onClick={uploadFile}
+              onChange={(e) => uploadFile(e, data, i)}
               // onChange={(e) => {}}
             />
           </div>
