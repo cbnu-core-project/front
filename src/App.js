@@ -94,7 +94,12 @@ function App() {
 
   function kakaoLogin() {
     return axios
-      .post(`${baseUrl}/oauth/kakao/login`, { code: CODE })
+      .post(
+        `${baseUrl}/oauth/kakao/login${
+          process.env.NODE_ENV == "development" ? "/development" : ""
+        }`,
+        { code: CODE }
+      )
       .then((res) => {
         const { access_token, refresh_token } = res.data;
         setAccessToken(access_token);
@@ -113,7 +118,12 @@ function App() {
 
   function naverLogin() {
     return axios
-      .post(`${baseUrl}/oauth/naver/login`, { code: CODE })
+      .post(
+        `${baseUrl}/oauth/naver/login${
+          process.env.NODE_ENV == "development" ? "/development" : ""
+        }`,
+        { code: CODE }
+      )
       .then((res) => {
         const { access_token, refresh_token } = res.data;
         setAccessToken(access_token);
@@ -131,19 +141,6 @@ function App() {
   }
 
   useEffect(() => {
-    // let access_token = getAccessToken();
-    // if (access_token) {
-    //   // 헤더 등록을 위해 한 번 더 set
-    //   setAccessToken(access_token);
-    //   axios
-    //     .get("/api/common/protected")
-    //     .then((res) => {
-    //       setToken(access_token);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
     if (CODE) {
       if (STATE == "kakao") {
         kakaoLogin();
