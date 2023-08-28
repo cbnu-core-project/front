@@ -76,7 +76,7 @@ function UserSignUp(props) {
 
   //파일
   const [filename, setFilename] = useState([]);
-  var d = new Date();
+  let d = new Date();
 
   const required = (bool_list) => {
     if (bool_list[1] == true) {
@@ -232,6 +232,7 @@ function UserSignUp(props) {
                   placeholder={"ex) 홍길동"}
                   value={realname}
                   onChange={(e) => {
+                    //최대 12글자를 넘지 않도록 한다.
                     if (e.target.value.length <= 12) {
                       setRealName(e.target.value);
                     }
@@ -255,6 +256,7 @@ function UserSignUp(props) {
                   placeholder={"ex) OO학과"}
                   value={department}
                   onChange={(e) => {
+                    //최대 16글자를 넘지 않도록 한다.
                     if (e.target.value.length <= 16) {
                       setDepartment(e.target.value);
                     }
@@ -278,6 +280,7 @@ function UserSignUp(props) {
                   placeholder={"ex) 2021070015"}
                   value={schoolNumber}
                   onChange={(e) => {
+                    //최대 10글자를 넘지 않도록 한다.
                     if (e.target.value.length <= 10) {
                       setSchoolNumber(e.target.value);
                     }
@@ -470,6 +473,7 @@ function ManagerSignUp(props) {
   const [viewBtnState, setViewBtnState] = useRecoilState(viewButtonState);
   const [page, onChange] = useState(1);
   const [approvalModal, setApprovalModal] = useState(-1);
+  const [deleteIdState, setDeleteIdState] = useState([]);
 
   const pagination = usePagination({
     total: Math.ceil(listData.length / 8),
@@ -507,8 +511,17 @@ function ManagerSignUp(props) {
     }
   };
 
-  // useEffect(() => {
+  //데이터 삭제 함수
+  const deleteListData = (data) => {
+    axios.delete("/api/club_application_lists/" + data).then((res) => {
+      axios.get("/api/club_application_lists/" + props.id).then((response) => {
+        setListData(response.data);
+      });
+    });
+  };
 
+  // useEffect(() => {
+  //   deleteListData()
   // }, []);
 
   return (
@@ -619,9 +632,12 @@ function ManagerSignUp(props) {
                         <input
                           type="checkbox"
                           name="click"
-                          value={i + 8 * (page - 1) + 1}
                           className="w-[17px] h-[17px] my-[9px] -z-10"
-                          // onClick={checkAll}
+                          onChange={(e) => {
+                            let copy = [...deleteIdState];
+                            copy.push(`${post._id}`);
+                            setDeleteIdState(copy);
+                          }}
                         ></input>
                       </div>
 
@@ -745,12 +761,17 @@ function ManagerSignUp(props) {
 
           <div className="flex content-between">
             <button
-              className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3 -z-10 "
+              className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3"
               // onClick={checkAll}
             >
               전체 선택
             </button>
-            <button className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3 -z-10">
+            <button
+              className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3"
+              onClick={() => {deleteIdState.map((data, i)=>{return(
+                deleteListData(data)
+              )})}}
+            >
               선택 삭제
             </button>
           </div>

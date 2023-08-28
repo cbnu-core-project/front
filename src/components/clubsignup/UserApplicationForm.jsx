@@ -450,8 +450,6 @@ export default function UserApplicationForm(props) {
                 updateApplicationForm();
                 alert("변경되었습니다.");
               }
-              
-              
             }}
           >
             제출하기
