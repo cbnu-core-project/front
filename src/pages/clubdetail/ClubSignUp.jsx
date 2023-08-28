@@ -193,7 +193,7 @@ function UserSignUp(props) {
 
   return (
     <div className={"text-h1 font-bold "}>
-      <p className={"text-sub ml-[618px]"}> 코어 가입 신청서</p>
+      <p className={"text-sub ml-[618px]"}>가입 신청서</p>
 
       {/*가입신청 양식이 설정되지 않을 경우 예외처리*/}
       {props.formData == undefined ? (

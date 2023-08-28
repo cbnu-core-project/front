@@ -440,7 +440,18 @@ export default function UserApplicationForm(props) {
             type={"button"}
             className={"w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"}
             onClick={() => {
-              updateApplicationForm();
+              console.log(props.formData)
+              if (props.formData === undefined)
+              {
+                createApplicationForm();
+                alert("제출되었습니다.");
+              }
+              else{
+                updateApplicationForm();
+                alert("변경되었습니다.");
+              }
+              
+              
             }}
           >
             제출하기
