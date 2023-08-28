@@ -453,6 +453,7 @@ function UserSignUp(props) {
                       });
                   });
                 alert("제출됨");
+                window.location.reload()
               }}
             >
               제출하기
@@ -632,11 +633,13 @@ function ManagerSignUp(props) {
                         <input
                           type="checkbox"
                           name="click"
-                          className="w-[17px] h-[17px] my-[9px] -z-10"
+                          className="w-[17px] h-[17px] my-[9px]"
                           onChange={(e) => {
                             let copy = [...deleteIdState];
                             copy.push(`${post._id}`);
+                            console.log(copy)
                             setDeleteIdState(copy);
+                            
                           }}
                         ></input>
                       </div>
@@ -768,9 +771,13 @@ function ManagerSignUp(props) {
             </button>
             <button
               className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3"
-              onClick={() => {deleteIdState.map((data, i)=>{return(
-                deleteListData(data)
-              )})}}
+              onClick={() => {
+                alert("삭제되었습니다.")
+                deleteIdState.map((data, i) => {
+                  return deleteListData(data);
+                });   
+                setDeleteIdState([])
+                window.location.reload()}}
             >
               선택 삭제
             </button>
