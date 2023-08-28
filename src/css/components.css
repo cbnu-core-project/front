@@ -57,7 +57,7 @@
         @apply w-[100px] h-[40px] bg-[#DAF9CF] text-darkgray rounded-md text-h5 -z-10
     }
     .signup_accept{
-        @apply w-[100px] h-[40px] bg-sub text-white rounded-md text-h5 -z-10
+        @apply w-[100px] h-[40px] bg-sub text-white rounded-md text-h5 transition hover:scale-110
     }
     .signup_deny{
         @apply w-[100px] h-[40px] bg-[#FECCC9] text-darkgray rounded-md text-h5 -z-10

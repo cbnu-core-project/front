@@ -58,6 +58,7 @@ export default function ClubSignUp() {
     </>
   );
 }
+
 //일반 유저가 동아리 신청할 때 보이는 양식
 function UserSignUp(props) {
   const [realname, setRealName] = useState("");
@@ -213,7 +214,7 @@ function UserSignUp(props) {
         </div>
       ) : (
         <>
-        {/*가입신청 양식이 설정되었을 때*/}
+          {/*가입신청 양식이 설정되었을 때*/}
           <div className={"w-[780px] h-auto rounded-xl shadow-lg mx-auto"}>
             {/*이름 (보이게하는것, 필수인지 체크)*/}
             {props.formData.realname == true ? (
@@ -411,7 +412,7 @@ function UserSignUp(props) {
             <button
               type={"submit"}
               className={
-                "w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"
+                "w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md transition hover:scale-110"
               }
               onClick={() => {
                 const data = {
@@ -448,6 +449,7 @@ function UserSignUp(props) {
                         setPost(response.data);
                       });
                   });
+                alert("제출됨");
               }}
             >
               제출하기
@@ -504,6 +506,10 @@ function ManagerSignUp(props) {
       return "합격";
     }
   };
+
+  // useEffect(() => {
+
+  // }, []);
 
   return (
     <>
@@ -657,7 +663,7 @@ function ManagerSignUp(props) {
                       <div className={"w-[156px] grid justify-center"}>
                         <button
                           className={
-                            "border border-[#C1C1C1] rounded-md w-[100px] h-[40px]"
+                            "border border-[#C1C1C1] rounded-md w-[100px] h-[40px] transition hover:scale-110"
                           }
                           onClick={() => {
                             setState(!state);
@@ -667,7 +673,7 @@ function ManagerSignUp(props) {
                           신청서보기
                         </button>
                       </div>
-                      <div className={"w-[140px] grid justify-end"}>
+                      <div className={"w-[140px] "}>
                         <button
                           className={"signup_accept"}
                           onClick={() => {
@@ -680,17 +686,21 @@ function ManagerSignUp(props) {
                             //         `api/club_application_lists/approval?objid=${post._id}&approval=2`
                             //       );
                             // }
-                            if (i === approvalModal) {
+                            // console.log(i)
+                            if (i + 8 * (page - 1) + 1 === approvalModal) {
                               setApprovalModal(-1);
                             } else {
-                              setApprovalModal(i);
+                              setApprovalModal(i + 8 * (page - 1) + 1);
+                              // console.log(i)
                             }
                           }}
                         >
                           승인여부
                         </button>
-                        {approvalModal === i ? (
-                          <div className="w-[200px] h-[200px] border absolute bg-white mt-[42px] right-[150px]">
+
+                        {/*멤버의 합격, 불합격, 대기를 선택할 수 있도록 만든 모달창*/}
+                        {approvalModal === i + 8 * (page - 1) + 1 ? (
+                          <div className="w-[200px] h-[200px] border absolute bg-white mt-[15px]">
                             <div className="m-6 grid gap-4">
                               <button
                                 className="signup_accept"
