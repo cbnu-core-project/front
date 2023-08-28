@@ -13,19 +13,19 @@ export default function UserApplicationForm(props) {
   const [type, setType] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   //////////////////////////
-  const [phoneNumber, setPhoneNumber] = useState([false, false])
-  const [phoneNumberChecked, setPhoneNumberChecked] = useState(false)
-  const [phoneNumberRequiredChecked, setPhoneNumberRequiredChecked] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState([false, false]);
+  const [phoneNumberChecked, setPhoneNumberChecked] = useState(false);
+  const [phoneNumberRequiredChecked, setPhoneNumberRequiredChecked] =
+    useState(false);
   const [gender, setGender] = useState([false, false]);
   const [genderChecked, setGenderChecked] = useState(false);
   const [genderRequiredChecked, setGenderRequiredChecked] = useState(false);
   const [email, setEmail] = useState([false, false]);
   const [emailChecked, setEmailChecked] = useState(false);
-  const [emailRequiredChecked, setEmailRequiredChecked] = useState(false)
+  const [emailRequiredChecked, setEmailRequiredChecked] = useState(false);
   const [address, setAddress] = useState([false, false]);
-  const [addressRequiredChecked, setAddressRequiredChecked] = useState(false)
-  const [addressChecked, setAddressChecked] = useState(false)
-  
+  const [addressRequiredChecked, setAddressRequiredChecked] = useState(false);
+  const [addressChecked, setAddressChecked] = useState(false);
 
   const handleMenuClick = (props) => {
     setIsOpen(!isOpen);
@@ -39,7 +39,7 @@ export default function UserApplicationForm(props) {
   const k = [1, 2, 3, 4, 5];
   var d = new Date();
 
-  function createApplicationForm() {
+  function updateApplicationForm() {
     axios
       .put(`api/club_application_form/club_objid/${props.id}`, {
         title: title,
@@ -58,18 +58,50 @@ export default function UserApplicationForm(props) {
         questions: forms,
       })
       .then((res) => {
-        axios.get(`api/club_application_form/club_objid/${props.id}`).then((response) => {
-          setData(response.data[0]);
-          console.log(response.data[0]);
-        });
+        axios
+          .get(`api/club_application_form/club_objid/${props.id}`)
+          .then((response) => {
+            setData(response.data[0]);
+            console.log(response.data[0]);
+          });
+      });
+  }
+
+  function createApplicationForm() {
+    axios
+      .post("api/club_application_form", {
+        title: title,
+        content: content,
+        club_objid: props.id,
+        club_name: "1",
+        deadline: d,
+        announcement_of_acceptance: d,
+        realname: true,
+        department: true,
+        school_number: true,
+        gender: gender,
+        phone_number: phoneNumber,
+        email: email,
+        address: address,
+        questions: forms,
+      })
+      .then((res) => {
+        axios
+          .get(`api/club_application_form/club_objid/${props.id}`)
+          .then((response) => {
+            setData(response.data[0]);
+            console.log(response.data[0]);
+          });
       });
   }
 
   function getClubApplicationForm() {
     //주요활동내역 가져옴
-    axios.get(`api/club_application_form/club_objid/${props.id}`).then((res) => {
-      setData(res.data[0]);
-    });
+    axios
+      .get(`api/club_application_form/club_objid/${props.id}`)
+      .then((res) => {
+        setData(res.data[0]);
+      });
   }
 
   //  //해당 동아리 지원한 사람들의 리스트 -> 관리자 입장에서 approval로 승인, 거절 선택할 수 있음
@@ -84,13 +116,13 @@ export default function UserApplicationForm(props) {
     getClubApplicationForm();
   }, []);
 
-//   useEffect(() => {
-//     console.log(phoneNumber);
-//   }, [phoneNumber, phoneNumberRequiredChecked]);
+  //   useEffect(() => {
+  //     console.log(phoneNumber);
+  //   }, [phoneNumber, phoneNumberRequiredChecked]);
 
-// useEffect(()=> {
-//     console.log(forms)
-// }, [forms])
+  // useEffect(()=> {
+  //     console.log(forms)
+  // }, [forms])
 
   return (
     <div className={"text-h1 font-bold absolute z-10 left-1/4 right-1/4"}>
@@ -308,7 +340,6 @@ export default function UserApplicationForm(props) {
                   question: "제목을 입력해주세요.",
                 });
                 setForms(copy);
-        
               }}
             >
               +
@@ -335,9 +366,9 @@ export default function UserApplicationForm(props) {
                         href="#"
                         className="block rounded-lg  py-2 px-4 text-h5 hover:bg-gray"
                         onClick={() => {
-                          let copy = [...forms]
-                          copy[index].type = 0
-                          setForms(copy)
+                          let copy = [...forms];
+                          copy[index].type = 0;
+                          setForms(copy);
                         }}
                       >
                         주관식
@@ -346,9 +377,9 @@ export default function UserApplicationForm(props) {
                         href="#"
                         className="block rounded-lg  py-2 px-4 text-h5 hover:bg-gray"
                         onClick={() => {
-                            let copy = [...forms]
-                            copy[index].type = 1
-                            setForms(copy)
+                          let copy = [...forms];
+                          copy[index].type = 1;
+                          setForms(copy);
                         }}
                       >
                         첨부파일
@@ -365,10 +396,10 @@ export default function UserApplicationForm(props) {
                     className="form-checkbox h-5 w-5 text-black rounded-sm border"
                     checked={forms[index].required}
                     onChange={(e) => {
-                        let copy = [...forms]
-                        copy[index].required = !forms[index].required
-                        setForms(copy)
-                      }}
+                      let copy = [...forms];
+                      copy[index].required = !forms[index].required;
+                      setForms(copy);
+                    }}
                   />
                 </div>
               </div>
@@ -381,10 +412,10 @@ export default function UserApplicationForm(props) {
                   }
                   placeholder={"제목을 입력해주세요."}
                   value={form.question}
-                  onChange={(e)=>{
-                    let copy = [...forms]
-                    copy[index].question = e.target.value
-                    setForms(copy)
+                  onChange={(e) => {
+                    let copy = [...forms];
+                    copy[index].question = e.target.value;
+                    setForms(copy);
                   }}
                 ></input>
               </div>

@@ -97,7 +97,7 @@ export const listsState = atom({
     club_name: "",
     approval: 1,
     classification: 0,
-    data: {},
+    data: {questions:[{}]},
   }]
 });
 

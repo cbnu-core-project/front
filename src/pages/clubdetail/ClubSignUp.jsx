@@ -6,6 +6,8 @@ import { baseUrl } from "../../common/global";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { listsState, userInfoState, viewButtonState } from "../../store";
 import ViewApplicationForm from "../../components/clubsignup/ViewApplicationForm";
+import { usePagination } from "@mantine/hooks";
+import { Pagination } from "@mantine/core";
 
 axios.defaults.baseURL = baseUrl;
 
@@ -52,12 +54,6 @@ export default function ClubSignUp() {
   return (
     <>
       <UserSignUp formData={formData} id={id} listData={listData} />
-      {/* <UserApplicationForm
-        formData={formData}
-        listData={listData}
-        id={id}
-        objid={objid}
-      /> */}
       <ManagerSignUp formData={formData} id={id} submitData={submitData} />
     </>
   );
@@ -78,8 +74,7 @@ function UserSignUp(props) {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   //파일
-  const [files, setFiles] = useState([]);
-  const [filesUrl, setFilesUrl] = useState([]);
+  const [filename, setFilename] = useState([]);
   var d = new Date();
 
   const required = (bool_list) => {
@@ -90,23 +85,13 @@ function UserSignUp(props) {
     }
   };
 
-  const handleChange = (e) => {
-    // console.log(URL.createObjectURL(e.target.files[0]));
-    // console.log(e.target.files[0]);
-    if (e.target.files.length) {
-      setFiles({
-        raw: e.target.files[0],
-      });
-    }
-  };
-
   const handleDelete = () => {
     // setFiles({ raw: "" });
   };
 
   const uploadFile = (e, data, i) => {
     const formData = new FormData();
-    formData.append("file", e.target.value);
+    formData.append("file", e.target.files[0]);
 
     axios
       .post("/upload/file", formData, {
@@ -115,14 +100,18 @@ function UserSignUp(props) {
         },
       })
       .then((res) => {
-        console.log(res.data.file_url);
         let copy = [...questions];
+        console.log(i);
         copy[i] = {
           type: 1,
           question: data.question,
           answer: res.data.file_url,
         };
         setQuestions(copy);
+
+        let copy2 = [...filename];
+        copy2[i] = res.data.filename;
+        setFilename(copy2);
       });
   };
 
@@ -160,7 +149,7 @@ function UserSignUp(props) {
       return (
         <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
           <div className={"w-[150px] p-2"}>
-            파일 추가
+            {data.question}
             {data.required == true ? (
               <span className={"text-sub"}>(필수)</span>
             ) : null}
@@ -168,21 +157,27 @@ function UserSignUp(props) {
           <div>
             <div className="w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal relative">
               <label
-                for="input_file"
-                className="block p-4 -bottom-10 w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal"
+                for={"input_file" + i}
+                className="block p-4 -bottom-10 w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal overflow-hidden"
               >
-                <img
-                  src="/images/attach_file.png"
-                  className="px-[14px] mb-1"
-                ></img>
-                파일 추가
+                {filename[i] == undefined ? (
+                  <>
+                    <img
+                      src="/images/attach_file.png"
+                      className="px-[14px] mb-1"
+                    ></img>
+                    파일 추가
+                  </>
+                ) : (
+                  filename[i]
+                )}
               </label>
             </div>
             <input
               type="file"
               accept="*.*"
               required
-              id="input_file"
+              id={"input_file" + i}
               className="hidden"
               onChange={(e) => uploadFile(e, data, i)}
               // onChange={(e) => {}}
@@ -193,248 +188,334 @@ function UserSignUp(props) {
     }
   };
 
-  useEffect(() => {});
+  // useEffect(() => { console.log(questions)}, [questions]);
 
   return (
     <div className={"text-h1 font-bold "}>
       <p className={"text-sub ml-[618px]"}> 코어 가입 신청서</p>
-      <div className={"w-[780px] h-auto rounded-xl shadow-lg mx-auto"}>
-        {/*이름 (보이게하는것, 필수인지 체크)*/}
-        {props.formData.realname == true ? (
-          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-            <div className={"w-[150px] p-2 mt-[32px]"}>
-              이름
-              <span className={" text-sub"}>(필수)</span>
-            </div>
-            <input
-              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3 mt-[32px]"}
-              placeholder={"ex) 홍길동"}
-              value={realname}
-              onChange={(e) => {
-                if (e.target.value.length <= 12) {
-                  setRealName(e.target.value);
-                }
-              }}
-            ></input>
-          </div>
-        ) : (
-          <div></div>
-        )}
 
-        {/*학과 (보이게 하 는것, 필수인지 체크)*/}
-        {props.formData.department == true ? (
-          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-            <div className={"w-[150px] p-2"}>
-              학과 <span className={"text-sub"}>(필수)</span>
-            </div>
-            <input
-              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
-              placeholder={"ex) OO학과"}
-              value={department}
-              onChange={(e) => {
-                if (e.target.value.length <= 16) {
-                  setDepartment(e.target.value);
-                }
-              }}
-            ></input>
+      {/*가입신청 양식이 설정되지 않을 경우 예외처리*/}
+      {props.formData == undefined ? (
+        <div className={"mt-[50px]"}>
+          <img
+            src={"/images/금지표시.jpg"}
+            alt="img"
+            className={"rounded-lg h-[150px] ml-[628px]"}
+          />
+          <div
+            className={
+              "ml-[530px] mt-12 w-[360px] px-[24px] py-[32px] font-[Pv] rounded-md font-bold text-center text-h5 text-white bg-sub "
+            }
+          >
+            {" "}
+            아직 가입신청 양식이 생성되지 않았습니다!
           </div>
-        ) : (
-          <div></div>
-        )}
-        {/*학번 (보이게 하는 것, 필수인지 체크)*/}
-        {props.formData.school_number == true ? (
-          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-            <div className={"w-[150px] p-2"}>
-              학번 <span className={"text-sub"}>(필수)</span>
-            </div>
-            <input
-              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
-              placeholder={"ex) 2021070015"}
-              value={schoolNumber}
-              onChange={(e) => {
-                if (e.target.value.length <= 10) {
-                  setSchoolNumber(e.target.value);
-                }
-              }}
-            ></input>
-          </div>
-        ) : (
-          <></>
-        )}
-        {/*성별 (보이게 하는 것, 필수인지 체크)*/}
-        {props.formData.gender[0] == true ? (
-          <form className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-            <div className={"w-[150px] p-2 "}>
-              성별 {required(props.formData.gender)}
-            </div>
-            <div className="">
-              <input
-                type="radio"
-                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
-                value={"남자"}
-                id="male"
-                name="gender"
-                onChange={(e) => {
-                  setGender(e.target.value);
-                }}
-              />
-              <label className="text-h5 font-normal ml-[4px]" for={"male"}>
-                남자
-              </label>
-            </div>
-            <div className=" ml-[8px]">
-              <input
-                type="radio"
-                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
-                value={"여자"}
-                id="female"
-                name="gender"
-                onChange={(e) => {
-                  setGender(e.target.value);
-                }}
-              />
-              <label className="text-h5 font-normal ml-[4px]" for={"female"}>
-                여자
-              </label>
-            </div>
-          </form>
-        ) : (
-          <></>
-        )}
-        {/*연락처 (보이게 하는 것, 필수인지 체크)*/}
-        {props.formData.phone_number[0] == true ? (
-          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-            <div className={"w-[150px] p-2"}>
-              연락처 {required(props.formData.phone_number)}
-            </div>
-            <input
-              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
-              placeholder={"ex) 010-0000-0000"}
-              value={phoneNumber}
-              onChange={(e) => {
-                if (e.target.value.length <= 13) {
-                  setPhoneNumber(e.target.value);
-                }
-              }}
-            ></input>
-          </div>
-        ) : (
-          <div></div>
-        )}
+        </div>
+      ) : (
+        <>
+        {/*가입신청 양식이 설정되었을 때*/}
+          <div className={"w-[780px] h-auto rounded-xl shadow-lg mx-auto"}>
+            {/*이름 (보이게하는것, 필수인지 체크)*/}
+            {props.formData.realname == true ? (
+              <div
+                className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}
+              >
+                <div className={"w-[150px] p-2 mt-[32px]"}>
+                  이름
+                  <span className={" text-sub"}>(필수)</span>
+                </div>
+                <input
+                  className={
+                    "bg-gray3 h-[48px] rounded-xl text-h5 p-3 mt-[32px]"
+                  }
+                  placeholder={"ex) 홍길동"}
+                  value={realname}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 12) {
+                      setRealName(e.target.value);
+                    }
+                  }}
+                ></input>
+              </div>
+            ) : (
+              <div></div>
+            )}
 
-        {/*이메일 (보이게 하는 것, 필수인지 체크)*/}
-        {props.formData.email[0] == true ? (
-          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-            <div className={"w-[150px] p-2"}>
-              이메일 {required(props.formData.email)}
-            </div>
-            <input
-              className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
-              placeholder={"ex) 0000@naver.com"}
-              value={email}
-              onChange={(e) => {
-                if (e.target.value.length <= 30) {
-                  setEmail(e.target.value);
-                }
-              }}
-            ></input>
-          </div>
-        ) : (
-          <div></div>
-        )}
+            {/*학과 (보이게 하 는것, 필수인지 체크)*/}
+            {props.formData.department == true ? (
+              <div
+                className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}
+              >
+                <div className={"w-[150px] p-2"}>
+                  학과 <span className={"text-sub"}>(필수)</span>
+                </div>
+                <input
+                  className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+                  placeholder={"ex) OO학과"}
+                  value={department}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 16) {
+                      setDepartment(e.target.value);
+                    }
+                  }}
+                ></input>
+              </div>
+            ) : (
+              <div></div>
+            )}
 
-        {/*주소 (보이게 하는 것, 필수인지 체크)*/}
-        {props.formData.address[0] == true ? (
-          <div className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}>
-            <div className={"w-[150px] p-2"}>
-              주소
-              {required(props.formData.address)}
-            </div>
-            <input
-              className={"bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3"}
-              placeholder={"주소를 작성해주세요."}
-              value={address}
-              onChange={(e) => {
-                if (e.target.value.length <= 40) {
-                  setAddress(e.target.value);
-                }
-              }}
-            ></input>
-          </div>
-        ) : null}
-        {/*추가적으로 설정*/}
-        {props.formData.questions.map((data, i) => {
-          return <>{testType(data, i)}</>;
-        })}
+            {/*학번 (보이게 하는 것, 필수인지 체크)*/}
+            {props.formData.school_number == true ? (
+              <div
+                className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}
+              >
+                <div className={"w-[150px] p-2"}>
+                  학번 <span className={"text-sub"}>(필수)</span>
+                </div>
+                <input
+                  className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+                  placeholder={"ex) 2021070015"}
+                  value={schoolNumber}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 10) {
+                      setSchoolNumber(e.target.value);
+                    }
+                  }}
+                ></input>
+              </div>
+            ) : (
+              <></>
+            )}
 
-        {/*제출하면 lists에 신청서 제출하게 된다.*/}
-        <button
-          type={"submit"}
-          className={"w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"}
-          onClick={() => {
-            const data = {
-              title: props.formData.title,
-              content: props.formData.content,
-              club_objid: props.id,
-              user_objid: userInfo._id.toString(),
-              club_name: props.formData.club_name,
-              deadline: d,
-              announcement_of_acceptance: d,
-              realname: realname,
-              department: department,
-              school_number: schoolNumber,
-              gender: gender,
-              phone_number: phoneNumber,
-              email: email,
-              address: address,
-              questions: questions, //나중에 forms 넣으면 될 것 같은데,, 일단 냅두자
-            };
-            axios
-              .post("api/club_application_lists", {
-                user_objid: userInfo._id.toString(),
-                club_objid: props.id,
-                title: props.formData.title,
-                club_name: props.formData.club_name,
-                approval: 1,
-                classification: 0,
-                data: data,
-              })
-              .then((res) => {
-                axios.get("/api/club_application_lists").then((response) => {
-                  setPost(response.data);
-                });
-              });
-          }}
-        >
-          제출하기
-        </button>
-      </div>
+            {/*성별 (보이게 하는 것, 필수인지 체크)*/}
+            {props.formData.gender[0] == true ? (
+              <form
+                className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}
+              >
+                <div className={"w-[150px] p-2 "}>
+                  성별 {required(props.formData.gender)}
+                </div>
+                <div className="">
+                  <input
+                    type="radio"
+                    className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
+                    value={"남자"}
+                    id="male"
+                    name="gender"
+                    onChange={(e) => {
+                      setGender(e.target.value);
+                    }}
+                  />
+                  <label className="text-h5 font-normal ml-[4px]" for={"male"}>
+                    남자
+                  </label>
+                </div>
+                <div className=" ml-[8px]">
+                  <input
+                    type="radio"
+                    className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[11px]"
+                    value={"여자"}
+                    id="female"
+                    name="gender"
+                    onChange={(e) => {
+                      setGender(e.target.value);
+                    }}
+                  />
+                  <label
+                    className="text-h5 font-normal ml-[4px]"
+                    for={"female"}
+                  >
+                    여자
+                  </label>
+                </div>
+              </form>
+            ) : (
+              <></>
+            )}
+
+            {/*연락처 (보이게 하는 것, 필수인지 체크)*/}
+            {props.formData.phone_number[0] == true ? (
+              <div
+                className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}
+              >
+                <div className={"w-[150px] p-2"}>
+                  연락처 {required(props.formData.phone_number)}
+                </div>
+                <input
+                  className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+                  placeholder={"ex) 010-0000-0000"}
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 13) {
+                      setPhoneNumber(e.target.value);
+                    }
+                  }}
+                ></input>
+              </div>
+            ) : (
+              <div></div>
+            )}
+
+            {/*이메일 (보이게 하는 것, 필수인지 체크)*/}
+            {props.formData.email[0] == true ? (
+              <div
+                className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}
+              >
+                <div className={"w-[150px] p-2"}>
+                  이메일 {required(props.formData.email)}
+                </div>
+                <input
+                  className={"bg-gray3 h-[48px] rounded-xl text-h5 p-3"}
+                  placeholder={"ex) 0000@naver.com"}
+                  value={email}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 30) {
+                      setEmail(e.target.value);
+                    }
+                  }}
+                ></input>
+              </div>
+            ) : (
+              <div></div>
+            )}
+
+            {/*주소 (보이게 하는 것, 필수인지 체크)*/}
+            {props.formData.address[0] == true ? (
+              <div
+                className={"w-[700px] h-auto mx-auto mt-[32px] text-h3 flex"}
+              >
+                <div className={"w-[150px] p-2"}>
+                  주소
+                  {required(props.formData.address)}
+                </div>
+                <input
+                  className={
+                    "bg-gray3 h-[48px] w-[550px] rounded-xl text-h5 p-3"
+                  }
+                  placeholder={"주소를 작성해주세요."}
+                  value={address}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 40) {
+                      setAddress(e.target.value);
+                    }
+                  }}
+                ></input>
+              </div>
+            ) : null}
+            {/*추가적으로 설정*/}
+            {props.formData.questions.map((data, i) => {
+              return <>{testType(data, i)}</>;
+            })}
+
+            {/*제출하면 lists에 신청서 제출하게 된다.*/}
+            <button
+              type={"submit"}
+              className={
+                "w-[87px] h-[40px] text-h5 text-white bg-sub rounded-md"
+              }
+              onClick={() => {
+                const data = {
+                  title: props.formData.title,
+                  content: props.formData.content,
+                  club_objid: props.id,
+                  user_objid: userInfo._id.toString(),
+                  club_name: props.formData.club_name,
+                  deadline: d,
+                  announcement_of_acceptance: d,
+                  realname: realname,
+                  department: department,
+                  school_number: schoolNumber,
+                  gender: gender,
+                  phone_number: phoneNumber,
+                  email: email,
+                  address: address,
+                  questions: questions,
+                };
+                axios
+                  .post("api/club_application_lists", {
+                    user_objid: userInfo._id.toString(),
+                    club_objid: props.id,
+                    title: props.formData.title,
+                    club_name: props.formData.club_name,
+                    approval: 1,
+                    classification: 0,
+                    data: data,
+                  })
+                  .then((res) => {
+                    axios
+                      .get("/api/club_application_lists")
+                      .then((response) => {
+                        setPost(response.data);
+                      });
+                  });
+              }}
+            >
+              제출하기
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
 //동아리 관리자 가입 신청 현황
 function ManagerSignUp(props) {
-  let posts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 100, 200, 300, 400, 500];
   //가입 양식 설정하는 페이지 뜨도록 하는 state
   const [modal, setModal] = useState(false);
   //승인
   const [state, setState] = useState(false);
   const [listData, setListData] = useRecoilState(listsState);
   const [viewBtnState, setViewBtnState] = useRecoilState(viewButtonState);
+  const [page, onChange] = useState(1);
+  const [approvalModal, setApprovalModal] = useState(-1);
 
-  const PutApproval = () => {};
+  const pagination = usePagination({
+    total: Math.ceil(listData.length / 8),
+    page,
+    onChange,
+  });
+
+  // //전체 선택하게 하기
+  // const checkAll = (hello) => {
+  //   const checkboxes = document.getElementsByName("click");
+
+  //   checkboxes.forEach((checkbox) => {
+  //     checkbox.checked = hello.checked;
+  //   });
+  // };
+
+  //승인 상태 확인하는 className 함수 1: 대기 2: 불합격 0: 합격
+  const approvalClassName = (approval) => {
+    if (approval == 1) {
+      return "signup_wait";
+    } else if (approval == 2) {
+      return "signup_deny";
+    } else {
+      return "signup_done";
+    }
+  };
+  //승인 상태 확인하는 글자 함수
+  const approvalState = (approval) => {
+    if (approval == 1) {
+      return "승인대기";
+    } else if (approval == 2) {
+      return "불합격";
+    } else {
+      return "합격";
+    }
+  };
 
   return (
     <>
       <div
         className={
           modal == true
-            ? "top-0 bottom-0 right-0 left-0 bg-black bg-opacity-40"
+            ? "top-0 bottom-0 right-0 left-0 z-100 h-auto bg-black bg-opacity-40"
             : ""
         }
       >
         <div className={" ml-[64px] w-[1306px] h-[40px] flex"}>
-          <div className={"text-h1 font-bold text-sub ml-[580px] "}>
+          <div className={"text-h1 font-bold text-sub ml-[580px] -z-10 "}>
             가입신청 현황
           </div>
 
@@ -462,7 +543,7 @@ function ManagerSignUp(props) {
           ) : null}
           <div
             className={
-              "w-[1306px] h-[648px] ml-[64px] rounded-xl overflow-hidden overflow-y-scroll shadow-xl "
+              "w-[1306px] h-[648px] ml-[64px] rounded-xl overflow-hidden shadow-xl "
             }
           >
             <div
@@ -475,63 +556,77 @@ function ManagerSignUp(props) {
                   "my-[16px] mx-[40px] w-[1226px] h-[40px] py-[6px] flex text-h5"
                 }
               >
-                <div className={"w-[38px]"}>
-                  <p className="">순번</p>
+                <div className="w-[48px]">
+                  <p className="">선택</p>
                 </div>
-                <div className={"w-[164px]"}>
+
+                <div className={"w-[56px]"}>
+                  <p className="text-center">순번</p>
+                </div>
+
+                <div className="w-[132px]">
                   <p className="text-center">승인 현황</p>
                 </div>
-                <div className="w-[85px]">
+
+                <div className={"w-[85px]"}>
                   <p className="text-center">이름</p>
                 </div>
-                <div className="w-[160px]">
+
+                <div className={"w-[152px]"}>
                   <p className={"text-center"}>학과</p>
                 </div>
-                <div className="w-[155px] ">
+
+                <div className={"w-[147px]"}>
                   <p className="text-center">학번</p>
                 </div>
-                <div className="w-[178px] r">
+
+                <div className={"w-[170px]"}>
                   <p className="text-center">전화번호</p>
                 </div>
-                <div className="w-[151px]">
+
+                <div className={"w-[143px]"}>
                   <p className="text-center">신청 일자</p>
                 </div>
-                <div className="w-[156px] ">
-                  <p className="text-center">신청서</p>
+
+                <div className={"w-[156px] grid justify-center"}>
+                  <p className="text-center">신청서 보기</p>
                 </div>
-                <div className="ml-auto w-[120px] ">
+
+                <div className={"w-[95px] grid justify-end"}>
                   <p className="text-center">승인</p>
                 </div>
               </div>
             </div>
             {/*정보 가져오기*/}
-            {listData.map((post, i) => {
+            {listData.slice((page - 1) * 8, page * 8).map((post, i) => {
               return (
-                // <>
-                //
-                // </>
                 <>
                   <li
                     className={
-                      post === 10
-                        ? "px-[45px] py-[16px] flex justify-between hover:bg-gray3 rounded-[20px]"
-                        : "px-[45px] py-[16px] flex justify-between border-b-[0.5px] border-gray2 hover:bg-gray3 "
+                      i === 8
+                        ? "px-[45px] py-[16px] flex justify-betweenrounded-[20px]"
+                        : "px-[45px] py-[16px] flex justify-between border-b-[0.5px] border-gray2  "
                     }
                   >
                     <div className={"flex w-[1216px] h-[40px]"}>
-                      <div className={"w-[36px]"}>
-                        <input type="checkbox" className="py-[6px]"></input>
+                      <div className={"w-[48px]"}>
+                        <input
+                          type="checkbox"
+                          name="click"
+                          value={i + 8 * (page - 1) + 1}
+                          className="w-[17px] h-[17px] my-[9px] -z-10"
+                          // onClick={checkAll}
+                        ></input>
                       </div>
-                      <div className={"w-[36px]"}>
-                        <div className={"py-[6px]"}>{i}</div>
+
+                      <div className={"w-[56px]"}>
+                        <div className={"py-[6px] text-center"}>
+                          {i + 8 * (page - 1) + 1}
+                        </div>
                       </div>
-                      <div className="w-[164px] grid justify-center">
-                        <button
-                          className={
-                            post.approval == 1 ? "signup_wait" : "signup_done"
-                          }
-                        >
-                          {post.approval == 1 ? "승인 대기" : "승인 완료"}
+                      <div className="w-[132px] grid justify-center">
+                        <button className={approvalClassName(post.approval)}>
+                          {approvalState(post.approval)}
                         </button>
                       </div>
                       <div className={"w-[85px]"}>
@@ -539,22 +634,22 @@ function ManagerSignUp(props) {
                           {post.data.realname}
                         </p>
                       </div>
-                      <div className={"w-[160px]"}>
+                      <div className={"w-[152px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {post.data.department}
                         </p>
                       </div>
-                      <div className={"w-[155px]"}>
+                      <div className={"w-[147px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           {post.data.school_number}
                         </p>
                       </div>
-                      <div className={"w-[178px]"}>
+                      <div className={"w-[170px]"}>
                         <p className={"text-h5 py-[6px] text-center"}>
                           {post.data.phone_number}
                         </p>
                       </div>
-                      <div className={"w-[151px]"}>
+                      <div className={"w-[143px]"}>
                         <p className={"text-h5 text-center py-[6px]"}>
                           2023.07.06
                         </p>
@@ -566,21 +661,70 @@ function ManagerSignUp(props) {
                           }
                           onClick={() => {
                             setState(!state);
-                            setViewBtnState(i);
+                            setViewBtnState(i + 8 * (page - 1));
                           }}
                         >
                           신청서보기
                         </button>
                       </div>
-                      <div className={"w-[128px] grid justify-end"}>
+                      <div className={"w-[140px] grid justify-end"}>
                         <button
-                          className={
-                            post.approval == 1 ? "signup_accept" : "signup_deny"
-                          }
-                          onClick={() => {}}
+                          className={"signup_accept"}
+                          onClick={() => {
+                            // {
+                            //   post.approval == 1
+                            //     ? axios.post(
+                            //         `api/club_application_lists/approval?objid=${post._id}&approval=0`
+                            //       )
+                            //     : axios.post(
+                            //         `api/club_application_lists/approval?objid=${post._id}&approval=2`
+                            //       );
+                            // }
+                            if (i === approvalModal) {
+                              setApprovalModal(-1);
+                            } else {
+                              setApprovalModal(i);
+                            }
+                          }}
                         >
-                          {post.approval == 0 ? "승인 취소" : "승인"}
+                          승인여부
                         </button>
+                        {approvalModal === i ? (
+                          <div className="w-[200px] h-[200px] border absolute bg-white mt-[42px] right-[150px]">
+                            <div className="m-6 grid gap-4">
+                              <button
+                                className="signup_accept"
+                                onClick={() => {
+                                  axios.post(
+                                    `api/club_application_lists/approval?objid=${post._id}&approval=0`
+                                  );
+                                }}
+                              >
+                                합격
+                              </button>
+                              <button
+                                className="signup_accept"
+                                onClick={() => {
+                                  axios.post(
+                                    `api/club_application_lists/approval?objid=${post._id}&approval=2`
+                                  );
+                                }}
+                              >
+                                불합격
+                              </button>
+                              <button
+                                className="signup_accept"
+                                onClick={() => {
+                                  axios.post(
+                                    `api/club_application_lists/approval?objid=${post._id}&approval=1`
+                                  );
+                                }}
+                              >
+                                대기
+                              </button>
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   </li>
@@ -588,13 +732,26 @@ function ManagerSignUp(props) {
               );
             })}
           </div>
+
           <div className="flex content-between">
-            <button className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3 ">
+            <button
+              className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3 -z-10 "
+              // onClick={checkAll}
+            >
               전체 선택
             </button>
-            <button className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3">
+            <button className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3 -z-10">
               선택 삭제
             </button>
+          </div>
+          <div className={"w-full p-8 flex justify-center"}>
+            <div>
+              <Pagination
+                total={Math.ceil(listData.length / 8)}
+                boundaries={1}
+                onChange={onChange}
+              />
+            </div>
           </div>
         </div>
       </div>

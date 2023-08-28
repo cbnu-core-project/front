@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { createElement, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { viewButtonState, listsState } from "../../store";
@@ -13,6 +13,7 @@ export default function ViewApplicationForm() {
     address: [],
     questions: [],
     school_number: [],
+    questions: [{}],
   });
   const [viewBtnState, setViewBtnState] = useRecoilState(viewButtonState);
   //가입 신청 제출한 정보 들어있는 lists, 동아리 현황 데이터
@@ -31,7 +32,14 @@ export default function ViewApplicationForm() {
       return null;
     }
   };
-  const testType = (data) => {
+
+  const handleDownload = (url) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.click();
+  };
+
+  const testType = (data, i) => {
     if (data.type == 0) {
       return (
         <div className={"w-[620px] h-auto mx-auto text-h3 border"}>
@@ -43,22 +51,29 @@ export default function ViewApplicationForm() {
             className={
               "bg-gray3 w-[620px] h-[300px] rounded-xl text-h5 overflow-y-scroll p-3 mt-[10px]"
             }
-          ></div>
+          >
+            {listData[viewBtnState].data.questions[i].answer}
+          </div>
         </div>
       );
     } else if (data.type == 1) {
       return (
         <div className={"w-[620px] h-auto mx-auto text-h3 border"}>
-          
-            파일 추가
-            {data.required == true ? (
-              <span className={"text-sub"}>(필수)</span>
-            ) : null}
-      
+          {data.question}
+          {data.required == true ? (
+            <span className={"text-sub"}>(필수)</span>
+          ) : null}
+
           <div>
-            <form>
-              <div className="w-[80px] h-[80px] mt-[10px] bg-gray3 rounded-xl text-h8 font-normal relative"></div>
-            </form>
+            <div className="w-[80px] h-[80px] mt-[10px] bg-gray3 rounded-xl text-h8 font-normal relative cursor-pointer hover:scale-110"
+            onClick={() =>
+              handleDownload(
+                listData[viewBtnState].data.questions[i].answer
+              )}>
+
+                {listData[viewBtnState].data.questions[i].answer.split('/').slice(-1)[0]}
+
+            </div>
           </div>
         </div>
       );
@@ -112,10 +127,60 @@ export default function ViewApplicationForm() {
         ) : null}
 
         {formData.gender[0] == true ? (
-          <div className="w-[620px] h-[33px] border">
+          <div className="w-[620px] h-[33px] border flex">
             <p className="text-[20px]">성별 {required(formData.gender)}</p>
+            {listData[viewBtnState].data.gender == "남자" ? (
+              <div className="flex">
+                <input
+                  type="radio"
+                  className="form-checkbox h-5 w-5 text-black rounded-sm border-black border "
+                  value={"남자"}
+                  id="male"
+                  name="gender"
+                  checked
+                />
+                <label className="text-h5 font-normal ml-[4px]" for={"male"}>
+                  남자
+                </label>
+                <input
+                  type="radio"
+                  className="form-checkbox h-5 w-5 text-black rounded-sm border-black border"
+                  value={"여자"}
+                  id="female"
+                  name="gender"
+                />
+                <label className="text-h5 font-normal ml-[4px]" for={"female"}>
+                  여자
+                </label>
+              </div>
+            ) : (
+              <div className="flex">
+                <input
+                  type="radio"
+                  className="form-checkbox h-5 w-5 text-black rounded-sm border-black border "
+                  value={"남자"}
+                  id="male"
+                  name="gender"
+                />
+                <label className="text-h5 font-normal ml-[4px]" for={"male"}>
+                  남자
+                </label>
+                <input
+                  type="radio"
+                  className="form-checkbox h-5 w-5 text-black rounded-sm border-black border"
+                  value={"여자"}
+                  id="female"
+                  name="gender"
+                  checked
+                />
+                <label className="text-h5 font-normal ml-[4px]" for={"female"}>
+                  여자
+                </label>
+              </div>
+            )}
           </div>
         ) : null}
+
         {formData.phone_number[0] == true ? (
           <div className="w-[620px] h-[92px] border">
             <p className="text-[20px]">연락처 {required(formData.gender)}</p>
@@ -141,8 +206,8 @@ export default function ViewApplicationForm() {
           </div>
         ) : null}
         {/*추가적으로 설정*/}
-        {formData.questions.map((data) => {
-          return <>{testType(data)}</>;
+        {formData.questions.map((data, i) => {
+          return <>{testType(data, i)}</>;
         })}
       </div>
     </>
