@@ -156,7 +156,7 @@ function UserSignUp(props) {
             ) : null}
           </div>
           <div>
-            <div className="w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal relative">
+            <div className="w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal relative  transition hover:scale-110 ">
               <label
                 for={"input_file" + i}
                 className="block p-4 -bottom-10 w-[80px] h-[80px] bg-gray3 rounded-xl text-h8 font-normal overflow-hidden"
@@ -453,7 +453,7 @@ function UserSignUp(props) {
                       });
                   });
                 alert("제출됨");
-                window.location.reload()
+                window.location.reload();
               }}
             >
               제출하기
@@ -513,13 +513,31 @@ function ManagerSignUp(props) {
   };
 
   //데이터 삭제 함수
-  const deleteListData = (data) => {
-    axios.delete("/api/club_application_lists/" + data).then((res) => {
-      axios.get("/api/club_application_lists/" + props.id).then((response) => {
-        setListData(response.data);
+  const deleteListData = () => {
+    console.log("1", deleteIdState)
+    axios
+      .delete("/api/club_application_lists/delete/list", {
+        objid_list: deleteIdState,
+      })
+      .then((res) => {
+        console.log("2", deleteIdState)
+        axios
+          .get("/api/club_application_lists/" + props.id)
+          .then((response) => {
+            setListData(response.data);
+          });
       });
-    });
   };
+
+  // //전체 선택하는 함수
+  // const selectAll(selectAll)  {
+  //   const checkboxes
+  //        = document.getElementsByName('click');
+
+  //   checkboxes.forEach((checkbox) => {
+  //     checkbox.checked = selectAll.checked;
+  //   })
+  // }
 
   // useEffect(() => {
   //   deleteListData()
@@ -534,24 +552,38 @@ function ManagerSignUp(props) {
             : ""
         }
       >
-        <div className={" ml-[64px] w-[1306px] h-[40px] flex"}>
+        <div className={" ml-[64px] w-[1306px] h-[40px]"}>
           <div className={"text-h1 font-bold text-sub ml-[580px] -z-10 "}>
             가입신청 현황
           </div>
+          <div className="flex">
+            <button
+              className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3  transition hover:scale-110 "
+              onClick={() => {
+                alert("삭제되었습니다.");
+                deleteListData();
+                setDeleteIdState([]);
+              }}
+            >
+              삭제
+            </button>
 
-          <button
-            className={
-              "ml-auto w-[155px] h-[40px] rounded-md bg-sub text-white flex py-[10px] pl-[14px]"
-            }
-            onClick={() => {
-              setModal(!modal);
-            }}
-          >
-            <p className="text-h3 font-semibold">가입 양식 설정</p>
-            <button className="material-symbols-outlined">chevron_right</button>
-          </button>
+            <button
+              className={
+                "ml-auto w-[155px] h-[40px] rounded-md bg-sub text-white flex py-[10px] pl-[14px] transition hover:scale-110"
+              }
+              onClick={() => {
+                setModal(!modal);
+              }}
+            >
+              <p className="text-h3 font-semibold">가입 양식 설정</p>
+              <button className="material-symbols-outlined">
+                chevron_right
+              </button>
+            </button>
+          </div>
         </div>
-        <div className={"h-[26px]"} />
+        <div className={"h-[50px]"} />
         <div className="relative">
           {state == true ? <ViewApplicationForm /> : null}
           {modal == true ? (
@@ -576,8 +608,11 @@ function ManagerSignUp(props) {
                   "my-[16px] mx-[40px] w-[1226px] h-[40px] py-[6px] flex text-h5"
                 }
               >
-                <div className="w-[48px]">
-                  <p className="">선택</p>
+                <div className="w-[48px]" name="click">
+                  <input
+                    type="checkbox"
+                    className="w-[17px] h-[17px] my-[5px]"
+                  ></input>
                 </div>
 
                 <div className={"w-[56px]"}>
@@ -633,13 +668,12 @@ function ManagerSignUp(props) {
                         <input
                           type="checkbox"
                           name="click"
-                          className="w-[17px] h-[17px] my-[9px]"
+                          className="w-[17px] h-[17px] my-[10px]"
                           onChange={(e) => {
                             let copy = [...deleteIdState];
                             copy.push(`${post._id}`);
-                            console.log(copy)
+                            console.log(copy);
                             setDeleteIdState(copy);
-                            
                           }}
                         ></input>
                       </div>
@@ -763,24 +797,12 @@ function ManagerSignUp(props) {
           </div>
 
           <div className="flex content-between">
-            <button
+            {/* <button
               className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3"
               // onClick={checkAll}
             >
               전체 선택
-            </button>
-            <button
-              className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3"
-              onClick={() => {
-                alert("삭제되었습니다.")
-                deleteIdState.map((data, i) => {
-                  return deleteListData(data);
-                });   
-                setDeleteIdState([])
-                window.location.reload()}}
-            >
-              선택 삭제
-            </button>
+            </button> */}
           </div>
           <div className={"w-full p-8 flex justify-center"}>
             <div>
