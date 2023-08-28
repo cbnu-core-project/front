@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../common/global";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { listsState, userInfoState, viewButtonState } from "../../store";
+import { listsState, userInfoState, viewButtonState, tokenState } from "../../store";
 import ViewApplicationForm from "../../components/clubsignup/ViewApplicationForm";
 import { usePagination } from "@mantine/hooks";
 import { Pagination } from "@mantine/core";
@@ -23,6 +23,9 @@ export default function ClubSignUp() {
   });
   const [listData, setListData] = useRecoilState(listsState);
   const [submitData, setSubmitData] = useState({});
+  //동아리 별 권한 설정 state
+  const [authorityOfClub, setAuthorityOfClub] = useState(5);
+  const [token, setToken] = useRecoilState(tokenState);
 
   //가입 신청 양식 설정한 것(form)을 데이터 가져오는 함수
   function getClubApplicationForm() {
@@ -49,12 +52,21 @@ export default function ClubSignUp() {
     getClubApplicationForm();
     getClubApplicationLists();
     getClubApplicationSubmit();
+    axios.get("/api/user/authority_of_club/" + id).then((res) => {
+      setAuthorityOfClub(res.data);
+    });
   }, []);
 
   return (
     <>
-      <UserSignUp formData={formData} id={id} listData={listData} />
-      <ManagerSignUp formData={formData} id={id} submitData={submitData} />
+      {/* 가입 신청 페이지 - 전체 인원 보여줌 */}
+      {authorityOfClub >= 5 && authorityOfClub <= 3 && token ? (
+        <UserSignUp formData={formData} id={id} listData={listData} />
+      ) : null}
+      {/* 가입 신청 현황 페이지 - 회장, 임원만 보여줌 */}
+      {authorityOfClub >= 2  && token ? (
+        <ManagerSignUp formData={formData} id={id} submitData={submitData} />
+      ) : null}
     </>
   );
 }
@@ -512,38 +524,22 @@ function ManagerSignUp(props) {
     }
   };
 
-  // //데이터 삭제 함수
-  // const deleteListData = () => {
-  //   axios
-  //     .delete('/api/club_application_lists/objid_list', {
-  //       data: { objid_list: deleteIdState },
-  //     })
-  //     .then((res) => {
-  //       axios
-  //         .get('/api/club_application_lists/' + props.id)
-  //         .then((response) => {
-  //           setListData(response.data);
-  //         });
-  //     });
-  // };
-
   // //전체 선택하는 함수
   const deleteAll = (selectAll) => {
     const checkboxes = document.getElementsByName("listdata");
-    console.log(checkboxes[0].checked)
 
     //가입 신청한 사람의 삭제할 값의 true, false
     let listEach = [];
 
     //가입 신청한 사람의 삭제할 값의 value 값
     let checklistData = [];
-    
+
     //전체 삭제하는 checkbox가 true일 경우
-    if (checkboxes[0].checked == true){
+    if (checkboxes[0].checked == true) {
       checkboxes.forEach((checkbox) => {
         listEach.push(checkboxes[0].checked);
       });
-    }else{
+    } else {
       //전체 삭제하는 checkbox가 false일 경우
       checkboxes.forEach((checkbox) => {
         listEach.push(checkbox.checked);
@@ -551,7 +547,7 @@ function ManagerSignUp(props) {
     }
 
     listEach.map((type, i) => {
-      if (i>=1 && type === true) {
+      if (i >= 1 && type === true) {
         checklistData.push(checkboxes[i].value);
       }
     });
@@ -569,9 +565,8 @@ function ManagerSignUp(props) {
       });
   };
 
-  useEffect(() => {
-    deleteAll()
-  }, []);
+  // useEffect(() => {
+  // }, []);
 
   return (
     <>
@@ -640,7 +635,8 @@ function ManagerSignUp(props) {
                   <input
                     type="checkbox"
                     name="listdata"
-                    value="selectall"
+                    key="checkAll"
+                    value="checkAll"
                     className="w-[17px] h-[17px] my-[5px]"
                   ></input>
                 </div>
