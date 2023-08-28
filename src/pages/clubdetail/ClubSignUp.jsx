@@ -501,7 +501,7 @@ function ManagerSignUp(props) {
   const [viewBtnState, setViewBtnState] = useRecoilState(viewButtonState);
   const [page, onChange] = useState(1);
   const [approvalModal, setApprovalModal] = useState(-1);
-  const [deleteIdState, setDeleteIdState] = useState([]);
+  // const [deleteIdState, setDeleteIdState] = useState([]);
 
   const pagination = usePagination({
     total: Math.ceil(listData.length / 8),
@@ -539,36 +539,61 @@ function ManagerSignUp(props) {
     }
   };
 
-  //데이터 삭제 함수
-  const deleteListData = () => {
-    console.log('1', deleteIdState);
+  // //데이터 삭제 함수
+  // const deleteListData = () => {
+  //   axios
+  //     .delete('/api/club_application_lists/objid_list', {
+  //       data: { objid_list: deleteIdState },
+  //     })
+  //     .then((res) => {
+  //       axios
+  //         .get('/api/club_application_lists/' + props.id)
+  //         .then((response) => {
+  //           setListData(response.data);
+  //         });
+  //     });
+  // };
+
+  // //전체 선택하는 함수
+  const deleteAll = (selectAll) => {
+    const checkboxes
+         = document.getElementsByName('listdata');
+
+    //삭제할 값의 true, false
+    let list = []
+    //삭제할 값의 value값
+    let checklistData = []
+
+    checkboxes.forEach((checkbox) => {
+      list.push(checkbox.checked) 
+    })
+
+    console.log(checkboxes)
+    
+    list.map((type, i)=>{
+      if (type === true){
+        checklistData.push(document.getElementsByName('listdata')[i].value)
+      }
+
+    })
+
     axios
       .delete('/api/club_application_lists/objid_list', {
-        data: { objid_list: deleteIdState },
+        data: { objid_list: checklistData },
       })
       .then((res) => {
-        console.log('2', deleteIdState);
         axios
           .get('/api/club_application_lists/' + props.id)
           .then((response) => {
             setListData(response.data);
           });
       });
-  };
-
-  // //전체 선택하는 함수
-  // const selectAll(selectAll)  {
-  //   const checkboxes
-  //        = document.getElementsByName('click');
-
-  //   checkboxes.forEach((checkbox) => {
-  //     checkbox.checked = selectAll.checked;
-  //   })
-  // }
+  }
 
   // useEffect(() => {
   //   deleteListData()
   // }, []);
+
 
   return (
     <>
@@ -587,8 +612,7 @@ function ManagerSignUp(props) {
             <button
               className="w-[129px] h-[40px] bg-[#C1C1C1] rounded-md text-white text-h3  transition hover:scale-110 "
               onClick={() => {
-                deleteListData();
-                setDeleteIdState([]);
+                deleteAll();
               }}
             >
               삭제
@@ -636,7 +660,6 @@ function ManagerSignUp(props) {
               >
                 <div
                   className="w-[48px]"
-                  name="click"
                 >
                   <input
                     type="checkbox"
@@ -696,14 +719,10 @@ function ManagerSignUp(props) {
                       <div className={'w-[48px]'}>
                         <input
                           type="checkbox"
-                          name="click"
+                          name="listdata"
+                          value={post._id}
+                          key = {post._id}
                           className="w-[17px] h-[17px] my-[10px]"
-                          onChange={(e) => {
-                            let copy = [...deleteIdState];
-                            copy.push(`${post._id}`);
-                            console.log(copy);
-                            setDeleteIdState(copy);
-                          }}
                         ></input>
                       </div>
 

@@ -12,6 +12,6 @@ if (process.env.NODE_ENV == 'development') {
 // console.log(baseUrl);
 
 // 테스트용
-baseUrl = 'http://127.0.0.1:8000';
+// baseUrl = 'http://127.0.0.1:8000';
 
 export { baseUrl };
