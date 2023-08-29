@@ -570,6 +570,7 @@ function ManagerSignUp(props) {
   //   deleteListData()
   // }, []);
 
+
   return (
     <>
       <div
@@ -634,10 +635,7 @@ function ManagerSignUp(props) {
                   'my-[16px] mx-[40px] w-[1226px] h-[40px] py-[6px] flex text-h5'
                 }
               >
-                <div
-                  className="w-[48px]"
-                  name="click"
-                >
+                <div className="w-[48px]">
                   <input
                     type="checkbox"
                     className="w-[17px] h-[17px] my-[5px]"
