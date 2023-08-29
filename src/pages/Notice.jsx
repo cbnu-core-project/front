@@ -118,7 +118,7 @@ const Notice = () => {
                 {/* {DateFromObject(post._id) - today >= -10 ? <span> [New] </span>: "" } <<- new 붙이는 곳인데 나중에 함수 추가하겠음.*/} 
                 <button
                   onClick={() => {
-                    alert("아직 개발 안됐어요")
+                    navigate('../noticeDetail');
                   }}>
                   {post.title.length > 70
                     ? post.title.slice(0, 70) + "..."
@@ -147,5 +147,8 @@ const Notice = () => {
 function DateFromObject(objid) { //오브젝트 아이디로부터 시간 받아오는 함수
   return new Date(parseInt(objid.substring(0, 8), 16) * 1000);
 }
+
+
+
 
 export default Notice;

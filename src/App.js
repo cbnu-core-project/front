@@ -16,6 +16,7 @@ import {
   ClubFAQSetting,
   UserApplicationForm,
   NoticePost,
+  NoticeDetail,
 } from "./pages";
 import SideBar from "./components/SideBar";
 import Login from "./pages/Login";
@@ -160,6 +161,7 @@ function App() {
           <Route path="/club" element={<Club />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticePost" element={<NoticePost />} />
+          <Route path="/noticeDetail" element={<NoticeDetail/>} />
           <Route path="/promotion" element={<Promotion />} />
           <Route path="/clubdetail/:id" element={<ClubDetail />}>
             <Route path="clubboard" element={<ClubBoard />}></Route>

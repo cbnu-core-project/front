@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userInfoState } from "../../store";
+import { userInfoState, tokenState} from "../../store";
 import { baseUrl } from "../../common/global";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,7 @@ function ManagerSignUp() {
   const [userInfo] = useRecoilState(userInfoState);
   const [authorityOfClub, setAuthorityOfClub] = useState(0);
   const [count, setCount] = useState(-1)
+  const [token, setToken] = useRecoilState(tokenState);
 
   const sortNgetMembers = () => {
     axios.get('/api/club/member/' + id).then((res) => {
@@ -59,7 +60,7 @@ function ManagerSignUp() {
   }
 
 
-  if (authorityOfClub <= 2) {
+  if (authorityOfClub <= 2 && token) {
     return (
       <>
         <div className="w-full relative">
@@ -221,7 +222,7 @@ function ManagerSignUp() {
   else {
     return (
       <>
-        <div>응 넌 못봐~</div>
+        <div> 볼 수 없는 페이지입니다.</div>
       </>
     );
   }
