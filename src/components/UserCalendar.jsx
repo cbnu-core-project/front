@@ -234,15 +234,15 @@ const SelectedDateSchedule = (props) => {
                     }
                   }}
                 >
-                  <div className="w-[58px] h-[90px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">
-                    <div className="text-h4 font-[600] text-white">
-                      {/*{startDateTime.get("date")}*/}
-                    </div>
-                    <div className="text-h4 font-[600]  text-white">
-                      {/*{endDateTime.get("date")}*/}
-                    </div>
-                  </div>
-                  <div className="flex flex-col w-full h-[90px] ml-[5px] bg-white pl-[10px] pt-[10px] rounded-2xl">
+                  {/*<div className="w-[58px] h-[90px] bg-main_mid rounded-2xl flex flex-col text-center justify-center">*/}
+                  {/*  <div className="text-h4 font-[600] text-white">*/}
+                  {/*    /!*{startDateTime.get("date")}*!/*/}
+                  {/*  </div>*/}
+                  {/*  <div className="text-h4 font-[600]  text-white">*/}
+                  {/*    /!*{endDateTime.get("date")}*!/*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
+                  <div className="flex flex-col w-full h-[90px] bg-white pl-[15px] pt-[15px] rounded-2xl">
                     <div className="text-black text-h7 font-[300] flex gap-[4px]">
                       <div
                         className={`w-[3px] ${

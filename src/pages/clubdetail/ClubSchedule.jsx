@@ -359,7 +359,7 @@ export default function ClubSchedule() {
                         `}
                         >
                           <div className={"flex justify-between"}>
-                            <div>a</div>
+                            <div></div>
                             <div className={"pr-[10px]"}>{day.date}</div>
                           </div>
                         </div>

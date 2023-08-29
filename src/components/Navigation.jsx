@@ -1,27 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { ReactComponent as Logo } from "../assets/Arible Logo English.ver.svg";
 
 export default function Navigation() {
-  // const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  //
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setScreenWidth(window.innerWidth);
-  //     // console.log(screenWidth);
-  //   };
-  //
-  //   window.addEventListener("resize", handleResize);
-  //
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, [screenWidth]);
-  //
-  // // 스타일 동적적용을 위한 style
-  // const containerStyle = {
-  //   width: screenWidth + "px",
-  // };
-
   return (
     <>
       <div
@@ -37,7 +17,7 @@ export default function Navigation() {
               "ml-[72px] mt-[25.5px] text-[24px] text-main_default font-bold"
             }
           >
-            동아리 로고
+            <Logo width={90} />
           </NavLink>
           <div
             className={"space-x-[80px] text-sm ml-[48px] mt-[31px] text-gray2"}
