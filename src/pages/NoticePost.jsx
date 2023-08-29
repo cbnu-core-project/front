@@ -31,34 +31,6 @@ const NoticePost = () => {
 
     };
 
-    const uploadFile = (e, data, i) => {
-        const formData = new FormData();
-        formData.append("file", e.target.files[0]);
-    
-        axios
-          .post("/upload/file", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            let copy = [...questions];
-            console.log(i);
-            copy[i] = {
-              type: 1,
-              question: data.question,
-              answer: res.data.file_url,
-            };
-            setQuestions(copy);
-    
-            let copy2 = [...filename];
-            copy2[i] = res.data.filename;
-            setFilename(copy2);
-          });
-      };
-    
-    
-
     return (
         <>
         <div className={'mt-[128px] text-center font-[Pv] text-h1 text-sub font-bold'}> 공지사항 작성</div>
