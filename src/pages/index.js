@@ -14,3 +14,6 @@ export { default as PromotionDetail } from "./promotiondetail/PromotionDetail";
 export { default as Mypage } from "./Mypage";
 export { default as ClubFAQSetting} from "./clubdetail/ClubFAQSetting"
 export { default as UserApplicationForm } from "../components/clubsignup/UserApplicationForm";
+export { default as NoticePost} from "./NoticePost"; 
+export { default as NoticeDetail} from "./NoticeDetail";
+
