@@ -54,17 +54,22 @@ export default function ClubSignUp() {
     getClubApplicationSubmit();
     axios.get("/api/user/authority_of_club/" + id).then((res) => {
       setAuthorityOfClub(res.data);
+      console.log(token)
     });
   }, []);
 
   return (
     <>
+     {/* <UserSignUp formData={formData} id={id} listData={listData} />
+     <ManagerSignUp formData={formData} id={id} submitData={submitData} /> */}
+
       {/* 가입 신청 페이지 - 전체 인원 보여줌 */}
-      {authorityOfClub >= 5 && authorityOfClub <= 3 && token ? (
+      {authorityOfClub >= 5 && authorityOfClub <= 3 ? (
+        
         <UserSignUp formData={formData} id={id} listData={listData} />
       ) : null}
       {/* 가입 신청 현황 페이지 - 회장, 임원만 보여줌 */}
-      {authorityOfClub >= 2  && token ? (
+      {authorityOfClub <= 2 ? (
         <ManagerSignUp formData={formData} id={id} submitData={submitData} />
       ) : null}
     </>
@@ -748,7 +753,7 @@ function ManagerSignUp(props) {
                           신청서보기
                         </button>
                       </div>
-                      <div className={"w-[140px] "}>
+                      <div className={"w-[140px] grid justify-end"}>
                         <button
                           className={"signup_accept"}
                           onClick={() => {

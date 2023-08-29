@@ -1,167 +1,80 @@
-import { useRecoilState } from "recoil";
-import { homeClubTabState, clubsState } from "../../store";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { readAllClubs, readSomeClubs } from "../../api/club";
-import { baseUrl } from "../../common/global";
-import { usePagination } from "@mantine/hooks";
-
-axios.defaults.baseURL = baseUrl;
-
 export default function ClubBoard() {
-  const [posts, setPosts] = useRecoilState(clubsState);
-  const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
-  const navigate = useNavigate();
-  const [count, setCount] = useState([0, 0]);
-
-  const countPosts = () => {
-    let i = 0;
-    let j = 0;
-    readAllClubs(0).then((res) => {
-      res.data.forEach((post) => (post.classification === 1 ? ++i : ++j));
-      setCount([i, j]);
-    });
-  };
-
-  const [page, onChange] = useState(1);
-
-  const pagination = usePagination({
-    total: Math.ceil((count[0] + count[1]) / 8),
-    page,
-    onChange,
-  });
-
-  const getPosts = () => {
-    readSomeClubs(0, 8, homeTab).then((res) => setPosts(res.data));
-  };
-
-  useEffect(() => {
-    getPosts();
-    countPosts();
-    document.title = `${posts.length}개의 동아리가 함께 하고 있습니다 | Core`;
-  }, [homeTab]);
-
-  return (
-    <div className={"w-full min-w-home2"}>
-      <div className={"h-[50px] flex justify-end pr-7"}>
-        <PromotionTab />
-      </div>
-      <div className={"px-[48px]"}>
-        <article className={""}>
-          <div className={"grid grid-cols-4 gap-10"}>
-            {posts.map((post) => {
-              return (
-                <div
-                  className={
-                    "w-[200px] h-[240px] 2xl:w-[300px] 2xl:h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
-                  }
-                >
-                  <Image post={post} />
-                  <Content post={post} />
-                </div>
-              );
-            })}
-          </div>
-        </article>
-      </div>
-      <div className={"w-full p-16 flex"}>
-        <div className={"flex-auto"}>
-          <button
-            className={
-              "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded"
-            }
-            onClick={() => {
-              pagination.previous();
-            }}
-          >
-            {"< 이전"}
-          </button>
-        </div>
-
-        <div className={"flex-auto"}>
-          <button className={"font-bold "}>{page}</button>
-        </div>
-
-        <div className={"flex-row-reverse"}>
-          <button
-            className={
-              "border w-[60px] h-[35px] text-center text-h7 border-midgray rounded "
-            }
-            onClick={() => {
-              pagination.next();
-            }}
-          >
-            {"다음 >"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const PromotionTab = () => {
-  const [homeTab, setHomeTab] = useRecoilState(homeClubTabState);
-  const navigate = useNavigate();
-
+  const acitivities = [1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <>
-      <div>
-        <form
-          className={"flex h-[30px] w-[220px] rounded-full border border-gray2"}
-          onSubmit={(e) => {
-            // e.preventDefault();
-            navigate("/club/search/?query=" + e.target.query.value);
-            setHomeTab(0); // 기본 홈탭을 0으로 바꾸기
-          }}
-        >
-          <input
-            type={"text"}
-            className={"rounded-full w-[250px] px-3 text-h6 outline-0"}
-            placeholder={"| 검색어를 검색해보세요."}
-            name={"query"}
-          />
-          <button type={"submit"}>
-            <i className="fa-solid fa-magnifying-glass flex-auto pt-1 mr-2"></i>
-          </button>
-        </form>
-      </div>
+      <div className="mx-[64px]">
+        <div className="flex">
+          <div className="flex gap-2 mb-8">
+            {/*카테고리 분류*/}
+            <div className="w-[100px] h-[40px] border border-gray2 rounded-full text-black py-[6px] pl-4 font-semibold flex">
+              <p>제목</p>
+              <button className="material-symbols-outlined ml-[22px]">
+                arrow_drop_down
+              </button>
+            </div>
+            {/*동아리 검색 UI*/}
+            <form
+              className={
+                "flex h-[40px] w-[300px] rounded-full border border-gray2"
+              }
+            >
+              <input
+                type={"text"}
+                className={"rounded-full w-[250px] px-3 outline-0"}
+                placeholder={"| 검색어를 입력해보세요."}
+                name={"query"}
+              />
+              <button type={"submit"}>
+                <i className="fa-solid fa-magnifying-glass fa-xl pt-2 ml-2"></i>
+              </button>
+            </form>
+          </div>
 
-      <div className={"mt-[32px]"} />
-    </>
-  );
-};
-
-const Image = (props) => {
-  return (
-    <div className={"2xl:w-[300px] 2xl:h-[200px]"}>
-      <img
-        src={`${baseUrl}/${props.post.image_url}`}
-        alt="img"
-        className={"rounded-t-lg"}
-      />
-    </div>
-  );
-};
-
-const Content = (props) => {
-  return (
-    <div className={"p-3"}>
-      <div className={"gap-2 flex "}>
-        <div className={"text-h5 2xl:text-xl font-bold grid content-center"}>
-          {props.post.title}
+          <div className="flex ml-[580px] gap-4">
+            {/*버튼 UI, 검색*/}
+            <button className="w-[133px] h-[40px] rounded-md bg-white text-sub border border-sub flex justify-end transition hover:scale-110">
+              <p className="my-3 mx-2">임시저장 목록</p>
+              <p className="material-symbols-outlined my-2">chevron_right</p>
+            </button>
+            <button className="w-[160px] h-[40px] rounded-md bg-sub text-white flex justify-end transition hover:scale-110">
+              <p className="my-3 mx-2">활동기록 작성하기</p>
+              <p className="material-symbols-outlined my-2">chevron_right</p>
+            </button>
+          </div>
+        </div>
+        {/*활동 기록 카드*/}
+        <div className="grid grid-cols-4 gap-8">
+          {acitivities.map((acitivity) => {
+            return (
+              <div
+                className={
+                  "w-[302px] h-[320px] bg-white shadow-lg transition hover:scale-110 rounded-xl"
+                }
+              >
+                <Image />
+                <div
+                  className={
+                    "w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl"
+                  }
+                >
+                  <div className="m-4">
+                  <p className="font-bold text-h4 mb-2">코어 디자인팀 회의</p>
+                  <p className="">디자인팀은 오늘 작업할 내용을 회의한 후, 동아리 소개 페이지 및 동아리 활동...</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-      <div className={"hidden 2xl:block"}>
-        {props.post.sub_content.length > 35
-          ? props.post.sub_content.slice(0, 35) + "..."
-          : props.post.sub_content}
-      </div>
-      <div className={"block 2xl:hidden text-h7 mt-[3px]"}>
-        {props.post.sub_content.length > 17
-          ? props.post.sub_content.slice(0, 17) + "..."
-          : props.post.sub_content}
-      </div>
+      <div className="h-[200px]" />
+    </>
+  );
+}
+const Image = () => {
+  return (
+    <div className={"h-[200px] 2xl:w-[300px] 2xl:h-[200px] overflow-y-scroll"}>
+      <img src="/images/스파크.png" alt="img" className={"rounded-t-lg"} />
     </div>
   );
 };

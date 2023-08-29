@@ -99,7 +99,7 @@ export default function Club() {
                   <Image post={post} />
                   <div
                     className={
-                      'w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl'
+                      'w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl relative'
                     }
                   >
                     <Content post={post} />
@@ -178,7 +178,7 @@ const ClubTab = () => {
                 name={'query'}
               />
               <button type={'submit'}>
-                <i className="fa-solid fa-magnifying-glass fa-xl pt-4 ml-2"></i>
+                <i className="fa-solid fa-magnifying-glass fa-xl pt-2 ml-2"></i>
               </button>
             </form>
           </div>
@@ -230,7 +230,7 @@ const Content = (props) => {
           ? props.post.main_content.slice(0, 19) + '...'
           : props.post.main_content}
       </div>
-      <div className={'gap-2 flex mt-[18px]'}>
+      <div className={'gap-2 flex absolute bottom-3'}>
         <div
           className={
             'h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray'
