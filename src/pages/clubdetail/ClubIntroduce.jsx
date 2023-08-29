@@ -126,7 +126,7 @@ export default function ClubIntroduce() {
                     setAddImg(true);
                   }}
                 >
-                  <div class="material-symbols-outlined ml-[7px]">edit</div>
+                  <div class="material-symbols-outlined ml-[14px]">edit</div>
                   <div>사진변경</div>
                 </button>
               ) : null}
@@ -180,7 +180,7 @@ export default function ClubIntroduce() {
                         setTagModfy(!tagModfy);
                       }}
                     >
-                      <div class="material-symbols-outlined ml-[7px]">edit</div>
+                      <div class="material-symbols-outlined ml-[14px]">edit</div>
                       <div>수정하기</div>
                     </button>
                   ) : null}
@@ -273,7 +273,7 @@ export default function ClubIntroduce() {
                         });
                     }}
                   >
-                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div class="material-symbols-outlined ml-[14px]">edit</div>
                     <div>완료하기</div>
                   </button>
                 </div>
@@ -427,7 +427,7 @@ export default function ClubIntroduce() {
                       setClubProgramModfy(!clubProgramModfy);
                     }}
                   >
-                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div class="material-symbols-outlined ml-[14px]">edit</div>
                     <div>수정</div>
                   </button>
                 ) : null
@@ -589,7 +589,7 @@ export default function ClubIntroduce() {
                       setClubHistoryModfy(!clubHistoryModfy);
                     }}
                   >
-                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div class="material-symbols-outlined ml-[14px]">edit</div>
                     <div>수정</div>
                   </button>
                 ) : null
@@ -629,7 +629,7 @@ export default function ClubIntroduce() {
                       });
                     }}
                   >
-                    <div class="material-symbols-outlined ml-[7px]">edit</div>
+                    <div class="material-symbols-outlined ml-[14px]">edit</div>
                     <div> 완료</div>
                   </button>
                 </div>
@@ -859,7 +859,7 @@ export default function ClubIntroduce() {
                     alert("서비스 준비중입니다");
                   }}
                 >
-                  <div className="ml-[10px]">게시물 등록하기</div>
+                  <div className="ml-[20px]">게시물 등록하기</div>
                   <span class="material-symbols-outlined">chevron_right</span>
                 </button>
               ) : null}

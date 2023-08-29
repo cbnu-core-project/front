@@ -63,7 +63,7 @@ export default function HomeClubList() {
                   <Image post={post} />
                   <div
                     className={
-                      "w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl"
+                      "w-[302px] h-[120px] bg-white shadow-lg rounded-b-xl relative"
                     }
                   >
                     <Content post={post} />
@@ -199,7 +199,7 @@ const Content = (props) => {
           ? props.post.main_content.slice(0, 12) + "..."
           : props.post.main_content}
       </div>
-      <div className={"gap-1 flex mt-[16px]"}>
+      <div className={"gap-1 flex absolute bottom-4"}>
         <div
           className={
             "h-[24px] px-2 py-[1.5px] text-center bg-gray3 rounded-lg  text-h7  text-midgray"

@@ -43,7 +43,7 @@ export default function ViewApplicationForm() {
     //주관식 신청서 보기
     if (data.type == 0) {
       return (
-        <div className={"w-[620px] h-auto mx-auto text-h3 border"}>
+        <div className={"w-[620px] h-auto mx-auto text-h3"}>
           {data.question}
           {data.required == true ? (
             <span className={"text-sub"}>(필수)</span>
@@ -96,13 +96,13 @@ export default function ViewApplicationForm() {
 
   return (
     <>
-      <div className="w-[700px] bg-white rounded-xl border absolute z-10 left-1/4 right-1/4 px-[40px] py-[32px] grid gap-10">
+      <div className="w-[700px] bg-white rounded-xl absolute z-10 left-1/4 right-1/4 px-[40px] py-[32px] grid gap-10 shadow-xl">
         {/* {listsState.map((post, i) => {
           return <></>;
         })} */}
         {/*formData에 realname이 필수이면 이름을 띄워줌*/}
 
-        <div className="w-[620px] h-[92px] border">
+        <div className="w-[620px] h-[92px]">
           <p className="text-[20px]">이름</p>
           <div className="h-[48px] w-[620px] bg-gray3 rounded-md mt-[10px] text-darkgray text-h5 px-[14px] py-[12px]">
             {listData[viewBtnState].data.realname}
@@ -111,7 +111,7 @@ export default function ViewApplicationForm() {
 
         {/*formData에 department가 필수이면 이름을 띄워줌*/}
 
-        <div className="w-[620px] h-[92px] border">
+        <div className="w-[620px] h-[92px]">
           <p className="text-[20px]">학과</p>
           <div className="h-[48px] w-[620px] bg-gray3 rounded-md mt-[10px] text-darkgray text-h5 px-[14px] py-[12px]">
             {listData[viewBtnState].data.department}
@@ -120,20 +120,20 @@ export default function ViewApplicationForm() {
 
         {/*formData에 school_number가 필수이면 이름을 띄워줌*/}
 
-        <div className="w-[620px] h-[92px] border">
+        <div className="w-[620px] h-[92px]">
           <p className="text-[20px]">학번</p>
           <div className="h-[48px] w-[620px] bg-gray3 rounded-md mt-[10px] text-darkgray text-h5 px-[14px] py-[12px]">
             {listData[viewBtnState].data.school_number}
           </div>
         </div>
 
-        <div className="w-[620px] h-[33px] border flex">
+        <div className="w-[620px] h-[33px] flex">
           <p className="text-[20px]">성별</p>
           {listData[viewBtnState].data.gender == "남자" ? (
-            <div className="flex">
+            <div className="flex my-[3px] ml-[10px]">
               <input
                 type="radio"
-                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border "
+                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[3px]"
                 value={"남자"}
                 id="male"
                 name="gender"
@@ -144,7 +144,7 @@ export default function ViewApplicationForm() {
               </label>
               <input
                 type="radio"
-                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border"
+                className="form-checkbox h-5 w-5 text-black rounded-sm border-black border my-[3px] ml-[8px]"
                 value={"여자"}
                 id="female"
                 name="gender"
@@ -180,21 +180,21 @@ export default function ViewApplicationForm() {
           )}
         </div>
 
-        <div className="w-[620px] h-[92px] border">
+        <div className="w-[620px] h-[92px]">
         <p className="text-[20px]">연락처</p>
           <div className="h-[48px] w-[620px] bg-gray3 rounded-md mt-[10px] text-darkgray text-h5 px-[14px] py-[12px]">
             {listData[viewBtnState].data.phone_number}
           </div>
         </div>
 
-        <div className="w-[620px] h-[92px] border">
+        <div className="w-[620px] h-[92px]">
         <p className="text-[20px]">이메일</p>
           <div className="h-[48px] w-[620px] bg-gray3 rounded-md mt-[10px] text-darkgray text-h5 px-[14px] py-[12px]">
             {listData[viewBtnState].data.email}
           </div>
         </div>
 
-        <div className="w-[620px] h-[92px] border">
+        <div className="w-[620px] h-[92px]">
         <p className="text-[20px]">주소</p>
           <div className="h-[48px] w-[620px] bg-gray3 rounded-md mt-[10px] text-darkgray text-h5 px-[14px] py-[12px]">
             {listData[viewBtnState].data.address}

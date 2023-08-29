@@ -54,7 +54,7 @@ export default function HomePromotionList() {
               <div className="relative">
                 <img
                   className={"w-[300px] h-[440px] overflow-y-scroll"}
-                  src={`${promotion.image_url}`}
+                  src={"/images/코어홍보.png"}
                   alt={"marketing"}
                 />
                 <div

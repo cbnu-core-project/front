@@ -188,7 +188,7 @@ const Image = (props) => {
   return (
     <div className={"2xl:w-[300px] 2xl:h-[440px]"}>
       <img
-        src={`${baseUrl}/${props.promotion.image_url}`}
+        src={"/images/코어홍보2.png"}
         alt="img"
         className={"rounded-t-lg"}
       />
