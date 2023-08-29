@@ -57,7 +57,28 @@ export default function MyInfo() {
         <span class="flex justify-center material-symbols-outlined text-gray text-[100px] mt-[50px]">
           account_circle
         </span>
-        <form>
+        <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          axios
+            .put("/api/user/info", {
+              //입력받은 사용자 정보 api전달
+              email: String(email),
+              realname: String(name),
+              major: String(major),
+              student_number: String(studentnumber),
+              phone_number: String(tell),
+              nickname: String(name),
+              profile_image_url: "string",
+              address: String(address),
+              gender: String(gender),
+            })
+            .then((res) => {
+              //랜더링
+              axios.get("/api/user/info").then((response) => {});
+            });
+        }}
+        >
           <div className="grid place-content-center mt-[35px] gap-[32px]">
             <div className="grid gap-[8px]">
               <div className="flex justify-between w-[406px]">
@@ -227,24 +248,10 @@ export default function MyInfo() {
 
             <button
               className="justify-self-center bg-sub text-white mt-[28px] w-[87px] h-[40px] rounded-lg"
+              type="submit"
               onClick={() => {
-                axios
-                  .put("/api/user/info", {
-                    //입력받은 사용자 정보 api전달
-                    email: String(email),
-                    realname: String(name),
-                    major: String(major),
-                    student_number: String(studentnumber),
-                    phone_number: String(tell),
-                    nickname: String(name),
-                    profile_image_url: "string",
-                    address: String(address),
-                    gender: String(gender),
-                  })
-                  .then((res) => {
-                    //랜더링
-                    axios.get("/api/user/info").then((response) => {});
-                  });
+                setSiderbarUI("standard");
+                alert("저장되었습니다.");
               }}
             >
               저장하기

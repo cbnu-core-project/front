@@ -13,12 +13,23 @@ export default function Login() {
 
   const KAKAO_REST_API_KEY = "40d478c8d7447b20143b402959fd7ed8";
   const KAKAO_STATE = "kakao";
-  const KAKAO_REDIRECT_URI = "http://localhost:3000";
+  let KAKAO_REDIRECT_URI = "http://localhost:3000";
+  if (process.env.NODE_ENV == "development") {
+    KAKAO_REDIRECT_URI = "http://localhost:3000";
+  } else if (process.env.NODE_ENV == "production") {
+    KAKAO_REDIRECT_URI = "http://cbnucore.site";
+  }
+
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code&state=${KAKAO_STATE}`;
 
   const NAVER_CLIENT_ID = "zB5gfqdBq1a0jq6vr_zv";
   const NAVER_STATE = "naver";
-  const NAVER_REDIRECT_URI = "http://localhost:3000";
+  let NAVER_REDIRECT_URI = "http://localhost:3000";
+  if (process.env.NODE_ENV == "development") {
+    NAVER_REDIRECT_URI = "http://localhost:3000";
+  } else if (process.env.NODE_ENV == "production") {
+    NAVER_REDIRECT_URI = "http://cbnucore.site";
+  }
   const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${NAVER_STATE}&redirect_uri=${NAVER_REDIRECT_URI}`;
 
   const handleKakaoLogin = () => {
@@ -39,30 +50,60 @@ export default function Login() {
         서비스 이용을 위해 로그인 해주세요.
       </div>
       <div>
-        <div className={"text-black text-center font-[Pv] font-bold mt-[150px]"}>
-          <button className={'px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'}
-            onClick={handleKakaoLogin}>
+        <div
+          className={"text-black text-center font-[Pv] font-bold mt-[150px]"}
+        >
+          <button
+            className={
+              "px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center"
+            }
+            onClick={handleKakaoLogin}
+          >
             <img src={"/images/카카오.png"} width={30} />
-            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 카카오로 로그인하기 </div>
+            <div className={"mt-2 ml-3 font-[Pv] text-h6 font-bold"}>
+              {" "}
+              카카오로 로그인하기{" "}
+            </div>
           </button>
-          <button className={'mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'} 
-            onClick={handleNaverLogin}>
+          <button
+            className={
+              "mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center"
+            }
+            onClick={handleNaverLogin}
+          >
             <img src={"/images/네이버.png"} width={30} />
-            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 네이버로 로그인하기 </div>
+            <div className={"mt-2 ml-3 font-[Pv] text-h6 font-bold"}>
+              {" "}
+              네이버로 로그인하기{" "}
+            </div>
           </button>
-          <button className={'mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'} 
+          <button
+            className={
+              "mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center"
+            }
             onClick={() => {
               alert("구현중");
-            }}>
+            }}
+          >
             <img src={"/images/구글.png"} width={30} />
-            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 구글로 로그인하기 </div>
+            <div className={"mt-2 ml-3 font-[Pv] text-h6 font-bold"}>
+              {" "}
+              구글로 로그인하기{" "}
+            </div>
           </button>
-          <button className={'mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center'} 
+          <button
+            className={
+              "mt-3 px-[8px] py-[10px] w-[406px] bg-white rounded-lg flex justify-center"
+            }
             onClick={() => {
               alert("구현중");
-            }}>
+            }}
+          >
             <img src={"/images/페이스북.png"} width={30} />
-            <div className={'mt-2 ml-3 font-[Pv] text-h6 font-bold'}> 페이스북으로 로그인하기 </div>
+            <div className={"mt-2 ml-3 font-[Pv] text-h6 font-bold"}>
+              {" "}
+              페이스북으로 로그인하기{" "}
+            </div>
           </button>
         </div>
         <div className={"mt-[120px]"} />
