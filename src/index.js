@@ -9,6 +9,7 @@ import "font-awesome/css/font-awesome.min.css";
 import { MantineProvider } from "@mantine/core";
 import { CookiesProvider } from "react-cookie";
 import { QueryClientProvider, QueryClient } from "react-query";
+import ModalProvider from "./providers/ModalProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -21,6 +22,7 @@ root.render(
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <BrowserRouter>
           <RecoilRoot>
+            <ModalProvider />
             <App />
           </RecoilRoot>
         </BrowserRouter>

@@ -4,14 +4,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../common/global";
 import { useRecoilState } from "recoil";
-import { listsState } from "../../store";
+import { serApplicationFormModalState, listsState, userApplicationFormModalState } from "../../store";
 
 export default function UserApplicationForm(props) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [forms, setForms] = useState([]);
   const [type, setType] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useRecoilState(userApplicationFormModalState);
   //////////////////////////
   const [phoneNumber, setPhoneNumber] = useState([false, false]);
   const [phoneNumberChecked, setPhoneNumberChecked] = useState(false);
